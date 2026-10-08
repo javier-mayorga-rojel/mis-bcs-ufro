@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<!--
+  Actividad de estudio · Lectura 3 (Ragin, 2007, cap. 4) · Módulo cualitativo · MIS · Bachillerato en Ciencias Sociales UFRO
+  v0.1 · 2026-10-06
+  Archivo: actividad_mis_bcs_l3.html (junto a index_mis_bcs.html en el mismo repositorio)
+  PIN DOCENTE: CUALITATIVO2026 (lo pide solo dashboard_docente.html; este archivo no pide PIN)
+  Firebase: se configura una sola vez en firebase_config.js (mismo archivo para todo el sitio). Mientras diga "REEMPLAZAR", usa solo localStorage.
+  Nodo que se escribe: mis_bcs/l3/[id]/sec[n].
+  Contrato con el portal: lee mis_bcs_reg y mis_bcs_theme; escribe mis_bcs_prog.l3 = {done, pts}.
+  Reinicio: «Borrar mi avance y empezar de nuevo» guarda antes una copia del avance en mis_bcs_hist (local) y, con Firebase activo,
+  en mis_bcs_hist/l3/[id]/[clave] (solo se agrega, no se sobrescribe) y marca mis_bcs/l3/[id]/ultimoReinicio. El panel docente lee ese historial.
+-->
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lectura 3 · Métodos cualitativos y aspectos comunes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+/* Concepto: un módulo de estudio sobrio, de una sola columna. Cada sección tiene su color. */
+:root{
+  --bg:#f8f5ef; --surface:#fffdf8; --ink:#0b1a33; --ink2:#4b566b; --line:#d9d0ba;
+  --gold:#c9a256; --gold-ink:#7d5f17; --gold-bg:#f3e8cc; --nav:#0b1a33; --nav-ink:#f8f5ef;
+  --teo:#1a4a7a; --teo-bg:#e6eef7; --emp:#1a5c38; --emp-bg:#e4f1e9;
+  --ok:#1a5c38; --ok-bg:#ebf7ef; --no:#9b2226; --no-bg:#fdeeee; --info:#1a4a7a; --info-bg:#eaf1f9;
+  --s0c:#1a4a7a; --s0b:#e8f0f8; --s1c:#7a3b1e; --s1b:#faf0e8; --s2c:#1a5c38; --s2b:#e8f5ee; --s3c:#4a1a6b; --s3b:#f0e8f8;
+  --focus:#0b1a33;
+  --ff-d:'Playfair Display',Georgia,'Times New Roman',serif;
+  --ff-b:'Source Serif 4',Georgia,'Times New Roman',serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0a1428; --surface:#111f3a; --ink:#f1ece0; --ink2:#aab4c6; --line:#2a3a5c;
+    --gold:#e0bd73; --gold-ink:#e0bd73; --gold-bg:#3a3118; --nav:#060d1c; --nav-ink:#f1ece0;
+    --teo:#7fb0e6; --teo-bg:#14284a; --emp:#6fcb98; --emp-bg:#12332a;
+    --ok:#6fcb98; --ok-bg:#10301f; --no:#f19a9d; --no-bg:#3a1618; --info:#8fbbea; --info-bg:#14284a;
+    --s0c:#8fbbea; --s0b:#14284a; --s1c:#e8a985; --s1b:#3a2216; --s2c:#6fcb98; --s2b:#12332a; --s3c:#c9a0e8; --s3b:#2c1a42;
+    --focus:#e0bd73; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0a1428; --surface:#111f3a; --ink:#f1ece0; --ink2:#aab4c6; --line:#2a3a5c;
+  --gold:#e0bd73; --gold-ink:#e0bd73; --gold-bg:#3a3118; --nav:#060d1c; --nav-ink:#f1ece0;
+  --teo:#7fb0e6; --teo-bg:#14284a; --emp:#6fcb98; --emp-bg:#12332a;
+  --ok:#6fcb98; --ok-bg:#10301f; --no:#f19a9d; --no-bg:#3a1618; --info:#8fbbea; --info-bg:#14284a;
+  --s0c:#8fbbea; --s0b:#14284a; --s1c:#e8a985; --s1b:#3a2216; --s2c:#6fcb98; --s2b:#12332a; --s3c:#c9a0e8; --s3b:#2c1a42;
+  --focus:#e0bd73; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--ff-b);font-size:17px;line-height:1.6;margin:0;padding:0}
+button{font:inherit;color:inherit}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--focus);outline-offset:3px;border-radius:6px}
+.wrap{max-width:960px;margin:0 auto;padding-inline:16px}
+
+/* Barra superior */
+.top{background:var(--nav);color:var(--nav-ink)}
+.top .wrap{display:flex;align-items:center;gap:14px;min-height:60px;flex-wrap:wrap;padding-block:8px}
+.top a.back{display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-weight:600;font-size:15px;color:var(--nav-ink);padding:6px 10px;border-radius:8px;border:1px solid rgba(248,245,239,.28)}
+.top a.back:hover{border-color:var(--gold)}
+.top .ttl{font-family:var(--ff-d);font-weight:600;font-size:16px;flex:1;min-width:0;line-height:1.25}
+.top .ttl small{display:block;font-family:var(--ff-b);font-weight:400;font-size:13px;opacity:.75}
+.top .who{font-size:14px;padding:4px 12px;border:1px solid rgba(248,245,239,.28);border-radius:999px;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tbtn{width:38px;height:38px;border-radius:50%;border:1px solid rgba(248,245,239,.28);background:none;color:var(--nav-ink);cursor:pointer;display:grid;place-items:center}
+.tbtn:hover{border-color:var(--gold)}
+@media (max-width:560px){.top .ttl small{display:none}.top .who{max-width:120px}}
+
+/* Aviso de identificación */
+.note{margin-top:18px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:12px 16px;border-radius:12px;background:var(--gold-bg);border:1px solid var(--gold);font-size:15px}
+.note a,.note button{font-weight:600}
+.note button{background:none;border:0;padding:0;text-decoration:underline;cursor:pointer}
+.note a.cta{display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:999px;background:var(--ink);color:var(--bg);text-decoration:none;font-weight:700;box-shadow:0 2px 0 var(--gold)}
+.note a.cta:hover{filter:brightness(1.12)}
+
+/* Inicio */
+.hero{padding-block:36px 8px}
+.eyebrow{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-ink);font-weight:600;margin:0 0 8px}
+h1{font-family:var(--ff-d);font-weight:700;font-size:clamp(30px,5.5vw,46px);line-height:1.12;margin:0 0 12px;text-wrap:balance}
+.lead{font-size:18px;color:var(--ink2);max-width:680px;margin:0}
+h2.sec-t{font-family:var(--ff-d);font-size:26px;margin:36px 0 14px;line-height:1.2}
+.goals{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:6px;max-width:720px}
+.how{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:6px}
+.how div{border-top:3px solid var(--ink);padding-top:10px}
+.how b{font-family:var(--ff-d);font-size:19px;display:block;margin-bottom:2px}
+.how span{color:var(--ink2);font-size:15.5px}
+.total{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:28px;padding:16px 18px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.total .big{font-family:var(--ff-d);font-weight:700;font-size:30px;line-height:1}
+.total small{color:var(--ink2);font-size:15px}
+.bar{height:8px;border-radius:4px;background:var(--line);overflow:hidden;flex:1;min-width:140px}
+.bar i{display:block;height:100%;background:var(--gold);border-radius:4px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.card .hd{background:var(--bg-c);color:var(--c);padding:16px 18px;display:flex;gap:12px;align-items:flex-start}
+.card .num{flex:none;width:36px;height:36px;border-radius:50%;background:var(--c);color:var(--bg-c);display:grid;place-items:center;font-family:var(--ff-d);font-weight:700}
+.card h3{font-family:var(--ff-d);font-size:20px;line-height:1.2;margin:2px 0 0}
+.card .bd{padding:14px 18px 18px;display:flex;flex-direction:column;gap:12px;flex:1}
+.card p{margin:0;font-size:15.5px;color:var(--ink2)}
+.card .meta{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:14px;color:var(--ink2)}
+.card .meta b{color:var(--ink)}
+.tagst{font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;padding:3px 9px;border-radius:999px;border:1px solid var(--line);color:var(--ink2);margin-left:auto;white-space:nowrap}
+.tagst.done{border-color:var(--ok);color:var(--ok)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:10px;padding:11px 18px;font-weight:600;cursor:pointer;background:var(--ink);color:var(--bg);text-decoration:none;font-size:16px}
+.btn.alt{background:none;color:var(--ink);border:1px solid var(--ink)}
+.btn.gold{background:var(--gold);color:#0b1a33}
+.btn:hover{filter:brightness(1.08)}
+.btn[disabled]{opacity:.4;cursor:default}
+.card .btn{margin-top:auto;align-self:flex-start}
+
+/* Sección */
+.stepper{display:flex;gap:6px;flex-wrap:wrap;margin-top:22px}
+.pill{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 14px;font-size:15px;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.pill i{font-style:normal;font-size:12px;color:var(--ink2)}
+.pill[aria-current="true"]{background:var(--c);color:var(--bg-c);border-color:var(--c)}
+.pill[aria-current="true"] i{color:var(--bg-c)}
+.pill.done i{color:var(--ok)}
+.pill[aria-current="true"].done i{color:var(--bg-c)}
+.sechd{margin-top:22px;border-radius:14px;background:var(--bg-c);color:var(--c);padding:22px 22px 20px;border:1px solid var(--c)}
+.sechd .k{font-size:13px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;margin:0 0 6px}
+.sechd h2{font-family:var(--ff-d);font-size:clamp(24px,4vw,32px);line-height:1.18;margin:0 0 10px}
+.sechd p.d{margin:0;color:var(--ink);font-size:17px}
+.sechd .g{margin:10px 0 0;font-size:14.5px;color:var(--ink2)}
+.blk{margin-top:30px}
+.blk > h3{font-family:var(--ff-d);font-size:21px;margin:0 0 4px}
+.blk > p.sub{margin:0 0 14px;color:var(--ink2);font-size:15.5px}
+.cloud{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:baseline}
+.chip{border:1px solid var(--c);background:var(--surface);color:var(--c);border-radius:999px;padding:5px 14px;cursor:pointer;font-weight:600;line-height:1.3}
+.chip[aria-pressed="true"]{background:var(--c);color:var(--bg-c)}
+.def{margin-top:14px;padding:14px 16px;border-radius:12px;background:var(--bg-c);border-left:4px solid var(--c)}
+.def b{font-family:var(--ff-d);font-size:18px;color:var(--c);display:block;margin-bottom:2px}
+.def p{margin:0}
+.prog{display:flex;align-items:center;gap:12px;margin:26px 0 0;padding:10px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);position:sticky;top:0;z-index:5}
+.prog .bar i{background:var(--c)}
+.prog span{font-size:15px;white-space:nowrap}
+
+/* Ítems */
+.q{padding:18px 0;border-bottom:1px solid var(--line)}
+.q:last-child{border-bottom:0}
+.q .qt{font-weight:600;margin:0 0 12px}
+.q .qn{color:var(--c);font-family:var(--ff-d);margin-right:6px}
+.frag{margin:0 0 12px;padding:10px 14px;border-left:4px solid var(--c);background:var(--bg-c);border-radius:0 10px 10px 0;font-style:italic}
+.fq{margin:0 0 10px;font-size:15.5px;color:var(--ink2)}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 14px;cursor:pointer;display:flex;gap:10px;align-items:flex-start;line-height:1.45}
+.opt:hover:not([disabled]){border-color:var(--c)}
+.opt .l{font-weight:700;color:var(--c);flex:none}
+.opt[disabled]{cursor:default}
+.opt.right{border-color:var(--ok);background:var(--ok-bg)}
+.opt.wrong{border-color:var(--no);background:var(--no-bg)}
+.opt.dim{opacity:.62}
+.pair{display:flex;gap:10px;flex-wrap:wrap}
+.pair .opt{flex:1 1 200px;justify-content:center;align-items:center;text-align:center;font-weight:600}
+.fb{margin-top:12px;padding:12px 14px;border-radius:10px;font-size:16px;line-height:1.55;display:flex;gap:12px;align-items:flex-start}
+.fb.ok{background:var(--ok-bg);border:1px solid var(--ok)}
+.fb.no{background:var(--info-bg);border:1px solid var(--info)}
+.fb svg{flex:none;margin-top:3px}
+.fb.ok svg{color:var(--ok)} .fb.no svg{color:var(--info)}
+.fb p{margin:0}
+.fb .ref{display:block;margin-top:6px;font-size:14px;color:var(--ink2)}
+.fb .ref b{color:var(--ink)}
+
+/* Resultado */
+.res{margin-top:34px;border:2px solid var(--c);border-radius:16px;background:var(--surface);padding:22px}
+.res h3{font-family:var(--ff-d);font-size:24px;margin:0 0 4px}
+.res .score{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:6px 0 10px}
+.res .score b{font-family:var(--ff-d);font-size:44px;line-height:1;color:var(--c)}
+.res .brk{display:flex;gap:8px 18px;flex-wrap:wrap;color:var(--ink2);font-size:15px;margin:0 0 12px}
+.res .rev{margin:14px 0 0;padding:12px 16px;border-radius:12px;background:var(--bg-c)}
+.res .rev b{display:block;margin-bottom:4px}
+.res .rev ul{margin:0;padding-left:20px}
+.acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+
+footer{margin-top:56px;background:var(--nav);color:var(--nav-ink)}
+footer .wrap{padding-block:32px}
+footer .f-n{margin:0;font:700 17px/1.3 var(--ff-d)}
+footer .f-s{margin:6px 0 0;font-size:14.5px;line-height:1.6;opacity:.82;max-width:60ch}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:10px;font-size:15px;z-index:50;max-width:calc(100% - 32px)}
+
+.reset{margin-top:36px;padding-top:20px;border-top:1px solid var(--line)}
+.reset .btn.alt{font-size:15px;padding:9px 16px}
+.reset-box{padding:16px 18px;border:1px solid var(--no);border-radius:12px;background:var(--no-bg)}
+.reset-box p{margin:0 0 6px;line-height:1.55}
+.btn.danger{background:var(--no);color:var(--bg)}
+</style>
+</head>
+<body>
+<script src="firebase_config.js"></script>
+
+
+
+<header class="top">
+  <div class="wrap">
+    <a class="back" id="back" href="index_mis_bcs.html" data-portal><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>Portal</a>
+    <div class="ttl">Lectura 3 · Métodos cualitativos y aspectos comunes</div>
+    <span class="who" id="who" hidden></span>
+    <button class="tbtn" id="theme" type="button" aria-label="Cambiar entre tema claro y oscuro"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v18" /><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></svg></button>
+  </div>
+</header>
+
+<main class="wrap" id="app" aria-live="polite"></main>
+
+<footer>
+  <div class="wrap">
+    <p class="f-n">Universidad de La Frontera</p>
+    <p class="f-s">Facultad de Educación, Ciencias Sociales y Humanidades<br>Metodología de la Investigación Social | Módulo Cualitativo | 2026</p>
+  </div>
+</footer>
+<div class="toast" id="toast" role="status" hidden></div>
+
+
+<script>
+(function(){
+var PREVIEW=false;
+var CHARS=[{"title": "Conocimiento en profundidad, imágenes y conceptos", "topic": "el conocimiento en profundidad y la aclaración recíproca entre imágenes y conceptos", "guia": "Preguntas 1 a 7 de la guía", "desc": "Ragin contrasta las visiones panorámicas con el conocimiento en profundidad de casos específicos, y explica cómo en la investigación cualitativa las imágenes del objeto y los conceptos se aclaran recíprocamente, a partir de conceptos guía preliminares.", "words": [{"w": "Visión panorámica", "d": "Afirmación general, como «las personas con mayor educación tienden a obtener mejores trabajos», donde un porcentaje o una estadística resume información de innumerables casos pero no dice nada de los casos individuales."}, {"w": "Conocimiento en profundidad", "d": "Saber tanto como sea posible sobre casos específicos. Según Ragin, los investigadores cualitativos suelen creer que una comprensión adecuada solo se logra mediante este examen."}, {"w": "Técnicas de agregación", "d": "Mayoría de las técnicas cuantitativas de manejo de datos: agregan los datos para revelar una imagen general. Por ejemplo, condensan la información de miles de individuos en un único porcentaje."}, {"w": "Realzar los datos", "d": "Función que Ragin atribuye a los métodos cualitativos. Es similar a enfocar una fotografía: permite ver con más claridad ciertos aspectos de los casos."}, {"w": "Imagen del objeto de investigación", "d": "Descripción que se construye a partir de los casos, a veces buscando parecidos entre varias expresiones del fenómeno que parecen caer en la misma categoría general. Se refina durante la investigación."}, {"w": "Concepto", "d": "Idea general que puede aplicarse a muchas manifestaciones específicas. Es una síntesis abstracta de las propiedades compartidas por los miembros de una categoría y un componente crucial de los marcos analíticos."}, {"w": "Categoría empírica", "d": "Agrupa manifestaciones similares de los fenómenos sociales. En el ejemplo de Hochschild, es «el trabajo de los auxiliares de vuelo»."}, {"w": "Marco analítico", "d": "Se deriva de las ideas, es decir, del pensamiento teórico actual sobre la vida social. En la investigación cualitativa suele comenzar preliminar y vagamente formulado, y se desarrolla durante el estudio."}, {"w": "Aclaración recíproca", "d": "Proceso continuo entre la imagen que tiene el investigador del objeto y los conceptos que enmarcan la investigación. Culmina en la representación que ofrece al concluir el estudio."}, {"w": "Conceptos guía", "d": "Conceptos iniciales de carácter preliminar e intuitivo, extraídos de marcos analíticos a medio formar. Permiten comenzar el estudio sin constreñirlo del todo y pueden modificarse o descartarse."}], "mc": [{"q": "¿Por qué, según Ragin, la investigación cualitativa puede parecer menos científica que otras clases de investigación social?", "opts": ["Porque la investigación cualitativa no emplea ninguna idea ni concepto previo y depende solo de las impresiones personales que tenga el investigador.", "Porque trabaja con un número mayor de casos que los estudios cuantitativos y no logra analizarlos con el rigor que se necesita para concluir algo.", "Porque solo describe casos individuales y no sirve para corregir representaciones que otros investigadores consideran erróneas de la vida social.", "Porque solemos asociar las ciencias sociales con afirmaciones panorámicas, y la investigación cualitativa examina casos específicos en profundidad."], "ans": 3, "tip": "Al pensar en ciencias sociales solemos imaginar afirmaciones como «las personas con mayor educación tienden a obtener mejores trabajos», donde un porcentaje resume información de innumerables casos. La investigación cualitativa parte de otra convicción: que las visiones panorámicas son inadecuadas o no pueden representar directamente los fenómenos, y que se necesita examinar casos específicos en profundidad.", "ref": "Introducción"}, {"q": "Ragin distingue entre técnicas de agregación de datos y técnicas que «realzan» los datos. ¿Cuál es la diferencia?", "opts": ["La agregación es propia de los estudios cualitativos, mientras que realzar los datos es una operación que realizan las técnicas cuantitativas de manejo de datos.", "La agregación condensa muchos casos en una imagen general, como un porcentaje; realzar es como enfocar una fotografía y deja ver aspectos de los casos.", "Realzar consiste en sumar más casos al estudio hasta revelar una imagen general, mientras que la agregación consiste en estudiar un solo caso a fondo y por separado.", "Ambas buscan lo mismo, que es revelar una imagen general de los datos, y solo se diferencian en el tipo de instrumento que se emplea para recogerlos y ordenarlos."], "ans": 1, "tip": "Para Ragin, la mayoría de las técnicas cuantitativas son de agregación: calcular el porcentaje de trabajadores sindicalizados que votan al Partido Demócrata condensa la información de miles de individuos en un solo número. Los métodos cualitativos se entienden mejor como técnicas para realzar los datos: como cuando se enfoca una fotografía, se ven con más claridad ciertos aspectos del objeto escogido.", "ref": "El uso de los métodos cualitativos"}, {"q": "Según el estudio de Hochschild sobre los auxiliares de vuelo, ¿qué es la «aclaración recíproca»?", "opts": ["Un proceso continuo entre imagen y concepto: Hochschild refinó la imagen del auxiliar de vuelo mientras aclaraba el concepto de trabajo emocional.", "Un procedimiento en que dos investigadores revisan mutuamente sus datos para comprobar que sus conclusiones coinciden entre sí antes de publicarlas.", "Una etapa final en que el investigador confirma el concepto aplicándolo a una muestra amplia de auxiliares de vuelo seleccionados al azar en distintas rutas.", "El intercambio de ideas entre el investigador y los auxiliares de vuelo entrevistados, que se produce a lo largo del trabajo de campo con cada uno de ellos."], "ans": 0, "tip": "El «trabajo emocional» es la manipulación consciente de los sentimientos para crear una expresión corporal y fisonómica observable públicamente. Resume gran parte de lo que hacen los auxiliares de vuelo. El estudio implicó una aclaración mutua entre la categoría empírica «el trabajo de los auxiliares de vuelo» y ese concepto, y el proceso culmina en la representación final de la investigación.", "ref": "Introducción"}, {"q": "¿Cómo se relacionan entre sí la imagen del objeto de investigación, el concepto, la categoría empírica y el marco analítico?", "opts": ["Los conceptos son agrupaciones de manifestaciones similares, que forman las categorías empíricas, y las imágenes son los marcos analíticos de cada estudio.", "Las categorías empíricas se derivan de las ideas teóricas, y los marcos analíticos son síntesis de las imágenes que el investigador va construyendo de cada caso.", "Las imágenes se construyen a partir de casos de una categoría empírica y se relacionan con conceptos, componentes de marcos analíticos derivados de las ideas.", "Los marcos analíticos reemplazan a los conceptos cuando la imagen del objeto ya está construida, y las categorías dejan de usarse desde ese momento del estudio."], "ans": 2, "tip": "Ragin define el concepto como una idea general aplicable a muchas manifestaciones específicas, síntesis abstracta de propiedades compartidas por los miembros de una categoría. Los conceptos son componentes cruciales de los marcos analíticos, que a su vez se derivan de las ideas. Las imágenes, en cambio, se construyen a partir de los casos, buscando parecidos entre expresiones del fenómeno dentro de una categoría general.", "ref": "Introducción"}, {"q": "¿Qué tipo de flexibilidad caracteriza al proceso de investigación cualitativa y qué pretenden hacer estos investigadores en lugar de comprobar teorías?", "opts": ["Siguen un diseño fijo definido antes de empezar, porque sus hipótesis ya fueron confirmadas en estudios anteriores sobre el mismo tema u otros similares.", "Parten con flexibilidad respecto del objeto y de lo que pueden aprender de él, y usan uno o más casos o categorías de casos para desarrollar ideas.", "Parten sin ninguna idea previa, porque la ciencia social solo admite descripciones detalladas de casos y no el desarrollo de nuevas ideas teóricas.", "Cambian de objeto de estudio cada vez que obtienen un hallazgo inesperado, y por eso trabajan siempre con un único caso a lo largo de todo el estudio."], "ans": 1, "tip": "Según Ragin, la investigación cualitativa está con frecuencia menos estructurada que otras. El investigador selecciona casos y lugares relevantes, identifica conceptos guía, aclara los principales conceptos y categorías empíricas durante el curso de la investigación y puede terminar elaborando uno o más marcos analíticos. Rara vez se dedica a comprobar teorías.", "ref": "El proceso de investigación cualitativa"}, {"q": "¿Por qué Ragin subraya el carácter preliminar e intuitivo de los «conceptos guía»?", "opts": ["Porque son hipótesis que se formulan al inicio y que deben mantenerse sin cambios hasta que el estudio concluya y se puedan comprobar con los datos.", "Porque reemplazan a los marcos analíticos y evitan que el investigador deba elaborar conceptos nuevos en las etapas posteriores del estudio completo.", "Porque se eligen sin relación con las ideas teóricas vigentes, para que estas no influyan en la selección del objeto de estudio ni en las preguntas.", "Porque permiten comenzar sin constreñir el estudio: pueden modificarse bastante o incluso descartarse durante el curso de la investigación."], "ans": 3, "tip": "Es imposible iniciar un estudio cualitativo sin algún sentido de por qué vale la pena el objeto y qué conceptos pueden guiarlo. Esos conceptos se extraen de marcos analíticos preliminares que reflejan las ideas teóricas vigentes. El investigador espera, como mínimo, que puedan modificarse bastante o descartarse: Walton, por ejemplo, reemplazó los conceptos iniciales de clase y conflicto social por otros sobre respuestas colectivas.", "ref": "El uso de conceptos guías"}], "tf": [{"q": "Según Ragin, una visión panorámica puede resumir en un único porcentaje o estadística información sobre innumerables casos, pero no dice nada acerca de los casos individuales.", "ans": true, "tip": "Es verdadero. Ragin usa afirmaciones como «los países pobres tienden a tener mayor conflicto social e inestabilidad política que los países ricos» para mostrar que estas visiones amplias condensan mucha información y, a la vez, no informan sobre ningún caso en particular.", "ref": "Introducción"}, {"q": "Los investigadores cualitativos suelen iniciar sus estudios convencidos de que las visiones panorámicas representan adecuadamente los fenómenos sociales.", "ans": false, "tip": "Es falso. Muchas veces inician sus investigaciones con la convicción contraria: que las representaciones panorámicas son bastante inadecuadas o que no pueden representar directamente los fenómenos sociales, y que se requiere un examen en profundidad de casos específicos.", "ref": "Introducción"}, {"q": "Para Ragin, los métodos cualitativos se entienden mejor como técnicas para realzar los datos, de modo parecido a enfocar una fotografía.", "ans": true, "tip": "Es verdadero. Al enfocar una fotografía se ven con más claridad ciertos aspectos del objeto escogido. Del mismo modo, los métodos cualitativos permiten ver cosas de los sujetos que podrían pasarse por alto, y realzar los datos es esencial para el conocimiento en profundidad.", "ref": "El uso de los métodos cualitativos"}, {"q": "Un concepto es una idea específica que describe un único caso y no puede aplicarse a otras manifestaciones del fenómeno.", "ans": false, "tip": "Es falso. Un concepto es una idea general que puede aplicarse a muchas manifestaciones específicas. Es una síntesis abstracta de las propiedades compartidas por los miembros de una categoría de fenómenos sociales.", "ref": "Introducción"}, {"q": "Los investigadores cualitativos rara vez se dedican a comprobar teorías: usualmente pretenden usar uno o más casos, o categorías de casos, para desarrollar ideas.", "ans": true, "tip": "Es verdadero. Comienzan seleccionando casos y lugares relevantes, y a partir de ahí identifican conceptos guía y aclaran conceptos y categorías empíricas. El estudio puede terminar con la elaboración de uno o más marcos analíticos.", "ref": "El proceso de investigación cualitativa"}, {"q": "Los conceptos guía son definiciones precisas y fijas que el investigador no debe modificar mientras dure la investigación.", "ans": false, "tip": "Es falso. Son conceptos iniciales de carácter preliminar e intuitivo: permiten comenzar, pero no constriñen del todo. Pueden modificarse bastante o incluso descartarse, como el concepto de clase social que podría reemplazarse por el prestigio profesional del cabeza de familia en un estudio de pacientes de hospitales.", "ref": "El uso de conceptos guías"}], "frags": [{"t": "Una investigadora estudia a los auxiliares de vuelo. A medida que aclara el concepto de «trabajo emocional», que resume la manipulación consciente de los sentimientos para mostrar apariencias a los pasajeros, refina su imagen del auxiliar de vuelo, y la imagen refinada le sirve para precisar el concepto.", "ok": true, "tip": "Sí corresponde. Es la aclaración recíproca entre la imagen del objeto (el trabajo de los auxiliares de vuelo, una categoría empírica) y el concepto que enmarca la investigación, que Ragin presenta con el estudio de Hochschild.", "ref": "Introducción"}, {"t": "Una investigadora estudia la ruptura de parejas heterosexuales y también de parejas homosexuales. A pesar de las diferencias en la orientación sexual, encuentra sorprendentes parecidos en el proceso de «ruptura de la pareja», lo que estimula nuevo pensamiento teórico.", "ok": false, "tip": "No corresponde a esta sección. Es el estudio de Vaughan y ejemplifica una de las formas de hacer progresar la teoría (buscar parecidos en lugares inesperados), una de las finalidades que se trabajan en la Sección 2.", "ref": "Hacer progresar la teoría"}, {"t": "Un investigador quiere comprender la fascinación por las armas. Una imagen panorámica muestra qué categorías de personas las coleccionan, pero decide además entrevistar en profundidad a entusiastas, leer las revistas que ellos leen y observar sus reuniones, para construir una imagen compleja del fenómeno.", "ok": true, "tip": "Sí corresponde. Contrasta la visión panorámica con el conocimiento en profundidad: el investigador busca saber tanto como sea posible del fenómeno y patrones comunes a los entusiastas de las armas y sus mundos sociales.", "ref": "Introducción"}, {"t": "Un investigador que estudia cómo el personal de un hospital evalúa la «pérdida social» de los pacientes en peligro de muerte elige otros dos hospitales, uno con más recursos y otro con menos, para poner a prueba su idea de que los recursos explican esa práctica.", "ok": false, "tip": "No corresponde a esta sección. Es un ejemplo de muestreo teórico y de triangulación de datos, procedimientos que se trabajan en la Sección 3.", "ref": "El muestreo teórico"}]}, {"title": "Finalidades, casos y depuración de categorías", "topic": "las finalidades de la investigación cualitativa, la selección de casos y la depuración de conceptos y categorías", "guia": "Preguntas 8 a 16 de la guía", "desc": "Ragin identifica tres finalidades de la investigación cualitativa (dar voz, interpretar lo cultural o histórico y hacer progresar la teoría), explica cómo se eligen los casos y cuántas manifestaciones estudiar, y muestra cómo se depuran conceptos y categorías con los casos negativos.", "words": [{"w": "Dar voz", "d": "Finalidad de dar a conocer la vida y las opiniones de grupos marginados que rara vez son oídos o bien representados. El énfasis cualitativo en lo cercano y en profundidad es adecuado para representarlos."}, {"w": "Grupos marginados", "d": "Grupos fuera de la corriente predominante de la sociedad, como los pobres, las minorías sexuales, étnicas y raciales y los grupos de emigrantes, que muchas veces carecen de voz."}, {"w": "Interpretar lo cultural o histórico", "d": "Finalidad de interpretar y reinterpretar acontecimientos importantes, como las disputas territoriales entre Estados Unidos y México. Exige atención cercana al detalle histórico y pruebas empíricas que apoyen con solidez la nueva imagen."}, {"w": "Caso típico", "d": "Caso que se elige por ser promedio o indistinguible y no por especial o inusual, como una facultad de medicina típica, ni la mejor ni la peor del país."}, {"w": "Manifestaciones múltiples", "d": "Varias expresiones de la misma cosa, como 35 auxiliares de vuelo o varias vecindades de inmigrantes. Permiten profundizar y enriquecer la representación al concentrarse en lo que tienen en común."}, {"w": "Punto de saturación", "d": "Momento en que el investigador deja de aprender cosas nuevas del caso y las últimas pruebas parecen repetitivas o redundantes. No puede determinarse de antemano cuántas manifestaciones se necesitarán."}, {"w": "Saturación prematura", "d": "Saturación que se alcanza demasiado pronto porque las manifestaciones elegidas no representan lo suficiente la categoría de interés, como diez taxistas rumanos para estudiar a los taxistas de Nueva York."}, {"w": "Depuración de conceptos y categorías", "d": "Proceso de doble vía entre los conceptos y las categorías empíricas: los conceptos definen las categorías y los miembros de una categoría ejemplifican los conceptos."}, {"w": "Casos negativos", "d": "Casos que no se corresponden con la imagen o con el concepto. Ragin les atribuye importancia porque llevan a excluirlos al reducir la categoría o a reconceptualizar los aspectos comunes."}, {"w": "Elaboración de marcos analíticos", "d": "Al inicio suele haber un marco preliminar y vagamente formulado que se desarrolla durante el estudio. No todos los investigadores cualitativos lo formulan: algunos lo dejan implícito o dejan esa tarea a otros."}], "mc": [{"q": "Para cada una de las tres finalidades de la investigación cualitativa, ¿qué criterio de selección de sitios o casos propone Ragin?", "opts": ["Dar voz: casos típicos; interpretar lo histórico: muchos casos elegidos al azar; hacer progresar la teoría: el caso promedio de la categoría estudiada.", "Dar voz: un conjunto de acontecimientos; interpretar lo histórico: un grupo marginado; hacer progresar la teoría: solamente casos típicos de la categoría.", "Dar voz: un grupo específico; interpretar lo histórico: un conjunto específico de acontecimientos; hacer progresar la teoría: un caso, por ejemplo inusual.", "En las tres finalidades se elige una muestra aleatoria amplia, para asegurar que los casos sean representativos de la población y se puedan generalizar."], "ans": 2, "tip": "Ragin señala que la investigación cualitativa depende mucho de la elección de los objetos y sitios. Cuando el fin es dar voz, se escoge un grupo específico; cuando es valorar la importancia cultural o histórica, un conjunto específico de acontecimientos u otra porción de la vida social; cuando es hacer progresar la teoría, puede escogerse un caso inusual, que ofrece una oportunidad especial para elaborar ideas.", "ref": "La selección de los sitios de investigación y de los casos"}, {"q": "En el ejemplo de las facultades de medicina, ¿qué riesgo implica elegir la mejor o la peor facultad?", "opts": ["Limitar el valor del estudio si se quieren sacar conclusiones sobre las facultades en general; por eso se elegiría una facultad típica o promedio.", "Que el estudio deje de considerarse cualitativo, porque solo los casos típicos pueden estudiarse en profundidad y con todo el detalle que se necesita.", "Que las facultades extremas ofrezcan poca información, ya que los casos inusuales carecen de detalles suficientes para ser investigados con profundidad.", "Que el investigador deba estudiar muchas manifestaciones más, hasta alcanzar la saturación en cada una de las facultades extremas que se eligieron."], "ans": 0, "tip": "A veces los casos se eligen por ser típicos o indistinguibles y no por especiales o inusuales. Si se quiere concluir algo sobre las facultades de medicina en general, elegir una de los extremos limita el valor del estudio. Y como los investigadores cualitativos trabajan con pocos casos, a veces les preocupa determinar la representatividad de lo que estudian.", "ref": "La selección de los sitios de investigación y de los casos"}, {"q": "¿Por qué no puede determinarse de antemano cuántas manifestaciones habrá que examinar hasta llegar al punto de saturación?", "opts": ["Porque el número depende del tamaño de la población estudiada, que casi nunca se conoce en los estudios cualitativos y que varía de un estudio a otro.", "Porque en los estudios cualitativos todas las manifestaciones siguen aportando información nueva, y por eso la saturación nunca llega a alcanzarse.", "Porque el número lo fija el marco analítico final, que solo se conoce una vez que se ha redactado la representación completa del estudio realizado.", "Porque la saturación llega cuando el investigador deja de aprender cosas nuevas y las últimas pruebas empíricas se vuelven repetitivas o redundantes."], "ans": 3, "tip": "Se añaden manifestaciones hasta que se alcanza la saturación, y eso solo se sabe en la práctica. Ragin agrega que, si el investigador intenta aprender tanto como sea posible sobre el objeto, terminará siendo un buen juez para determinar cuándo llegó a ese punto.", "ref": "La selección de los sitios de investigación y de los casos"}, {"q": "En el ejemplo de los auxiliares de vuelo, si solo algunos recurren al trabajo emocional, ¿por qué Ragin sostiene que esa falta de correspondencia «enriquecería» el estudio?", "opts": ["Porque obligaría a descartar el concepto de trabajo emocional y a abandonar el estudio de los auxiliares de vuelo de la aerolínea que se investiga.", "Porque permitiría estrechar la categoría a un subconjunto, como quienes tuvieron cierto entrenamiento, y conectarlo con los administradores.", "Porque demostraría que el concepto es válido para todos los auxiliares, ya que la excepción confirma la regla general que propone el estudio.", "Porque permitiría aumentar el número de auxiliares entrevistados hasta alcanzar el punto de saturación en el conjunto de la muestra del estudio."], "ans": 1, "tip": "Si solo los auxiliares contratados después de cierto momento recurrieran al trabajo emocional, sería erróneo usar el concepto para caracterizar a todos. Ese comportamiento podría atribuirse a un cambio en la formación, y la falta de correspondencia permitiría estrechar la categoría y mostrar su conexión con la intervención de los administradores en esa formación.", "ref": "La depuración de los conceptos y las categorías"}, {"q": "En el estudio de Becker sobre los consumidores habituales de marihuana, ¿qué solución adoptó al encontrar algunos que decían no disfrutar de la droga?", "opts": ["Descartó el concepto de aprendizaje social y propuso otro nuevo, que englobara a todos los consumidores habituales sin excepción alguna.", "Excluyó del estudio a quienes no disfrutaban de la droga, sin cambiar la categoría inicial ni el concepto que había propuesto desde el comienzo.", "Redujo la categoría: el proceso de aprendizaje valía solo para quienes la usaban por placer, lo que dio una correspondencia más cercana con el concepto.", "Amplió la categoría a todas las personas que alguna vez probaron marihuana, para poder incluir los casos que contradecían su primera idea."], "ans": 2, "tip": "Becker entrevistó a más de cincuenta consumidores habituales y casi todos pasaron por un proceso de aprendizaje para disfrutar de la marihuana. Unos pocos la usaban por aparentar. Ante pruebas contradictorias hay dos opciones, descartar el concepto o reducir la categoría, y Becker eligió la segunda: la categoría pasó a ser quienes la usan por placer.", "ref": "La depuración de los conceptos y las categorías"}, {"q": "¿Qué estrategias puede usar el investigador cuando encuentra pruebas empíricas contradictorias, es decir, casos negativos?", "opts": ["Descartar el concepto y desarrollar otros que unifiquen mejor a la categoría, o reducir el alcance de la categoría para ajustarla al concepto.", "Ignorarlos si son pocos, porque ya existe suficiente cantidad de pruebas que corroboran la imagen que había construido al inicio del estudio.", "Ampliar la categoría hasta incluirlos, de modo que el concepto cubra a todas las manifestaciones sin necesidad de ajustar la imagen del objeto.", "Sustituirlos por nuevas manifestaciones que sí confirmen el concepto, hasta que el estudio alcance finalmente el punto de saturación buscado."], "ans": 0, "tip": "Ragin dice que ante pruebas contradictorias el investigador tiene dos opciones: descartar el concepto y buscar otros que unifiquen mejor a la categoría, o reducir el alcance de la categoría. Los casos negativos son valiosos porque son la mejor materia prima para perfeccionar las imágenes iniciales.", "ref": "La depuración de los conceptos y las categorías; La inducción analítica"}], "tf": [{"q": "Según Ragin, el conocimiento en profundidad aporta materia prima especialmente rica para construir nuevas ideas teóricas, porque cuando se sabe mucho de un caso es fácil ver cómo encajan sus partes.", "ans": true, "tip": "Es verdadero. Ragin ejemplifica con la monja: es difícil saber cómo sus rutinas diarias de oración, trabajo y vida comunitaria la ayudan a mantener sus compromisos si no se recogen observaciones detalladas. Ese conocimiento sirve para elaborar conceptos como el de «compromiso». Además, es imposible decidir qué pruebas de un caso son relevantes sin aclarar los conceptos e ideas que enmarcan la investigación, porque el investigador no puede permanecer abierto a todo.", "ref": "Hacer progresar la teoría"}, {"q": "En el estudio de Vaughan sobre la ruptura de parejas, la teoría progresó al comprobar que las rupturas heterosexuales y las homosexuales siguen procesos completamente distintos.", "ans": false, "tip": "Es falso. Pese a las diferencias profundas en la orientación sexual, Vaughan encontró sorprendentes parecidos en el proceso de «ruptura de la pareja». Buscar parecidos en lugares inesperados puede estimular nuevo pensamiento teórico.", "ref": "Hacer progresar la teoría"}, {"q": "Los grupos marginados, como los pobres o las minorías étnicas, muchas veces carecen de voz en la sociedad, y el énfasis cualitativo en lo cercano y en profundidad es adecuado para representarlos.", "ans": true, "tip": "Es verdadero. Ragin explica que sus opiniones rara vez se publican o aparecen en los medios y que sus vidas se representan inadecuadamente, si es que se representan. Las técnicas cualitativas ayudan a los investigadores a construir mejores representaciones de esas experiencias.", "ref": "Dar voz"}, {"q": "Un investigador que estudia varias vecindades de inmigrantes se concentra en lo que cada vecindad tiene de único, no en lo que las manifestaciones tienen en común.", "ans": false, "tip": "Es falso. Cuando los investigadores cualitativos recogen datos sobre muchas manifestaciones del fenómeno, se concentran en lo que las diferentes manifestaciones tienen en común. Por ejemplo, el uso de las redes interpersonales para facilitar el ajuste de los inmigrantes a su nuevo entorno.", "ref": "La selección de los sitios de investigación y de los casos"}, {"q": "Un estudio sobre los taxistas de Nueva York puede alcanzar la saturación tras entrevistar a diez taxistas rumanos recién inmigrados, pero deberá buscar conductores con otras historias de vida porque estos no representan a todos.", "ans": true, "tip": "Es verdadero. Si las manifestaciones seleccionadas no son lo bastante representativas de la categoría, la saturación puede alcanzarse de manera prematura. Esos diez taxistas probablemente no representan a todos los de la ciudad, así que el investigador debería sumar conductores con otras historias.", "ref": "La selección de los sitios de investigación y de los casos"}, {"q": "Si solo una parte de los auxiliares de vuelo recurre al trabajo emocional, Ragin sostiene que igualmente debe usarse el concepto para caracterizar a todos los auxiliares.", "ans": false, "tip": "Es falso. Ragin dice que sería erróneo usar el concepto para caracterizar a todos. Por eso importa examinar a los miembros de una categoría y comprobar que todos son manifestaciones de los conceptos que se piensa que ejemplifican.", "ref": "La depuración de los conceptos y las categorías"}], "frags": [{"t": "Una investigadora registra con detalle las rutinas diarias de oración, trabajo y vida comunitaria de una monja. Así logra ver cómo esa estructura la ayuda a mantener sus compromisos religiosos y, a partir de ello, elabora el concepto de «compromiso».", "ok": true, "tip": "Sí corresponde. Es la finalidad de hacer progresar la teoría: el conocimiento en profundidad de un caso permite elaborar conceptos y examinar directamente las conexiones entre los fenómenos que parecen ilustrarlos.", "ref": "Hacer progresar la teoría"}, {"t": "Un investigador que estudió cómo los activistas defensores del medio ambiente de Estados Unidos mantienen sus compromisos políticos amplía luego su estudio a activistas del medio ambiente de Europa del Este, o a activistas religiosos, eligiendo los nuevos casos para compararlos con el primero, a partir de las preguntas que surgieron en él.", "ok": false, "tip": "No corresponde a esta sección. Es un ejemplo de muestreo teórico, una de las técnicas para realzar los datos que se trabajan en la Sección 3.", "ref": "El muestreo teórico"}, {"t": "Un investigador entrevista a más de cincuenta consumidores habituales de marihuana y concluye que casi todos aprendieron a disfrutarla. Al hallar a unos pocos que la usan por aparentar, restringe su categoría a quienes la usan por placer, para que concepto y categoría se correspondan mejor.", "ok": true, "tip": "Sí corresponde. Es la depuración de conceptos y categorías en el estudio de Becker: ante pruebas contradictorias, redujo el alcance de la categoría para lograr un mejor ajuste con el concepto.", "ref": "La depuración de los conceptos y las categorías"}, {"t": "Una antropóloga se sumerge en una comunidad y vive en un pueblo aislado de una región remota para comprender las vidas y los mundos de las personas «a través de sus ojos», como en el trabajo de Margaret Mead en Samoa.", "ok": false, "tip": "No corresponde a esta sección. Es un ejemplo de inmersión del investigador en el entorno de estudio, característica de los métodos cualitativos que se trabaja en la Sección 3.", "ref": "El uso de los métodos cualitativos"}]}, {"title": "Métodos cualitativos, inducción analítica y muestreo teórico", "topic": "los métodos cualitativos, la inducción analítica, el muestreo teórico y el estudio de caso único", "guia": "Preguntas 17 a 25 de la guía", "desc": "Ragin describe cómo se identifican los métodos cualitativos y presenta dos procedimientos para realzar los datos, la inducción analítica y el muestreo teórico (con la triangulación). También explica cómo se estudia un caso único y cierra con el carácter holístico de estos métodos.", "words": [{"w": "Inmersión", "d": "Rasgo de los métodos identificados con la observación participante, las entrevistas en profundidad, el trabajo de campo y el estudio etnográfico. El investigador se sumerge en un entorno para descubrir qué significan los fenómenos para quienes lo viven."}, {"w": "Inducción analítica", "d": "Estrategia que desafía o desequilibra las imágenes del investigador. Compara manifestaciones de una categoría y busca pruebas contradictorias para depurar imágenes, conceptos y categorías."}, {"w": "Universales", "d": "Propiedades invariables de un objeto. Son el sentido estricto original de la inducción analítica: un solo caso contrario impide que el patrón califique como universal."}, {"w": "Método comparativo constante", "d": "Nombre que Glaser y Strauss dan al proceso de comparar manifestaciones para establecer parecidos y diferencias y ayudar a definir categorías y conceptos."}, {"w": "Doble correspondencia", "d": "Expresión de Katz para la correspondencia que se busca entre las explicaciones y las observaciones, es decir, entre las ideas y las pruebas empíricas."}, {"w": "Retroducción", "d": "Término que describe la interacción entre la inducción y la deducción en el proceso de la investigación científica, ya discutido en el capítulo 3."}, {"w": "Muestreo teórico", "d": "Término de Glaser y Strauss: proceso de elegir nuevos sitios o casos para compararlos con uno ya estudiado, guiado por las preguntas que surgieron en él. No busca capturar todas las variaciones."}, {"w": "Triangulación", "d": "Término tomado de la navegación. Hoy designa el uso de piezas independientes de información para formarse una mejor opinión sobre algo que solo se conoce de manera parcial."}, {"w": "Estudio de caso único", "d": "Se estructura de manera similar a la inducción analítica. Los hechos relevantes para un marco analítico cumplen el papel de las manifestaciones de un caso."}, {"w": "Holístico", "d": "Los métodos cualitativos son holísticos: los aspectos de los casos se ven en el contexto del caso en su conjunto."}], "mc": [{"q": "¿Qué busca la inmersión del investigador en los métodos cualitativos, según Ragin?", "opts": ["Reunir el mayor número posible de casos para resumir sus rasgos comunes en un único porcentaje o estadística de carácter general sobre ellos.", "Descubrir el significado de los fenómenos sociales para quienes viven en un entorno, mediante observación participante y entrevistas en profundidad.", "Alejarse del entorno estudiado para observar a las personas con la mayor neutralidad y distancia posibles, y así no influir en lo que hacen.", "Comprobar hipótesis derivadas de una teoría mediante la observación estructurada de una muestra aleatoria de las personas del entorno."], "ans": 1, "tip": "Ragin identifica los métodos cualitativos, en sociología y antropología, con la observación participante, las entrevistas en profundidad, el trabajo de campo y el estudio etnográfico. para un antropólogo la inmersión puede implicar vivir en un pueblo aislado, como en el trabajo de Mead en Samoa, y Goffman observó durante largos periodos a personal y pacientes de una institución mental. En ambos casos las vidas se entienden «a través de sus ojos».", "ref": "El uso de los métodos cualitativos"}, {"q": "¿Cómo propone Ragin entender la inducción analítica, frente a su sentido original de búsqueda de «universales»?", "opts": ["Como la búsqueda de propiedades invariables, que es la única forma en que esta técnica puede producir descubrimientos de investigación válidos y aceptados.", "Como un procedimiento para acumular tantos casos que corroboren la imagen inicial, de modo que esta quede confirmada estadísticamente al final.", "Como una técnica para seleccionar por conveniencia los casos que mejor se ajustan, evitando aquellos que contradicen la imagen inicial del investigador.", "Como una estrategia que desafía o desequilibra las imágenes de los investigadores, no como una búsqueda de universales, que muy probablemente fallará."], "ans": 3, "tip": "En su sentido original era muy estricto: los universales son propiedades invariables, y un solo caso contrario bastaba para que el patrón no calificara como descubrimiento. Hoy el término se usa para cualquier examen sistemático de parecidos con el fin de desarrollar conceptos o ideas. Ragin prefiere verla como estrategia que desafía las imágenes del investigador y se preocupa menos de cuántas pruebas la corroboran.", "ref": "La inducción analítica"}, {"q": "Katz considera pobre la denominación «inducción analítica». ¿Por qué?", "opts": ["Porque no es inducción pura: los investigadores van y vienen entre las ideas y las pruebas empíricas para lograr una «doble correspondencia».", "Porque la técnica se basa solo en la deducción a partir de teorías previas y no incorpora la observación empírica de los casos que se estudian.", "Porque la técnica se limita a la búsqueda de universales y por eso no admite casos negativos en ninguna de las fases del proceso de investigación.", "Porque no permite comparar manifestaciones entre sí y, por tanto, no ayuda a definir las categorías ni los conceptos que el estudio necesita."], "ans": 0, "tip": "Katz habla de «doble correspondencia» entre las explicaciones y las observaciones, es decir, entre ideas y pruebas empíricas. Ragin señala que ese proceso se entiende mejor como retroducción, la interacción entre inducción y deducción. Además, el fin no es una correspondencia perfecta entre imagen y pruebas, sino una depuración conceptual que dé una comprensión más profunda del objeto.", "ref": "La inducción analítica"}, {"q": "¿Qué es el muestreo teórico y en qué se diferencia de una selección por conveniencia?", "opts": ["Es elegir a los participantes más accesibles para el investigador, con el fin de completar con rapidez el estudio con los casos que están disponibles.", "Es seleccionar al azar una muestra amplia de casos, de modo que se capture la mayor cantidad posible de variaciones del fenómeno que se investiga.", "Es elegir nuevos casos o sitios para compararlos con uno ya estudiado, guiado por sus preguntas, y no por conveniencia ni para capturar todas las variaciones.", "Es elegir un caso típico y estudiarlo sin compararlo con otros, para proteger la comprensión de ese único caso dentro de su propio contexto de estudio."], "ans": 2, "tip": "Glaser y Strauss acuñaron el término para el proceso de elegir nuevos sitios o casos de investigación y compararlos con uno ya estudiado. La selección se determina por preguntas surgidas en el primer caso y evoluciona con la comprensión del objeto. Su fin es desarrollar los conceptos y profundizar la comprensión, no capturar todas las variaciones posibles. Ejemplos del texto: los activistas del medio ambiente de Estados Unidos comparados con los de Europa del Este o con activistas religiosos, y la Revolución rusa comparada con la china o la nicaragüense.", "ref": "El muestreo teórico"}, {"q": "En el ejemplo de los hospitales, ¿cómo aparece la triangulación de datos y qué permite valorar al investigador?", "opts": ["Entrevista a distintos miembros del personal del primer hospital para confirmar que todos entregan exactamente la misma versión de los hechos observados.", "Combina datos cualitativos y estadísticas oficiales del primer hospital para calcular el porcentaje de pacientes que recibe una atención deficiente.", "Repite el estudio en los tres hospitales con los mismos instrumentos, para comprobar la confiabilidad de las mediciones que se realizaron en cada uno.", "Usa pruebas de otros dos hospitales, uno con más y otro con menos recursos, y así valora la validez y la generalidad de lo hallado en el primero."], "ans": 3, "tip": "Ragin recuerda que el término describía cómo los marineros usaban las estrellas para ubicar su posición. Hoy es una forma de usar piezas independientes de información para formarse una mejor opinión sobre algo que se conoce parcialmente. Al comparar los tres hospitales a lo largo de un continuo de recursos, el investigador valora la validez y la generalidad de lo hallado en el primero.", "ref": "El muestreo teórico"}, {"q": "En un estudio de caso único, ¿qué equivale a las «manifestaciones» de un caso en la inducción analítica?", "opts": ["Los distintos investigadores que estudian el mismo acontecimiento histórico y comparan entre sí las interpretaciones que cada uno propone sobre él.", "Los distintos hechos relevantes para el marco propuesto, que se examinan para ver si se ajustan a una única interpretación o la apoyan.", "Los casos adicionales que se agregan después, mediante muestreo teórico, para comparar el caso único con otros casos semejantes de la misma categoría.", "Las etapas cronológicas del caso, que se estudian por separado y luego se resumen en un único porcentaje o estadística de carácter general."], "ans": 1, "tip": "Con el ejemplo de la dimisión de Nixon, Ragin muestra que el marco analítico define qué hechos son relevantes. La pregunta es cuáles de esos hechos son consistentes con la interpretación y cuáles no, como en la inducción analítica. También se busca una doble correspondencia entre interpretación y hechos, y los casos que admiten varias interpretaciones se consideran «ricos».", "ref": "El estudio de un caso único"}], "tf": [{"q": "En los estudios de Mead y de Goffman, el principio organizador es que las vidas y los mundos de las personas estudiadas deben comprenderse «a través de sus ojos».", "ans": true, "tip": "Es verdadero. Ragin dice que, en ambos ejemplos, el conocimiento en profundidad que se requiere para una representación adecuada debe basarse en las perspectivas de las personas estudiadas. El énfasis está en la inmersión y la intimidad que busca el estudio empírico.", "ref": "El uso de los métodos cualitativos"}, {"q": "En su sentido original, la inducción analítica buscaba patrones con excepciones, porque un caso contrario confirmaba el hallazgo.", "ans": false, "tip": "Es falso. En su sentido original buscaba «universales», propiedades invariables. Si una sola persona se apartaba del patrón, este no sería universal y no calificaría como descubrimiento según esa aplicación muy estricta del método.", "ref": "La inducción analítica"}, {"q": "En el estudio de Katz sobre los abogados del turno de oficio, el examen de los casos negativos llevó a reducir la categoría a los abogados que permanecían en trabajos de poco prestigio profesional.", "ans": true, "tip": "Es verdadero. Katz redujo la categoría varias veces: de todos los abogados que permanecían, a los que permanecían en un trabajo frustrante y, por último, a quienes tenían trabajos de poco prestigio dentro de la profesión. A la vez depuró la imagen, vinculándola con un entorno social que glorificaba el trabajo de reforma social. Su idea inicial era que los ex activistas políticos tardarían más en cansarse, pero los casos negativos (ex activistas que se iban y abogados sin pasado activista que se quedaban) le mostraron que debía refinar sus categorías.", "ref": "La inducción analítica"}, {"q": "Ebaugh, Becker y Goffman construyeron sus marcos analíticos estudiando un único grupo, sin compararlo con ningún otro.", "ans": false, "tip": "Es falso. Ebaugh estudió a ex monjas y luego a otros «ex algo» (ex doctores, madres sin custodia, transexuales); Becker agrupó a distintos grupos «desviados» además de los usuarios de marihuana; y Goffman estudió a una amplia variedad de personas estigmatizadas. En los tres casos hubo una selección deliberada de grupos para comparar. De ahí salieron marcos como el del abandono de roles sociales (Ebaugh), el del aprendizaje social y el etiquetamiento (Becker) y el del manejo de identidades desacreditadas (Goffman).", "ref": "El muestreo teórico"}, {"q": "Los métodos cualitativos son holísticos: los aspectos de los casos se ven en el contexto del caso en su conjunto.", "ans": true, "tip": "Es verdadero. Así lo plantea Ragin en la conclusión. Agrega que los investigadores deben triangular muchas veces la información de varios casos para darle sentido a un caso concreto, y que suelen argumentar que sus casos ejemplifican procesos o categorías teóricas fundamentales.", "ref": "Conclusión"}, {"q": "Ragin sostiene que el fin de la inducción analítica es alcanzar una correspondencia perfecta entre la imagen y las pruebas empíricas.", "ans": false, "tip": "Es falso. Según Ragin, la mayoría de los investigadores no aspira a una correspondencia perfecta, porque suele haber algunas pruebas inexplicables que no calzan con la imagen pero tampoco la contradicen. El fin es una depuración conceptual que permita una comprensión más profunda del objeto de investigación.", "ref": "La inducción analítica"}], "frags": [{"t": "Un investigador sospecha que el personal de un hospital evalúa la «pérdida social» que supondría la muerte de cada paciente y que de ello depende la calidad del cuidado. Busca luego a un paciente de poca pérdida social que reciba un cuidado excelente, para comprobar su imagen y, si hace falta, restringirla.", "ok": true, "tip": "Sí corresponde. Es la inducción analítica: se busca una prueba contradictoria para poner a prueba la imagen inicial y ver en qué sentido debe revisarse o restringirse, por ejemplo limitándola a pacientes que no estén en el hospital por un accidente.", "ref": "La inducción analítica"}, {"t": "Un investigador entrevista a cincuenta sacerdotes católicos y observa que sus imágenes cambian muy poco después de diez entrevistas. Concluye que lo que importa no es la diferencia entre diez y cincuenta, sino la solidez de la descripción del caso «el sacerdote católico».", "ok": false, "tip": "No corresponde a esta sección. Es un ejemplo de estudio de manifestaciones múltiples de un mismo caso y de la saturación, que se trabajan en la Sección 2.", "ref": "La selección de los sitios de investigación y de los casos"}, {"t": "Una investigadora estudia a mujeres que dejaron de ser monjas y, interesada en las identidades marcadas por roles abandonados, estudia también a ex doctores, madres sin la custodia de sus hijos y transexuales, hasta elaborar un marco analítico del abandono de roles sociales.", "ok": true, "tip": "Sí corresponde. Es el muestreo teórico de Ebaugh como técnica para construir marcos analíticos: eligió deliberadamente distintos grupos de «ex algo», cada uno con un tipo diferente de abandono de un rol social.", "ref": "El muestreo teórico"}, {"t": "Un investigador que estudia a pacientes de hospitales comienza con la «clase social» como concepto intuitivo y preliminar, esperando que las familias con mayores ingresos reciban mejor cuidado. Luego lo reemplaza por el prestigio profesional del cabeza de familia, porque el ingreso resulta un enfoque demasiado limitado.", "ok": false, "tip": "No corresponde a esta sección. Es un ejemplo de concepto guía preliminar que puede modificarse o descartarse, tema de la Sección 1.", "ref": "El uso de conceptos guías"}]}];
+var MAXI=16, TOTAL=CHARS.length*MAXI;
+var KEYS={reg:'mis_bcs_reg',prog:'mis_bcs_prog',theme:'mis_bcs_theme',mod:'mis_bcs_l3'};
+var FIREBASE_CONFIG=window.MIS_FIREBASE||{apiKey:"REEMPLAZAR",authDomain:"REEMPLAZAR",databaseURL:"REEMPLAZAR",projectId:"REEMPLAZAR",storageBucket:"REEMPLAZAR",messagingSenderId:"REEMPLAZAR",appId:"REEMPLAZAR"};
+var FB_OK=FIREBASE_CONFIG.apiKey.indexOf('REEMPLAZAR')<0;
+
+function $(s,r){return (r||document).querySelector(s)}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function lsGet(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}}
+function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function lsDel(k){try{localStorage.removeItem(k)}catch(e){}}
+function toast(m){var t=$('#toast');t.textContent=m;t.hidden=false;clearTimeout(toast.h);toast.h=setTimeout(function(){t.hidden=true},3200)}
+
+/* Estado persistente */
+var ST=lsGet(KEYS.mod)||{};
+function freshST(){return {v:1,secs:CHARS.map(function(){return {ans:{mc:[],tf:[],fr:[]},done:false,best:0,last:0,attempts:0}})}}
+if(!ST.secs||ST.secs.length!==CHARS.length){ST=freshST();}
+var view={name:'home',si:0,word:null};
+function save(){lsSet(KEYS.mod,ST);syncProg()}
+function syncProg(){
+  var done=0,pts=0; ST.secs.forEach(function(s){if(s.done)done++;pts+=s.best||0});
+  var p=lsGet(KEYS.prog)||{}; p.l3={done:done,pts:pts,ts:Date.now()}; lsSet(KEYS.prog,p);
+}
+function reg(){return lsGet(KEYS.reg)}
+function score(si){
+  var ch=CHARS[si],a=ST.secs[si].ans,mc=0,tf=0,fr=0;
+  ch.mc.forEach(function(q,i){if(a.mc[i]===q.ans)mc++});
+  ch.tf.forEach(function(q,i){if(a.tf[i]===q.ans)tf++});
+  ch.frags.forEach(function(q,i){if(a.fr[i]===q.ok)fr++});
+  return {mc:mc,tf:tf,fr:fr,t:mc+tf+fr};
+}
+function answered(si){
+  var a=ST.secs[si].ans,n=0;
+  ['mc','tf','fr'].forEach(function(k){for(var i=0;i<(k==='fr'?4:6);i++)if(a[k][i]!==undefined&&a[k][i]!==null)n++});
+  return n;
+}
+function totalPts(){var p=0;ST.secs.forEach(function(s){p+=s.best||0});return p}
+function doneCount(){return ST.secs.filter(function(s){return s.done}).length}
+
+/* Reporte opcional a Firebase (si se configura); sin configuración no hace nada */
+function report(si){
+  if(!FB_OK||PREVIEW)return;
+  try{
+    var r=reg()||{id:'anon',name:'Sin identificar'},sc=score(si);
+    var payload={id:r.id,name:r.name,mode:r.mode||'individual',members:r.members||[],lectura:'l3',seccion:si+1,pts:sc.t,max:MAXI,intento:ST.secs[si].attempts,ts:Date.now()};
+    var go=function(){if(!firebase.apps.length)firebase.initializeApp(FIREBASE_CONFIG);firebase.database().ref('mis_bcs/l3/'+r.id+'/sec'+(si+1)).set(payload)};
+    if(window.firebase){go();return}
+    var a=document.createElement('script');a.src='https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js';
+    a.onload=function(){var b=document.createElement('script');b.src='https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js';b.onload=go;document.head.appendChild(b)};
+    document.head.appendChild(a);
+  }catch(e){}
+}
+
+/* ===== Reinicio de la lectura ===== */
+var MODID='l3';
+/* Registro para el docente: cada reinicio guarda una copia del avance previo (bandeja local mis_bcs_hist)
+   y la envía a Firebase en mis_bcs_hist/[módulo]/[id]/[clave]; así el registro no depende de que el estudiante conserve su avance.
+   Solo se registra si el estudiante está identificado. */
+var HK='mis_bcs_hist';
+function histAdd(estado,prog){
+  var r=reg();if(!r||!r.id)return;
+  var a=lsGet(HK)||[],ts=Date.now();
+  a.push({k:'r'+ts+'_'+MODID,mod:MODID,sid:r.id,name:r.name||'',mode:r.mode||'individual',members:r.members||[],ts:ts,prog:prog||null,estado:estado,sent:false});
+  if(a.length>40)a=a.slice(-40);
+  lsSet(HK,a);
+}
+function fbLoad(cb){
+  var ini=function(){if(!firebase.apps.length)firebase.initializeApp(FIREBASE_CONFIG);cb()};
+  if(window.firebase){ini();return}
+  var a=document.createElement('script');a.src='https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js';
+  a.onload=function(){var b=document.createElement('script');b.src='https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js';b.onload=ini;document.head.appendChild(b)};
+  document.head.appendChild(a);
+}
+function histFlush(){
+  if(!FB_OK||PREVIEW)return;
+  var a=lsGet(HK)||[];
+  if(!a.some(function(x){return !x.sent}))return;
+  try{fbLoad(function(){
+    (lsGet(HK)||[]).forEach(function(x){
+      if(x.sent)return;
+      var db=firebase.database();
+      db.ref('mis_bcs_hist/'+x.mod+'/'+x.sid+'/'+x.k).set({id:x.sid,name:x.name,mode:x.mode,members:x.members,mod:x.mod,ts:x.ts,prog:x.prog,estado:x.estado})
+        .then(function(){return db.ref('mis_bcs/'+x.mod+'/'+x.sid+'/ultimoReinicio').transaction(function(c){return Math.max(c||0,x.ts)})})
+        .then(function(){var b=lsGet(HK)||[];b.forEach(function(y){if(y.k===x.k)y.sent=true});lsSet(HK,b)})
+        .catch(function(){});
+    });
+  })}catch(e){}
+}
+function hasProgress(){return ST.secs.some(function(s,i){return s.done||s.attempts>0||answered(i)>0})}
+function resetBlock(){
+  if(!view.ask)return '<div class="reset"><button type="button" class="btn alt" data-ask>Borrar mi avance y empezar de nuevo</button></div>';
+  return '<div class="reset"><div class="reset-box" role="group" aria-labelledby="rst-t"><p id="rst-t"><b>¿Borrar tu avance en esta lectura?</b></p>'
+   +'<p>Se borrarán tus respuestas, tu puntaje y las secciones completadas, en este navegador.'+(reg()?' Tu docente conservará el registro de lo que ya hiciste.':'')+'</p>'
+   +'<div class="acts"><button type="button" class="btn danger" data-rst-yes>Sí, borrar y empezar de nuevo</button><button type="button" class="btn alt" id="rst-no" data-rst-no>Cancelar</button></div></div></div>';
+}
+function resetAll(){
+  if(hasProgress())histAdd(JSON.parse(JSON.stringify(ST)),(lsGet(KEYS.prog)||{})[MODID]||null);
+  ST=freshST();lsDel(KEYS.mod);var pg=lsGet(KEYS.prog)||{};delete pg[MODID];lsSet(KEYS.prog,pg);
+  view={name:'home',si:0,word:null};render();window.scrollTo(0,0);
+  histFlush();
+  toast('Empezaste de nuevo. Tu avance en esta lectura quedó en cero.');
+}
+
+/* Tema */
+function applyTheme(t){if(t)document.documentElement.setAttribute('data-theme',t);else document.documentElement.removeAttribute('data-theme')}
+(function(){var t=lsGet(KEYS.theme);if(t==='light'||t==='dark')applyTheme(t)})();
+$('#theme').addEventListener('click',function(){
+  var cur=document.documentElement.getAttribute('data-theme');
+  var dark=cur?cur==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;
+  var n=dark?'light':'dark'; applyTheme(n); lsSet(KEYS.theme,n);
+});
+
+/* Cabecera: identificación */
+function paintWho(){var r=reg(),w=$('#who');if(r&&r.name){w.textContent=(r.mode==='grupo'?'Grupo: ':'')+r.name;w.hidden=false}else w.hidden=true}
+$('#back').addEventListener('click',function(e){if(PREVIEW){e.preventDefault();toast('En esta vista previa el portal no está disponible. En el sitio, este botón vuelve al portal.')}});
+
+/* Vistas */
+var app=$('#app');
+function secStyle(i){return '--c:var(--s'+i+'c);--bg-c:var(--s'+i+'b)'}
+function stat(i){var s=ST.secs[i],n=answered(i);return s.done&&n===MAXI?'Completada':(n>0?'En curso':'Sin empezar')}
+
+function vHome(){
+  var noreg=!reg();
+  var h='<section class="hero"><p class="eyebrow">Lectura 3 · Ragin (2007), capítulo 4, pp. 143-176</p><h1>Métodos cualitativos y aspectos comunes</h1>'
+   +'<p class="lead">Estudia cómo la investigación cualitativa construye conocimiento en profundidad (conceptos, casos, inducción analítica y muestreo teórico) en tres secciones. Cada una te propone preguntas sobre el texto y te explica, apenas respondes, dónde repasar.</p></section>';
+  if(noreg)h+='<div class="note"><span>Aún no te has identificado. Tu avance no quedará registrado en el sistema.</span>'+(PREVIEW?'':'<a class="cta" href="index_mis_bcs.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/></svg>Ingresa en el portal para identificarte</a>')+'</div>';
+  h+='<h2 class="sec-t">Lo que vas a lograr</h2><ul class="goals">'
+   +'<li>Explicar por qué la investigación cualitativa busca el conocimiento en profundidad y cómo se aclaran recíprocamente imágenes y conceptos.</li>'
+   +'<li>Reconocer las finalidades de la investigación cualitativa y las decisiones sobre selección de casos, saturación y casos negativos.</li>'
+   +'<li>Describir la inducción analítica, el muestreo teórico, la triangulación y el estudio de caso único con los ejemplos del texto.</li></ul>';
+  h+='<h2 class="sec-t">Cómo funciona</h2><div class="how">'
+   +'<div><b>16 preguntas por sección</b><span>6 de selección múltiple, 6 de verdadero o falso y 4 fragmentos de ejemplos del capítulo.</span></div>'
+   +'<div><b>Respuesta inmediata</b><span>Después de cada respuesta ves la explicación y el apartado del capítulo donde puedes revisarla.</span></div>'
+   +'<div><b>Repite cuando quieras</b><span>Puedes volver a hacer cada sección las veces que necesites. Se conserva tu mejor puntaje.</span></div></div>';
+  h+='<div class="total"><div><div class="big">'+totalPts()+' <small>de '+TOTAL+' puntos</small></div></div><div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="'+CHARS.length+'" aria-valuenow="'+doneCount()+'" aria-label="Secciones completadas"><i style="width:'+Math.round(doneCount()/CHARS.length*100)+'%"></i></div><small>'+doneCount()+' de '+CHARS.length+' secciones completadas</small></div>';
+  h+='<h2 class="sec-t">Secciones</h2><div class="cards">';
+  CHARS.forEach(function(c,i){
+    var s=ST.secs[i],n=answered(i),st=stat(i),lbl=st==='Completada'?'Repasar':(n>0?'Continuar':'Empezar');
+    h+='<article class="card" style="'+secStyle(i)+'"><div class="hd"><span class="num" aria-hidden="true">'+(i+1)+'</span><div><h3>'+esc(c.title)+'</h3></div><span class="tagst'+(st==='Completada'?' done':'')+'">'+st+'</span></div>'
+     +'<div class="bd"><p>'+esc(c.desc)+'</p><div class="meta"><span>'+esc(c.guia)+'</span><span><b>'+(s.best||0)+'</b> de '+MAXI+' puntos (mejor intento)</span>'+(s.attempts?'<span>'+s.attempts+(s.attempts===1?' intento':' intentos')+'</span>':'')+'</div>'
+     +'<button type="button" class="btn" data-open="'+i+'">'+lbl+'</button></div></article>';
+  });
+  h+='</div>';
+  if(hasProgress())h+=resetBlock();
+  app.innerHTML=h;
+}
+
+function optBtn(i,k,idx,label,val,state){
+  // state: undefined (sin responder) | {chosen, correct}
+  var cls='opt',dis='';
+  if(state){dis=' disabled';if(val===state.correct)cls+=' right';else if(val===state.chosen)cls+=' wrong';else cls+=' dim'}
+  return '<button type="button" class="'+cls+'"'+dis+' data-k="'+k+'" data-i="'+idx+'" data-v="'+val+'">'+label+'</button>';
+}
+function fb(ok,tip,ref){
+  var ic=ok?'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>':'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></svg>';
+  return '<div class="fb '+(ok?'ok':'no')+'">'+ic+'<div><p><b>'+(ok?'Correcto. ':'Para revisar. ')+'</b>'+esc(tip)+'</p><span class="ref"><b>Dónde repasarlo:</b> '+esc(ref)+'</span></div></div>';
+}
+function qMC(si,i,q){
+  var a=ST.secs[si].ans.mc[i],has=a!==undefined&&a!==null;
+  var o=q.opts.map(function(t,oi){return optBtn(si,'mc',i,'<span class="l">'+String.fromCharCode(65+oi)+'.</span><span>'+esc(t)+'</span>',oi,has?{chosen:a,correct:q.ans}:null)}).join('');
+  return '<div class="q"><p class="qt"><span class="qn">'+(i+1)+'.</span>'+esc(q.q)+'</p><div class="opts">'+o+'</div>'+(has?fb(a===q.ans,q.tip,q.ref):'')+'</div>';
+}
+function qTF(si,i,q){
+  var a=ST.secs[si].ans.tf[i],has=a!==undefined&&a!==null;
+  var st=has?{chosen:a,correct:q.ans}:null;
+  return '<div class="q"><p class="qt"><span class="qn">'+(i+1)+'.</span>'+esc(q.q)+'</p><div class="pair">'+optBtn(si,'tf',i,'Verdadero',true,st)+optBtn(si,'tf',i,'Falso',false,st)+'</div>'+(has?fb(a===q.ans,q.tip,q.ref):'')+'</div>';
+}
+function qFR(si,i,q,topic){
+  var a=ST.secs[si].ans.fr[i],has=a!==undefined&&a!==null;
+  var st=has?{chosen:a,correct:q.ok}:null;
+  return '<div class="q"><p class="frag">'+esc(q.t)+'</p><p class="fq">¿Este fragmento ilustra '+esc(topic)+'?</p><div class="pair">'+optBtn(si,'fr',i,'Sí, lo ilustra',true,st)+optBtn(si,'fr',i,'No, corresponde a otra sección',false,st)+'</div>'+(has?fb(a===q.ok,q.tip,q.ref):'')+'</div>';
+}
+function levelTxt(p){return p>=85?'Logro destacado':(p>=70?'Logro esperado':'Conviene repasar esta sección')}
+function vSec(){
+  var si=view.si,c=CHARS[si],s=ST.secs[si],n=answered(si);
+  var h='<div class="stepper" role="navigation" aria-label="Secciones">'+CHARS.map(function(x,i){var d=ST.secs[i].done&&answered(i)===MAXI;return '<button type="button" class="pill'+(d?' done':'')+'" style="'+secStyle(i)+'" data-open="'+i+'"'+(i===si?' aria-current="true"':'')+'>Sección '+(i+1)+'<i>'+(d?'completada':answered(i)+'/'+MAXI)+'</i></button>'}).join('')+'<button type="button" class="pill" data-home>Inicio</button></div>';
+  h+='<div style="'+secStyle(si)+'"><section class="sechd"><p class="k">Sección '+(si+1)+' de '+CHARS.length+'</p><h2>'+esc(c.title)+'</h2><p class="d">'+esc(c.desc)+'</p><p class="g">'+esc(c.guia)+'</p></section>';
+  h+='<div class="blk"><h3>Conceptos clave</h3><p class="sub">Toca un concepto para ver su definición según el capítulo.</p><div class="cloud">'
+    +c.words.map(function(w,i){var fs=i===0?20:(i<3?18:16);return '<button type="button" class="chip" style="font-size:'+fs+'px" data-word="'+i+'" aria-pressed="'+(view.word===i)+'">'+esc(w.w)+'</button>'}).join('')+'</div>'
+    +(view.word!==null?'<div class="def"><b>'+esc(c.words[view.word].w)+'</b><p>'+esc(c.words[view.word].d)+'</p></div>':'')+'</div>';
+  h+='<div class="prog" role="status"><span><b>'+n+'</b> de '+MAXI+' respondidas</span><div class="bar"><i style="width:'+Math.round(n/MAXI*100)+'%"></i></div></div>';
+  h+='<div class="blk"><h3>Parte A · Selección múltiple</h3><p class="sub">Elige la opción que mejor responde, según el capítulo.</p>'+c.mc.map(function(q,i){return qMC(si,i,q)}).join('')+'</div>';
+  h+='<div class="blk"><h3>Parte B · Verdadero o falso</h3><p class="sub">Decide si cada afirmación es verdadera o falsa.</p>'+c.tf.map(function(q,i){return qTF(si,i,q)}).join('')+'</div>';
+  h+='<div class="blk"><h3>Parte C · Fragmentos de ejemplos del capítulo</h3><p class="sub">Cada fragmento reescribe un ejemplo del texto. Decide si ilustra el tema de esta sección.</p>'+c.frags.map(function(q,i){return qFR(si,i,q,c.topic)}).join('')+'</div>';
+  if(n===MAXI){
+    var sc=score(si),p=Math.round(sc.t/MAXI*100),miss=[];
+    c.mc.forEach(function(q,i){if(s.ans.mc[i]!==q.ans&&miss.indexOf(q.ref)<0)miss.push(q.ref)});
+    c.tf.forEach(function(q,i){if(s.ans.tf[i]!==q.ans&&miss.indexOf(q.ref)<0)miss.push(q.ref)});
+    c.frags.forEach(function(q,i){if(s.ans.fr[i]!==q.ok&&miss.indexOf(q.ref)<0)miss.push(q.ref)});
+    h+='<section class="res" id="res" aria-labelledby="res-t"><h3 id="res-t">Resultado de la sección '+(si+1)+'</h3><div class="score"><b>'+sc.t+'</b><span>de '+MAXI+' puntos · '+p+'%</span></div>'
+     +'<p style="margin:0 0 6px"><b>'+levelTxt(p)+'.</b> Tu mejor intento en esta sección es de '+s.best+' puntos.</p>'
+     +'<div class="brk"><span>Selección múltiple: '+sc.mc+' de 6</span><span>Verdadero o falso: '+sc.tf+' de 6</span><span>Fragmentos: '+sc.fr+' de 4</span></div>'
+     +(miss.length?'<div class="rev"><b>Apartados del capítulo para repasar</b><ul>'+miss.map(function(m){return '<li>'+esc(m)+'</li>'}).join('')+'</ul></div>':'<div class="rev"><b>Sin errores en este intento.</b> Puedes pasar a la siguiente sección o repetir esta para afianzarla.</div>')
+     +'<div class="acts"><button type="button" class="btn alt" data-retry="'+si+'">Repetir esta sección</button>'
+     +(si<CHARS.length-1?'<button type="button" class="btn" data-open="'+(si+1)+'">Ir a la sección '+(si+2)+'</button>':'<button type="button" class="btn" data-home>Volver al inicio</button>')
+     +'<button type="button" class="btn alt" data-home>Ver todas las secciones</button></div></section>';
+  }
+  h+='</div>';
+  app.innerHTML=h;
+}
+
+function render(keep){
+  var y=window.scrollY;
+  paintWho();
+  if(view.name==='home')vHome(); else vSec();
+  if(keep)window.scrollTo(0,y);
+}
+function openSec(i){view={name:'sec',si:i,word:null};render();window.scrollTo(0,0);try{history.replaceState(null,'','#s'+(i+1))}catch(e){}}
+function goHome(){view={name:'home',si:0,word:null};render();window.scrollTo(0,0);try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}}
+
+function answer(si,k,i,v){
+  var s=ST.secs[si],a=s.ans[k];
+  if(a[i]!==undefined&&a[i]!==null)return;
+  a[i]=v;
+  var finished=answered(si)===MAXI;
+  if(finished){var sc=score(si);s.done=true;s.last=sc.t;s.best=Math.max(s.best||0,sc.t);s.attempts=(s.attempts||0)+1;s.ts=Date.now()}
+  save();
+  var y=window.scrollY;
+  render(true);
+  if(finished){report(si);var r=$('#res');if(r){r.scrollIntoView({behavior:'smooth',block:'start'});}} else window.scrollTo(0,y);
+}
+
+app.addEventListener('click',function(e){
+  var t=e.target.closest('button,a');if(!t)return;
+  if(t.hasAttribute('data-ask')){view.ask=true;render(true);var rn=$('#rst-no');if(rn){rn.focus();rn.scrollIntoView({block:'center'})}return}
+  if(t.hasAttribute('data-rst-no')){view.ask=false;render(true);return}
+  if(t.hasAttribute('data-rst-yes')){resetAll();return}
+  if(t.hasAttribute('data-open')){openSec(+t.getAttribute('data-open'));return}
+  if(t.hasAttribute('data-home')){goHome();return}
+  if(t.hasAttribute('data-retry')){var si=+t.getAttribute('data-retry');ST.secs[si].ans={mc:[],tf:[],fr:[]};save();view.word=null;render();window.scrollTo(0,0);toast('Sección reiniciada. Tu mejor puntaje se conserva.');return}
+  if(t.hasAttribute('data-word')){var w=+t.getAttribute('data-word');view.word=(view.word===w?null:w);render(true);return}
+  if(t.hasAttribute('data-k')){
+    var v=t.getAttribute('data-v');v=(v==='true')?true:(v==='false'?false:+v);
+    answer(view.si,t.getAttribute('data-k'),+t.getAttribute('data-i'),v);return}
+});
+
+/* Inicio */
+syncProg();
+var m=/^#s([1-9])$/.exec(location.hash||'');
+if(m&&+m[1]<=CHARS.length){view={name:'sec',si:+m[1]-1,word:null}}
+render();
+histFlush();
+window.addEventListener('storage',function(e){if(e.key===KEYS.mod&&e.newValue===null){ST=freshST();view={name:'home',si:0,word:null};render()}});
+})();
+</script>
+
+</body>
+</html>

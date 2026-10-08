@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!--
+  Portal de estudio cualitativo · Metodología de la Investigación Social (BCS · UFRO) · v0.1 · 2026-10-06
+  Archivo: index_mis_bcs.html (portada del sitio; enlaza a actividad_mis_bcs_l1 a l3, actividad_mis_bcs_p3 y a dashboard_docente.html)
+  PIN DOCENTE: CUALITATIVO2026 (lo pide solo dashboard_docente.html; este archivo no pide PIN)
+  Firebase: se configura en firebase_config.js (mientras diga "REEMPLAZAR", usa solo localStorage). Estado compartido con los módulos: ver comentario al inicio del <script>.
+-->
+<title>Portal de estudio cualitativo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+/* Concepto: portal universitario. Cabecera fija, portada navy con red de conceptos, ruta de estudio en tarjetas
+   (panel tintado por módulo), registro único. Identidad UFRO: navy, dorado, crema; Playfair Display + Source Serif 4. */
+:root{
+  --bg:#f8f5ef; --surface:#fffdf8; --ink:#0b1a33; --ink2:#4b566b; --line:#d9d0ba; --hdr:rgba(248,245,239,.9);
+  --gold:#c9a256; --gold-l:#e8d5a0; --gold-ink:#7d5f17;
+  --hero-bg:#0b1a33; --hero-ink:#f8f5ef; --hero-ink2:rgba(248,245,239,.74); --hero-line:rgba(201,162,86,.32);
+  --c1:#1a4a7a; --c1t:#e8f0f8; --c1on:#ffffff;
+  --c2:#7a3b1e; --c2t:#faf0e8; --c2on:#ffffff;
+  --c3:#1a5c38; --c3t:#e8f5ee; --c3on:#ffffff;
+  --seg1:#7fb0e6; --seg2:#e3a57f; --seg3:#7fd1a0;
+  --ok:#15803d; --err:#b91c1c;
+  --ff-d:'Playfair Display',Georgia,serif; --ff-b:'Source Serif 4',Georgia,serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#08142a; --surface:#0f2142; --ink:#f3efe6; --ink2:#aebad0; --line:#27406a; --hdr:rgba(8,20,42,.88);
+    --gold-ink:#d9b866; --hero-bg:#10264a;
+    --c1:#7fb0e6; --c1t:#12294a; --c1on:#0b1a33;
+    --c2:#e3a57f; --c2t:#35241b; --c2on:#0b1a33;
+    --c3:#7fd1a0; --c3t:#12372a; --c3on:#0b1a33;
+    --ok:#4ade80; --err:#f87171;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#08142a; --surface:#0f2142; --ink:#f3efe6; --ink2:#aebad0; --line:#27406a; --hdr:rgba(8,20,42,.88);
+  --gold-ink:#d9b866; --hero-bg:#10264a;
+  --c1:#7fb0e6; --c1t:#12294a; --c1on:#0b1a33;
+  --c2:#e3a57f; --c2t:#35241b; --c2on:#0b1a33;
+  --c3:#7fd1a0; --c3t:#12372a; --c3on:#0b1a33;
+  --ok:#4ade80; --err:#f87171;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{background:var(--bg);color:var(--ink);font:400 17px/1.6 var(--ff-b);margin:0;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+h1,h2,h3,h4,p,ul,dl,dd,figure{margin:0}
+ul{padding:0;list-style:none}
+.wrap{max-width:1160px;margin-inline:auto;padding-inline:20px}
+:focus-visible{outline:3px solid var(--gold);outline-offset:3px;border-radius:6px}
+.skip{position:absolute;left:12px;top:-60px;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:8px;z-index:50;text-decoration:none}
+.skip:focus{top:calc(env(safe-area-inset-top,0px) + 10px)}
+
+/* Cabecera */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--hdr);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:14px;min-height:66px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;min-width:0}
+.seal{flex:none;width:40px;height:40px;border-radius:10px;background:#0b1a33;border:1px solid rgba(201,162,86,.45);display:grid;place-items:center}
+.brand-t{display:flex;flex-direction:column;line-height:1.25;min-width:0}
+.brand-n{font:600 11px/1.3 var(--ff-b);letter-spacing:.11em;text-transform:uppercase;color:var(--gold-ink)}
+.brand-s{font-size:14px;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top nav{margin-left:auto;display:flex;gap:26px}
+.top nav a{font-size:15px;color:var(--ink2);text-decoration:none;padding-block:6px;border-bottom:2px solid transparent}
+.top nav a:hover{color:var(--ink);border-bottom-color:var(--gold)}
+.pill{font:600 14px/1 var(--ff-b);padding:10px 16px;border-radius:999px;border:1.5px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer;max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pill:hover{background:var(--ink);color:var(--bg)}
+.pill.on{border-color:var(--gold);background:var(--gold);color:#0b1a33}
+.icon-btn{flex:none;width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;display:grid;place-items:center}
+.icon-btn:hover{border-color:var(--ink2)}
+
+/* Portada */
+.hero{position:relative;overflow:hidden;background:var(--hero-bg);color:var(--hero-ink)}
+.hero-art{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,.8fr);gap:56px;align-items:center;padding-block:72px 84px}
+.eyebrow-l{font:600 12px/1.4 var(--ff-b);letter-spacing:.13em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:10px}
+.eyebrow-l::before{content:"";width:28px;height:1px;background:var(--gold)}
+.hero h1{font:700 clamp(34px,5.4vw,60px)/1.07 var(--ff-d);margin-top:18px;text-wrap:balance}
+.hero h1 em{font-style:italic;font-weight:500;color:var(--gold-l)}
+.lead{margin-top:22px;max-width:56ch;font-size:19px;line-height:1.65;color:var(--hero-ink2);font-weight:300}
+.cta-row{margin-top:34px;display:flex;flex-wrap:wrap;gap:14px}
+.btn-gold{display:inline-flex;align-items:center;gap:10px;padding:15px 24px;border-radius:10px;background:var(--gold);color:#0b1a33;font:700 16px/1 var(--ff-d);text-decoration:none;box-shadow:0 8px 28px rgba(201,162,86,.25);transition:transform .2s,background .2s}
+.btn-gold:hover{background:#d6b169;transform:translateY(-2px)}
+.btn-ghost{display:inline-flex;align-items:center;padding:15px 22px;border-radius:10px;border:1px solid var(--hero-line);color:var(--hero-ink);font:600 15px/1 var(--ff-b);text-decoration:none}
+.btn-ghost:hover{background:rgba(255,255,255,.07)}
+.panel{background:rgba(11,26,51,.62);border:1px solid var(--hero-line);border-radius:16px;padding:24px;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.panel-h{font:600 12px/1.3 var(--ff-b);letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+.big{margin-top:10px;font:700 54px/1 var(--ff-d);font-variant-numeric:tabular-nums}
+.big .of{font:400 17px/1.3 var(--ff-b);color:var(--hero-ink2);margin-left:6px}
+.seg{margin-top:18px;display:flex;gap:10px}
+.seg-g{display:flex;gap:4px;flex:var(--n) 1 0}
+.seg-g i{flex:1;height:10px;border-radius:3px;background:rgba(255,255,255,.15)}
+.seg-g.s1 i.f{background:var(--seg1)} .seg-g.s2 i.f{background:var(--seg2)} .seg-g.s3 i.f{background:var(--seg3)}
+.seg-l{margin-top:8px;display:flex;gap:10px;font-size:12px;color:var(--hero-ink2)}
+.seg-l span{flex:var(--n) 1 0;min-width:0}
+.seg-g.sp i.f{background:var(--gold)}
+.blk{margin-top:18px;padding-top:16px;border-top:1px solid var(--hero-line)}
+.blk.first{border-top:0;padding-top:0;margin-top:14px}
+.bh{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.bh b{font:700 18px/1.3 var(--ff-d)}
+.bh span{font-size:15px;color:var(--hero-ink2);font-variant-numeric:tabular-nums}
+.bh2{margin-top:8px;display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;font-size:14px;color:var(--hero-ink2);font-variant-numeric:tabular-nums}
+.bh2 em{font-style:normal;color:var(--gold-l);font-size:13px}
+.blk .seg{margin-top:10px}
+.stats{margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:12px;font-variant-numeric:tabular-nums}
+.stats dt{font-size:13px;color:var(--hero-ink2)}
+.stats dd{font:700 20px/1.3 var(--ff-d)}
+.stats dd small{font:400 14px var(--ff-b);color:var(--hero-ink2)}
+.hp-id{margin-top:20px;padding-top:16px;border-top:1px solid var(--hero-line);font-size:15px;color:var(--hero-ink2)}
+.hp-id b{color:var(--hero-ink);font-weight:600}
+.link-btn{background:none;border:0;padding:0;font:600 15px/1.4 var(--ff-b);color:var(--gold);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.link-btn.danger{color:var(--err)}
+.hp-id .link-btn.danger{color:#f4a3a6}
+.hp-rst{margin-top:12px;padding:12px 14px;border:1px solid #f4a3a6;border-radius:10px;font-size:14.5px;line-height:1.55;color:var(--hero-ink)}
+.hp-rst p{margin:0 0 4px}
+.hp-rst-a{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.hp-rst-a button{font:600 14.5px/1.2 var(--ff-b);padding:9px 15px;border-radius:999px;cursor:pointer}
+.hp-rst-a .y{background:#f4a3a6;color:#0b1a33;border:0}
+.hp-rst-a .n{background:none;color:var(--hero-ink);border:1px solid var(--hero-line)}
+
+/* Secciones */
+.sec{padding-block:72px 8px}
+.sec + .sec{padding-block:64px 8px}
+.sec-head{max-width:62ch;margin-bottom:34px}
+.eyebrow{font:600 12px/1.4 var(--ff-b);letter-spacing:.13em;text-transform:uppercase;color:var(--gold-ink)}
+h2.t{font:700 clamp(26px,3.6vw,38px)/1.15 var(--ff-d);margin-top:8px;text-wrap:balance}
+.sub{margin-top:10px;color:var(--ink2)}
+.grp{font:700 20px/1.3 var(--ff-d);margin-top:8px}
+.grp-sub{color:var(--ink2);font-size:15px;margin-top:2px}
+.grid{margin-top:16px;margin-bottom:44px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+.card{--c:var(--c1);--ct:var(--c1t);--con:var(--c1on);background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;min-width:0;transition:transform .2s,box-shadow .2s}
+.card:hover{transform:translateY(-3px);box-shadow:0 14px 36px rgba(11,26,51,.12)}
+.m-c2{--c:var(--c2);--ct:var(--c2t);--con:var(--c2on)} .m-c3{--c:var(--c3);--ct:var(--c3t);--con:var(--c3on)}
+.card-top{background:var(--ct);padding:20px 22px 18px;display:flex;flex-direction:column;gap:10px}
+.card-k{display:flex;align-items:center;gap:10px;font:600 12px/1.2 var(--ff-b);letter-spacing:.11em;text-transform:uppercase;color:var(--c)}
+.ord{width:28px;height:28px;border-radius:50%;background:var(--c);color:var(--con);display:grid;place-items:center;font:700 14px/1 var(--ff-d);letter-spacing:0}
+.tag{margin-left:auto;font:600 11px/1 var(--ff-b);letter-spacing:.06em;text-transform:none;padding:6px 10px;border-radius:999px;background:var(--gold);color:#0b1a33}
+.tag.ok{background:transparent;border:1px solid var(--ok);color:var(--ok)}
+.card-t{font:700 22px/1.2 var(--ff-d);color:var(--ink);text-wrap:balance}
+@media (min-width:981px){.card-t{min-height:2.4em}}
+.card-s{font-size:14.5px;color:var(--ink2)}
+.card-b{padding:18px 22px 22px;display:flex;flex-direction:column;gap:16px;flex:1}
+.card-b>p{font-size:15.5px;color:var(--ink2)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips li{font-size:13px;padding:5px 11px;border-radius:999px;border:1px solid var(--line);color:var(--ink2);font-variant-numeric:tabular-nums}
+.guide{font-size:14px;color:var(--ink2)}
+.prog{margin-top:auto}
+.bar{height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--c);border-radius:3px}
+.prog-t{margin-top:7px;font-size:13px;color:var(--ink2);font-variant-numeric:tabular-nums}
+.btn-card{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 18px;border-radius:10px;background:var(--ink);color:var(--bg);font:700 15px/1 var(--ff-d);text-decoration:none;transition:opacity .2s}
+.btn-card:hover{opacity:.88}
+.card.pre{background:transparent;border-style:dashed;box-shadow:none}
+.card.pre:hover{transform:none;box-shadow:none}
+.pre-in{padding:18px 22px 20px;display:flex;flex-direction:column;gap:8px}
+.pre-k{display:flex;align-items:center;gap:10px;font:600 12px/1.2 var(--ff-b);letter-spacing:.11em;text-transform:uppercase;color:var(--ink2)}
+.soon{margin-left:auto;font:600 11px/1 var(--ff-b);letter-spacing:.04em;text-transform:none;padding:6px 10px;border-radius:999px;border:1px dashed var(--ink2);color:var(--ink2)}
+.pre h4{font:700 19px/1.25 var(--ff-d);color:var(--ink)}
+.pre-s{font-size:14.5px;color:var(--ink2)}
+
+/* Cómo funciona */
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:36px}
+.step{border-top:2px solid var(--ink);padding-top:16px}
+.step-n{font:700 38px/1 var(--ff-d);color:var(--gold-ink)}
+.step h3{font:700 20px/1.3 var(--ff-d);margin-top:10px}
+.step p{margin-top:8px;color:var(--ink2);font-size:16px}
+
+
+/* Pie */
+footer{margin-top:72px;background:var(--hero-bg);color:var(--hero-ink)}
+footer .wrap{padding-block:36px;display:flex;flex-wrap:wrap;gap:20px 48px;justify-content:space-between;align-items:flex-end}
+.f-n{font:700 17px/1.3 var(--ff-d)}
+.f-s{margin-top:6px;font-size:14.5px;color:var(--hero-ink2);max-width:60ch}
+.f-links{display:flex;gap:22px;font-size:15px}
+.f-links a{color:var(--gold-l);display:inline-flex;align-items:center;gap:8px}
+
+/* Diálogo de registro */
+dialog{border:1px solid var(--line);border-radius:18px;background:var(--surface);color:var(--ink);padding:0;width:min(540px,calc(100% - 32px));box-shadow:0 30px 80px rgba(0,0,0,.4)}
+dialog::backdrop{background:rgba(5,12,28,.62)}
+.dlg{padding:28px 28px 24px;display:flex;flex-direction:column;gap:18px}
+.dlg h2{font:700 24px/1.2 var(--ff-d);text-wrap:balance}
+.dlg .muted{margin-top:8px;font-size:15px;color:var(--ink2)}
+fieldset{border:0;padding:0;margin:0;min-width:0}
+legend,.lbl,.field label{display:block;font:600 12px/1.3 var(--ff-b);letter-spacing:.1em;text-transform:uppercase;color:var(--ink2);margin-bottom:8px;padding:0}
+.seg-ctl{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.seg-ctl label{position:relative;margin:0;text-transform:none;letter-spacing:0}
+.seg-ctl input{position:absolute;opacity:0;inset:0;cursor:pointer}
+.seg-ctl span{display:block;text-align:center;padding:11px 12px;border-radius:10px;border:1.5px solid var(--line);font:600 15px/1.2 var(--ff-b);color:var(--ink2)}
+.seg-ctl input:checked + span{border-color:var(--ink);background:var(--ink);color:var(--bg)}
+.seg-ctl input:focus-visible + span{outline:3px solid var(--gold);outline-offset:2px}
+.field input[type=text]{width:100%;padding:12px 14px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);font:400 16px/1.3 var(--ff-b)}
+.field input[type=text]:focus{outline:none;border-color:var(--ink);box-shadow:0 0 0 3px rgba(201,162,86,.4)}
+#mem-list{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
+.mem-r{display:flex;gap:8px}
+.mem-r input{flex:1;min-width:0}
+.mem-x{flex:none;width:44px;border-radius:10px;border:1.5px solid var(--line);background:transparent;color:var(--ink2);cursor:pointer;font:400 20px/1 var(--ff-b)}
+#mem-add{color:var(--ink);}
+.err{color:var(--err);font-size:14.5px}
+.warn{font-size:14px;color:var(--ink2);padding:10px 12px;border-radius:10px;border:1px dashed var(--ink2)}
+.dlg-actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:4px}
+.dlg-actions .sp{flex:1}
+.lo{margin-top:16px;padding:14px 16px;border:1px solid var(--err);border-radius:12px;font-size:15px;line-height:1.55}
+.lo p{margin:0 0 6px}
+.lo-a{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:10px}
+.btn-line{padding:12px 18px;border-radius:10px;border:1.5px solid var(--line);background:transparent;color:var(--ink);font:600 15px/1 var(--ff-b);cursor:pointer}
+.btn-solid{padding:12px 20px;border-radius:10px;border:0;background:var(--ink);color:var(--bg);font:700 15px/1 var(--ff-d);cursor:pointer}
+.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 22px);transform:translateX(-50%);z-index:60;max-width:min(520px,calc(100% - 32px));background:var(--ink);color:var(--bg);padding:13px 18px;border-radius:12px;font-size:15px;box-shadow:0 12px 36px rgba(0,0,0,.35)}
+
+@media (max-width:980px){
+  .hero-grid{grid-template-columns:minmax(0,1fr);gap:36px;padding-block:52px 60px}
+  .grid,.steps{grid-template-columns:minmax(0,1fr)}
+  .steps{gap:26px}
+  .top nav{display:none}
+  .top .pill{margin-left:auto}
+}
+@media (max-width:480px){
+  .brand-t{display:none}
+  .pill{max-width:none}
+  .lead{font-size:17.5px}
+  .big{font-size:46px}
+  .dlg{padding:22px 18px 18px}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .card,.btn-gold,.btn-card{transition:none}
+  .card:hover,.btn-gold:hover{transform:none}
+}
+</style>
+</head>
+<body>
+<script src="firebase_config.js"></script>
+<a class="skip" href="#ruta">Ir a la ruta de estudio</a>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#inicio" aria-label="Inicio del portal">
+      <span class="seal" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c9a256" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3L2 8l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      </span>
+      <span class="brand-t">
+        <span class="brand-n">Universidad de La Frontera</span>
+        <span class="brand-s">Bachillerato en Ciencias Sociales</span>
+      </span>
+    </a>
+    <nav aria-label="Principal">
+      <a href="#ruta">Ruta de estudio</a>
+      <a href="#como">Cómo funciona</a>
+    </nav>
+    <button id="reg-btn" class="pill" type="button">Identificarme</button>
+    <button id="theme-btn" class="icon-btn" type="button" aria-label="Cambiar entre tema claro y oscuro">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v18" /><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></svg>
+    </button>
+  </div>
+</header>
+
+<main id="inicio">
+  <section class="hero" aria-labelledby="h1">
+    <svg id="hero-art" class="hero-art" aria-hidden="true"></svg>
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow-l">Metodología de la Investigación Social · Módulo cualitativo</p>
+        <h1 id="h1">Fundamentos de la investigación con <em>enfoque cualitativo</em></h1>
+        <div class="cta-row">
+          <a id="hero-cta" class="btn-gold" data-go href="actividad_mis_bcs_l1.html">
+            <span id="hero-cta-t">Identificarme y empezar</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a class="btn-ghost" href="#ruta">Ver la ruta de estudio</a>
+        </div>
+      </div>
+      <aside class="panel" aria-labelledby="panel-h">
+        <h2 id="panel-h" class="panel-h">Tu avance</h2>
+        <p class="big"><span id="hp-act">0</span><span class="of">de <span id="hp-actn">6</span> actividades completadas</span></p>
+        <div class="blk first">
+          <div class="bh"><b>Lecturas</b><span><span id="hp-done">0</span> de <span id="hp-total">9</span> secciones</span></div>
+          <div id="hp-seg" class="seg" role="img" aria-label="Avance por sección de lectura"></div>
+          <div id="hp-seg-l" class="seg-l" aria-hidden="true"></div>
+          <div class="bh2"><em>Con puntaje</em><span><span id="hp-pts">0</span> de <span id="hp-ptot">144</span> puntos</span></div>
+        </div>
+        <div class="blk">
+          <div class="bh"><b>Presentaciones</b><span><span id="hp-pdone">0</span> de <span id="hp-ptotal">12</span> momentos</span></div>
+          <div id="hp-pseg" class="seg" role="img" aria-label="Avance por momento de presentación"></div>
+          <div id="hp-pseg-l" class="seg-l" aria-hidden="true"></div>
+          <div class="bh2"><em>Sin puntaje</em><span>se marcan como completadas</span></div>
+        </div>
+        <div id="hp-id" class="hp-id"></div>
+      </aside>
+    </div>
+  </section>
+
+  <section id="ruta" class="sec" aria-labelledby="ruta-t">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Ruta de estudio</p>
+        <h2 id="ruta-t" class="t">Elige qué estudiar</h2>
+        <p class="sub">Cada lectura y cada presentación de clases tiene su respectiva actividad. Te sugerimos seguir el orden 1, 2 y 3 en cada una, pero puedes empezar por la que necesites repasar.</p>
+      </div>
+      <h3 class="grp">Lecturas</h3>
+      <div id="grid-lec" class="grid"></div>
+      <h3 class="grp">Presentaciones de clase</h3>
+      <p class="grp-sub">Estudia las presentaciones de las clases en cuatro momentos: recorrido guiado, cuadros por completar, ejemplos por clasificar y preguntas de desarrollo. No tienen puntaje: cada momento que terminas queda marcado como completado.</p>
+      <div id="grid-pre" class="grid"></div>
+    </div>
+  </section>
+
+  <section id="como" class="sec" aria-labelledby="como-t">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Cómo funciona</p>
+        <h2 id="como-t" class="t">Sigue los siguientes pasos para organizar tu estudio.</h2>
+      </div>
+      <ol class="steps" style="list-style:none;padding:0;margin:0">
+        <li class="step"><span class="step-n" aria-hidden="true">1</span><h3>Identifícate una vez</h3><p>Trabajas solo o en grupo. Tu nombre y tu avance quedan guardados en este navegador y tu docente los ve en el panel de seguimiento.</p></li>
+        <li class="step"><span class="step-n" aria-hidden="true">2</span><h3>Orientaciones para el estudio</h3><p>En las lecturas, cada sección reúne 16 preguntas: 6 de selección múltiple, 6 de verdadero o falso y 4 fragmentos para analizar. En las presentaciones avanzas por cuatro momentos: recorrido guiado, cuadros por completar, ejemplos por clasificar y preguntas de desarrollo.</p></li>
+        <li class="step"><span class="step-n" aria-hidden="true">3</span><h3>Lee la retroalimentación</h3><p>Cada respuesta se puede revisar y así orientar dónde repasar los contenidos (en las lecturas, los textos; en las presentaciones, los contenidos de las clases). Recuerda que siempre debes leer los textos previamente y revisar tus apuntes de las clases.</p></li>
+      </ol>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <p class="f-n">Universidad de La Frontera</p>
+      <p class="f-s">Facultad de Educación, Ciencias Sociales y Humanidades<br>Metodología de la Investigación Social | Módulo Cualitativo | 2026</p>
+    </div>
+    <div class="f-links"><a data-ext href="dashboard_docente.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 9l-10-4-10 4 10 4 10-4v6"/><path d="M6 10.6v5.4a6 3 0 0 0 12 0v-5.4"/></svg><span>Acceso docente</span></a></div>
+  </div>
+</footer>
+
+<dialog id="dlg" aria-labelledby="dlg-t">
+  <form id="dlg-f" class="dlg" novalidate>
+    <div>
+      <h2 id="dlg-t">Identifícate para guardar tu avance</h2>
+      <p class="muted">Lo haces una sola vez. Tu docente verá tu nombre y tu avance en el panel de seguimiento.</p>
+    </div>
+    <fieldset class="seg-ctl">
+      <legend>Cómo trabajas</legend>
+      <label><input type="radio" name="mode" value="individual" checked><span>Individual</span></label>
+      <label><input type="radio" name="mode" value="grupo"><span>Grupal</span></label>
+    </fieldset>
+    <div class="field">
+      <label for="f-name" id="f-name-l">Tu nombre</label>
+      <input id="f-name" type="text" autocomplete="name" maxlength="80" placeholder="Nombre y apellido">
+    </div>
+    <div id="mem-wrap" class="field" hidden>
+      <span class="lbl">Integrantes</span>
+      <div id="mem-list"></div>
+      <button type="button" id="mem-add" class="link-btn">Agregar integrante</button>
+    </div>
+    <p id="dlg-err" class="err" role="alert" hidden></p>
+    <p id="dlg-warn" class="warn" hidden>Tu navegador bloquea el almacenamiento. Puedes seguir, pero tu avance no se guardará.</p>
+    <div class="dlg-actions">
+      <button type="button" id="dlg-out" class="link-btn danger" hidden>Cerrar mi sesión</button>
+      <span class="sp"></span>
+      <button type="button" id="dlg-cancel" class="btn-line">Cancelar</button>
+      <button type="submit" class="btn-solid">Guardar y continuar</button>
+    </div>
+    <div id="lo" class="lo" role="group" aria-labelledby="lo-t" hidden>
+      <p id="lo-t"><b>Vas a cerrar tu sesión. ¿Qué hacemos con tu avance guardado en este navegador?</b></p>
+      <p>Si el computador es compartido, conviene borrarlo: tu docente conservará una copia del avance que borres. Si lo conservas, queda en este navegador y quien se identifique aquí después lo verá.</p>
+      <div class="lo-a">
+        <button type="button" class="btn-solid" id="lo-del">Borrar mi avance y cerrar sesión</button>
+        <button type="button" class="btn-line" id="lo-keep">Conservarlo y cerrar sesión</button>
+        <button type="button" class="link-btn" id="lo-no">Cancelar</button>
+      </div>
+    </div>
+  </form>
+</dialog>
+
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+<noscript><p style="padding:24px;text-align:center">Este portal necesita JavaScript. Abre directamente: <a href="actividad_mis_bcs_l1.html">Lectura 1</a>, <a href="actividad_mis_bcs_l2.html">Lectura 2</a> o <a href="actividad_mis_bcs_l3.html">Lectura 3</a>.</p></noscript>
+
+<script>
+/* ESTADO COMPARTIDO CON LOS MÓDULOS (mismo origen, localStorage)
+   mis_bcs_reg   = {id, mode:'individual'|'grupo', name, members:[...], createdAt}   (lo escribe el portal)
+   mis_bcs_prog  = {l1:{done:n, pts:n}, l2:{...}, l3:{...}, p3:{done:n de 4 momentos, pts:0}}  (lo escribe cada módulo al cerrar una sección o momento)
+   mis_bcs_theme = 'light' | 'dark'                                                  (preferencia de tema)
+   mis_bcs_hist  = [{k, mod, sid, name, ts, prog, estado, sent}]   bandeja de copias que se crean al reiniciar (módulo o portal).
+                   Con Firebase activo se envían a mis_bcs_hist/[módulo]/[id]/[k] (solo se agrega) y se marca mis_bcs/[módulo]/[id]/ultimoReinicio.
+                   Solo se registran reinicios de estudiantes identificados. */
+(function(){
+'use strict';
+var PREVIEW = false;
+var DASH_READY = true; /* dashboard_docente.html se publica en el mismo repositorio */
+var KEY_REG='mis_bcs_reg', KEY_PROG='mis_bcs_prog', KEY_THEME='mis_bcs_theme', MIN_PER_SEC=20, MAX_MEM=6;
+
+/* Contenido de los módulos: único lugar que hay que editar para cambiar textos, secciones o puntajes */
+var LECS=[
+ {id:'l1',n:1,c:'c1',title:'Diálogo entre ideas y pruebas',src:'Ragin (2007), cap. 3',pages:'pp. 103-135',guide:23,secs:4,pts:64,
+  desc:'Cómo se relacionan las ideas, los marcos analíticos, las imágenes y las pruebas empíricas en una investigación social.',href:'actividad_mis_bcs_l1.html'},
+ {id:'l2',n:2,c:'c2',title:'Relevancia y rasgos de la investigación cualitativa',src:'Flick (2007)',pages:'pp. 15-24',guide:16,secs:2,pts:32,
+  desc:'Por qué los métodos cualitativos no se separan del problema que se estudia, y qué ocurre con los ideales de objetividad.',href:'actividad_mis_bcs_l2.html'},
+ {id:'l3',n:3,c:'c3',title:'Métodos cualitativos y aspectos comunes',src:'Ragin (2007), cap. 4',pages:'pp. 143-176',guide:25,secs:3,pts:48,
+  desc:'Conceptos, selección de casos, saturación, inducción analítica, muestreo teórico y triangulación en el estudio en profundidad.',href:'actividad_mis_bcs_l3.html'}
+];
+var PRES=[
+ {n:1,id:'p1',c:'c1',title:'Pensar un proyecto de investigación',meta:'Láminas 2 a 10, 12 y 14 · Lecturas 1, 2 y 3',secs:4,href:'actividad_mis_bcs_p1.html',
+  desc:'Recorrido guiado por las láminas, cuadros por completar, clasificación de ejemplos y tres preguntas de desarrollo con autoevaluación.'},
+ {n:2,id:'p2',c:'c2',title:'Perspectivas y fundamentos según Flick',meta:'Láminas 2 a 20 · Lecturas 1, 2 y 3',secs:4,href:'actividad_mis_bcs_p2.html',desc:'Recorrido guiado por las láminas, tres cuadros por completar, clasificación de ejemplos y tres preguntas de desarrollo con autoevaluación.'},
+ {n:3,id:'p3',c:'c3',title:'Perspectivas y fundamentos',meta:'Ragin, cap. 4 y Denzin · 26 láminas',secs:4,href:'actividad_mis_bcs_p3.html',
+  desc:'Recorrido guiado por las láminas, cuadros por completar, clasificación de ejemplos y tres preguntas de desarrollo con autoevaluación.'}
+];
+
+var ARROW='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+
+/* Almacenamiento tolerante a fallos */
+var mem={}, storageOK=true;
+function sget(k){try{return localStorage.getItem(k);}catch(e){storageOK=false;return mem.hasOwnProperty(k)?mem[k]:null;}}
+function sset(k,v){try{localStorage.setItem(k,v);}catch(e){storageOK=false;mem[k]=v;}}
+function sdel(k){try{localStorage.removeItem(k);}catch(e){storageOK=false;delete mem[k];}}
+function jget(k,d){try{var v=sget(k);return v?JSON.parse(v):d;}catch(e){return d;}}
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function $(id){return document.getElementById(id);}
+
+function getReg(){var r=jget(KEY_REG,null);return r&&r.name?r:null;}
+
+/* Firebase (opcional): solo para enviar el historial de reinicios. Sin configurar, no hace nada. */
+var FIREBASE_CONFIG=window.MIS_FIREBASE||{apiKey:"REEMPLAZAR",authDomain:"REEMPLAZAR",databaseURL:"REEMPLAZAR",projectId:"REEMPLAZAR",storageBucket:"REEMPLAZAR",messagingSenderId:"REEMPLAZAR",appId:"REEMPLAZAR"};
+var FB_OK=FIREBASE_CONFIG.apiKey.indexOf('REEMPLAZAR')<0;
+var MODS=['l1','l2','l3','p1','p2','p3'], HK='mis_bcs_hist';
+function histAdd(mod,estado,prog){
+  var r=getReg();if(!r||!r.id)return;
+  var a=jget(HK,[])||[],ts=Date.now();
+  a.push({k:'r'+ts+'_'+mod,mod:mod,sid:r.id,name:r.name||'',mode:r.mode||'individual',members:r.members||[],ts:ts,prog:prog||null,estado:estado,sent:false});
+  if(a.length>40)a=a.slice(-40);
+  sset(HK,JSON.stringify(a));
+}
+function fbLoad(cb){
+  var ini=function(){if(!firebase.apps.length)firebase.initializeApp(FIREBASE_CONFIG);cb();};
+  if(window.firebase){ini();return;}
+  var a=document.createElement('script');a.src='https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js';
+  a.onload=function(){var b=document.createElement('script');b.src='https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js';b.onload=ini;document.head.appendChild(b);};
+  document.head.appendChild(a);
+}
+function histFlush(){
+  if(!FB_OK||PREVIEW)return;
+  var a=jget(HK,[])||[];
+  if(!a.some(function(x){return !x.sent;}))return;
+  try{fbLoad(function(){
+    (jget(HK,[])||[]).forEach(function(x){
+      if(x.sent)return;
+      var db=firebase.database();
+      db.ref('mis_bcs_hist/'+x.mod+'/'+x.sid+'/'+x.k).set({id:x.sid,name:x.name,mode:x.mode,members:x.members,mod:x.mod,ts:x.ts,prog:x.prog,estado:x.estado})
+        .then(function(){return db.ref('mis_bcs/'+x.mod+'/'+x.sid+'/ultimoReinicio').transaction(function(c){return Math.max(c||0,x.ts);});})
+        .then(function(){var b=jget(HK,[])||[];b.forEach(function(y){if(y.k===x.k)y.sent=true;});sset(HK,JSON.stringify(b));})
+        .catch(function(){});
+    });
+  });}catch(e){}
+}
+
+/* Reinicio global: guarda copia de cada módulo con avance, borra su estado y deja la identificación intacta */
+var askReset=false;
+function anyProg(){
+  if(MODS.some(function(id){return sget('mis_bcs_'+id)!==null;}))return true;
+  var p=jget(KEY_PROG,{})||{};
+  return Object.keys(p).some(function(k){return p[k]&&((parseInt(p[k].done,10)||0)>0||(parseInt(p[k].pts,10)||0)>0);});
+}
+function resetEverything(){
+  var prog=jget(KEY_PROG,{})||{};
+  MODS.forEach(function(id){
+    var raw=sget('mis_bcs_'+id), st=null;
+    try{st=raw?JSON.parse(raw):null;}catch(e){}
+    if(st)histAdd(id,st,prog[id]||null);
+    sdel('mis_bcs_'+id);
+  });
+  sdel(KEY_PROG);
+  askReset=false; render(); histFlush();
+  toast('Empezaste de nuevo. Se borró tu avance en las seis actividades.');
+}
+function progOf(m){
+  var p=(jget(KEY_PROG,{})||{})[m.id]||{};
+  return {done:Math.max(0,Math.min(m.secs,parseInt(p.done,10)||0)), pts:Math.max(0,Math.min(m.pts,parseInt(p.pts,10)||0))};
+}
+
+/* Arte de portada: palabras que se vuelven categorías.
+   Se genera según el tamaño real de la portada, con semilla fija, y evita el título, los botones y el panel. */
+var ART_WORDS=['caso','categoría','imagen','idea','marco analítico','evidencia','saturación','triangulación','inducción analítica','muestreo teórico','concepto','selección de casos','codificación','entrevista','nota de campo','hallazgos','objetividad','mundos vitales','prueba','representación','teoría','pregunta','comparación','datos'];
+var ART_PAL={
+  A:{g1:'#2b5190',g1o:.52,g2:'#c9a256',g2o:.16,line:'#e8d5a0',lineo:.34,node:'#f3efe6',bok:'#e8d5a0',boko:.11}
+};
+function art(){
+  var svg=$('hero-art'),hero=svg.parentNode,NS='http://www.w3.org/2000/svg';
+  var W=Math.round(hero.clientWidth),H=Math.round(hero.clientHeight);
+  if(!W||!H)return;
+  art.w=W;
+  var P=ART_PAL.A,GOLD='#c9a256',GOLDL='#e8d5a0';
+  svg.setAttribute('viewBox','0 0 '+W+' '+H);svg.setAttribute('preserveAspectRatio','none');
+  var hr=hero.getBoundingClientRect(),Z=[];
+  function addBox(el,pad){if(!el)return;var r=el.getBoundingClientRect();if(r.width)Z.push({x0:r.left-hr.left-pad,y0:r.top-hr.top-pad,x1:r.right-hr.left+pad,y1:r.bottom-hr.top+pad})}
+  function addText(el,pad){if(!el)return;var rg=document.createRange();rg.selectNodeContents(el);Array.prototype.forEach.call(rg.getClientRects(),function(r){if(r.width>2)Z.push({x0:r.left-hr.left-pad,y0:r.top-hr.top-pad,x1:r.right-hr.left+pad,y1:r.bottom-hr.top+pad})})}
+  addText(hero.querySelector('.eyebrow-l'),14);addText(hero.querySelector('h1'),16);addText(hero.querySelector('.lead'),14);
+  Array.prototype.forEach.call(hero.querySelectorAll('.cta-row > *'),function(e){addBox(e,16)});
+  addBox(hero.querySelector('.panel'),14);
+  function inZ(x,y,m){m=m||0;for(var i=0;i<Z.length;i++){var z=Z[i];if(x>z.x0-m&&x<z.x1+m&&y>z.y0-m&&y<z.y1+m)return true}return false}
+  function segZ(a,b){for(var t=.1;t<1;t+=.2){if(inZ(a.x+(b.x-a.x)*t,a.y+(b.y-a.y)*t,0))return true}return false}
+  var s=20261007;function rnd(){s|=0;s=s+0x6D2B79F5|0;var t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}
+  function pick(free){for(var k=0;k<80;k++){var x=rnd()*W,y=rnd()*H;if(rnd()<Math.pow(y/H,1.6)*.9+.1&&(!free||!inZ(x,y,6)))return{x:x,y:y}}return null}
+  function el(n,a,p){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e}
+  while(svg.firstChild)svg.removeChild(svg.firstChild);
+  var d=el('defs',{},svg);
+  function rg(id,cx,cy,r,c,o){var g=el('radialGradient',{id:id,gradientUnits:'userSpaceOnUse',cx:cx,cy:cy,r:r},d);el('stop',{offset:'0','stop-color':c,'stop-opacity':o},g);el('stop',{offset:'1','stop-color':c,'stop-opacity':0},g)}
+  rg('ag1',W*.08,-H*.1,Math.max(W*.62,H),P.g1,P.g1o);rg('ag2',W*.74,H*1.12,Math.max(W*.55,H*.9),P.g2,P.g2o);
+  function bl(id,sd){var f=el('filter',{id:id,x:'-10%',y:'-10%',width:'120%',height:'120%'},d);el('feGaussianBlur',{stdDeviation:sd},f)}
+  bl('abF',2.2);bl('abN',4.5);bl('abW',1.5);
+  var lg=el('linearGradient',{id:'agm',x1:0,y1:0,x2:0,y2:1},d);el('stop',{offset:'.12','stop-color':'#fff','stop-opacity':0},lg);el('stop',{offset:'.72','stop-color':'#fff','stop-opacity':1},lg);
+  var mk=el('mask',{id:'amask',maskUnits:'userSpaceOnUse',x:0,y:0,width:W,height:H},d);el('rect',{width:W,height:H,fill:'url(#agm)'},mk);
+  el('rect',{width:W,height:H,fill:'url(#ag1)'},svg);el('rect',{width:W,height:H,fill:'url(#ag2)'},svg);
+  var mobile=W<700,N=Math.round(W*H/(mobile?7800:8800));
+  /* red: plano lejano, medio y cercano */
+  var far=el('g',{filter:'url(#abF)',opacity:.55},svg),net=el('g',{mask:'url(#amask)'},svg),near=el('g',{filter:'url(#abN)'},svg);
+  var i,nodes=[];
+  for(i=0;i<N;i++){var p=pick(true);if(p)nodes.push(p)}
+  for(i=0;i<Math.round(N*.55);i++){var q=pick(false);if(q)el('circle',{cx:q.x,cy:q.y,r:1.6+rnd()*2.2,fill:P.node,'fill-opacity':.5},far)}
+  var maxD=mobile?120:165,seen={};
+  nodes.forEach(function(a,ia){
+    var cand=nodes.map(function(b,ib){return{ib:ib,d:Math.hypot(a.x-b.x,a.y-b.y)}}).filter(function(o){return o.ib!==ia&&o.d<maxD}).sort(function(u,v){return u.d-v.d}).slice(0,2);
+    cand.forEach(function(o){var key=Math.min(ia,o.ib)+'-'+Math.max(ia,o.ib);if(seen[key])return;seen[key]=1;var b=nodes[o.ib];if(segZ(a,b))return;
+      el('line',{x1:a.x.toFixed(1),y1:a.y.toFixed(1),x2:b.x.toFixed(1),y2:b.y.toFixed(1),stroke:P.line,'stroke-opacity':P.lineo,'stroke-width':.9},net)});
+  });
+  nodes.forEach(function(a){el('circle',{cx:a.x.toFixed(1),cy:a.y.toFixed(1),r:(1.5+rnd()*1.7).toFixed(1),fill:P.node,'fill-opacity':.78},net)});
+  for(i=0;i<(mobile?6:10);i++){var y=H*(.66+rnd()*.38);el('circle',{cx:rnd()*W,cy:y,r:10+rnd()*20,fill:P.bok,'fill-opacity':P.boko+rnd()*.06},near)}
+  /* palabras */
+  var FF="'Source Serif 4',Georgia,serif",placed=[],wf=el('g',{filter:'url(#abW)'},svg),wm=el('g',{},svg),wk=el('g',{},svg);
+  function fits(x,y,w,h){for(var k=0;k<placed.length;k++){var r=placed[k];if(x<r.x+r.w+8&&x+w+8>r.x&&y<r.y+r.h+6&&y+h+6>r.y)return false}return true}
+  function place(word,size,free,biasY){for(var k=0;k<60;k++){var p=pick(false);if(!p)break;var w=word.length*size*.52+10,h=size+8,x=Math.min(Math.max(8,p.x-w/2),W-w-8),y=Math.min(Math.max(h,p.y),H-8);
+      if(free&&(inZ(x,y-h*.5,10)||inZ(x+w,y-h*.5,10)||inZ(x+w/2,y-h*.5,10)))continue;
+      if(!fits(x,y-h,w,h))continue;placed.push({x:x,y:y-h,w:w,h:h});return{x:x,y:y,w:w,h:h}}return null}
+  var words=ART_WORDS.slice(),nm=mobile?5:8,nf=mobile?7:11,nx=mobile?7:11,marked=[];
+  var wi=0;
+  for(i=0;i<nm&&wi<words.length;i++){var wd=words[wi++],sz=mobile?14:16,pp=place(wd,sz,true);if(!pp)continue;
+    var t=el('text',{x:pp.x.toFixed(1),y:pp.y.toFixed(1),'font-family':FF,'font-size':sz,'font-style':'italic',fill:'#f6efdc','fill-opacity':.95},wk);t.textContent=wd;marked.push({t:t,pp:pp})}
+  for(i=0;i<nx&&wi<words.length;i++){var wd2=words[wi++],sz2=(mobile?12:13)+Math.round(rnd()*2),p2=place(wd2,sz2,true);if(!p2)continue;
+    var t2=el('text',{x:p2.x.toFixed(1),y:p2.y.toFixed(1),'font-family':FF,'font-size':sz2,'font-style':rnd()<.5?'italic':'normal',fill:P.node,'fill-opacity':(.34+rnd()*.18).toFixed(2),stroke:'#0c1d3a','stroke-width':3.2,'stroke-opacity':.7,'paint-order':'stroke','stroke-linejoin':'round'},wm);t2.textContent=wd2}
+  for(i=0;i<nf;i++){var wd3=ART_WORDS[Math.floor(rnd()*ART_WORDS.length)],sz3=20+Math.round(rnd()*14),p3=pick(false);if(!p3)continue;
+    var t3=el('text',{x:p3.x.toFixed(1),y:p3.y.toFixed(1),'font-family':FF,'font-size':sz3,'font-style':'italic',fill:P.node,'fill-opacity':(.08+rnd()*.07).toFixed(2),transform:'rotate('+((rnd()*8-4).toFixed(1))+' '+p3.x.toFixed(1)+' '+p3.y.toFixed(1)+')'},wf);t3.textContent=wd3}
+  /* marcas doradas: resaltado + línea + nodo de categoría */
+  marked.forEach(function(m){
+    var b=m.t.getBBox(),mx=b.x+b.width/2,my=b.y+b.height/2,ok=null;
+    for(var k=0;k<14&&!ok;k++){
+      var side=(k%2===0)?((mx<W/2)?1:-1):((mx<W/2)?-1:1),
+          cx=mx+side*(b.width/2+34+rnd()*70),cy=my+14+rnd()*52,
+          sx=side>0?b.x+b.width+4:b.x-4;
+      if(cx<16||cx>W-16||cy>H-16)continue;
+      if(inZ(cx,cy,12)||segZ({x:sx,y:my},{x:cx,y:cy}))continue;
+      ok={cx:cx,cy:cy,sx:sx};
+    }
+    if(!ok){m.t.parentNode.removeChild(m.t);return}
+    var r=el('rect',{x:(b.x-4).toFixed(1),y:(b.y-1).toFixed(1),width:(b.width+8).toFixed(1),height:(b.height+2).toFixed(1),rx:4,fill:GOLD,'fill-opacity':.22},wk);wk.insertBefore(r,m.t);
+    el('line',{x1:(b.x+4).toFixed(1),y1:(b.y+b.height+1).toFixed(1),x2:(b.x+b.width-4).toFixed(1),y2:(b.y+b.height+1).toFixed(1),stroke:GOLD,'stroke-width':1.5,'stroke-opacity':.9},wk);
+    el('line',{x1:ok.sx.toFixed(1),y1:my.toFixed(1),x2:ok.cx.toFixed(1),y2:ok.cy.toFixed(1),stroke:GOLDL,'stroke-width':1,'stroke-opacity':.55},wk);
+    el('circle',{cx:ok.cx.toFixed(1),cy:ok.cy.toFixed(1),r:11,fill:'none',stroke:GOLD,'stroke-opacity':.38},wk);
+    el('circle',{cx:ok.cx.toFixed(1),cy:ok.cy.toFixed(1),r:4.6,fill:GOLD},wk);
+  });
+}
+(function(){var h;window.addEventListener('resize',function(){clearTimeout(h);h=setTimeout(function(){var w=$('hero-art').parentNode.clientWidth;if(Math.abs(w-(art.w||0))>30)art()},180)})})();
+
+
+function lecCard(m,pr,sug,started){
+  var st=pr.done>=m.secs?'done':(pr.done>0?'doing':'new');
+  var label=st==='done'?'Repasar':(st==='doing'?'Continuar':'Empezar');
+  var badge='';
+  if(sug&&sug.id===m.id)badge='<span class="tag">'+(started?'Continúa aquí':'Empieza aquí')+'</span>';
+  else if(st==='done')badge='<span class="tag ok">Completada</span>';
+  var pct=Math.round(pr.done/m.secs*100);
+  return '<article class="card m-'+m.c+'">'
+   +'<div class="card-top"><div class="card-k"><span class="ord" aria-hidden="true">'+m.n+'</span><span>Lectura '+m.n+'</span>'+badge+'</div>'
+   +'<h4 class="card-t">'+esc(m.title)+'</h4></div>'
+   +'<div class="card-b"><p>'+esc(m.desc)+'</p>'
+   +'<ul class="chips"><li>'+m.secs+' secciones</li><li>'+m.pts+' puntos</li><li>≈ '+(m.secs*MIN_PER_SEC)+' min</li></ul>'
+   +'<p class="guide">Guía de estudio: '+m.guide+' preguntas</p>'
+   +'<div class="prog"><div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="'+m.secs+'" aria-valuenow="'+pr.done+'" aria-label="Avance de la lectura '+m.n+'"><i style="width:'+pct+'%"></i></div>'
+   +'<p class="prog-t">'+pr.done+' de '+m.secs+' secciones · '+pr.pts+' de '+m.pts+' puntos</p></div>'
+   +'<a class="btn-card" data-go href="'+m.href+'"><span>'+label+'</span>'+ARROW+'</a></div></article>';
+}
+function preCard(p){
+  if(p.href){
+    var pr=progOf({id:p.id,secs:p.secs,pts:0}),st=pr.done>=p.secs?'done':(pr.done>0?'doing':'new');
+    var label=st==='done'?'Repasar':(st==='doing'?'Continuar':'Empezar'),pct=Math.round(pr.done/p.secs*100);
+    return '<article class="card m-'+p.c+'">'
+     +'<div class="card-top"><div class="card-k"><span class="ord" aria-hidden="true">'+p.n+'</span><span>Presentación '+p.n+'</span>'+(st==='done'?'<span class="tag ok">Completada</span>':'')+'</div>'
+     +'<h4 class="card-t">'+esc(p.title)+'</h4></div>'
+     +'<div class="card-b"><p>'+esc(p.desc)+'</p>'
+     +'<ul class="chips"><li>'+p.secs+' momentos</li><li>Sin puntaje</li></ul>'
+     +'<div class="prog"><div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="'+p.secs+'" aria-valuenow="'+pr.done+'" aria-label="Avance de la presentación '+p.n+'"><i style="width:'+pct+'%"></i></div>'
+     +'<p class="prog-t">'+pr.done+' de '+p.secs+' momentos completados</p></div>'
+     +'<a class="btn-card" data-go href="'+p.href+'"><span>'+label+'</span>'+ARROW+'</a></div></article>';
+  }
+  return '<article class="card pre"><div class="pre-in"><p class="pre-k"><span>Presentación '+p.n+'</span><span class="soon">En preparación</span></p>'
+   +'<h4>'+esc(p.title)+'</h4></div></article>';
+}
+
+
+function render(){
+  var reg=getReg(), i, tp=0, td=0, ts=0, tpt=0, lecDone=0, next=null, started=false;
+  var prs=LECS.map(progOf);
+  var pps=PRES.map(function(p){return progOf({id:p.id,secs:p.secs,pts:0});}), pd=0, ps=0, presDone=0;
+  PRES.forEach(function(p,k){pd+=pps[k].done; ps+=p.secs; if(pps[k].done>=p.secs)presDone++;});
+  LECS.forEach(function(m,k){
+    td+=prs[k].done; ts+=m.secs; tp+=prs[k].pts; tpt+=m.pts;
+    if(prs[k].done>=m.secs)lecDone++;
+    if(prs[k].done>0)started=true;
+    if(!next&&prs[k].done<m.secs)next=m;
+  });
+  /* cabecera */
+  var rb=$('reg-btn');
+  rb.textContent=reg?reg.name:'Identificarme'; rb.className='pill'+(reg?' on':'');
+  rb.setAttribute('aria-label',reg?'Tu registro: '+reg.name+'. Abrir para editar':'Identificarme');
+  /* portada */
+  var cta=$('hero-cta'), ct=$('hero-cta-t');
+  if(!reg){ct.textContent='Identificarme y empezar';cta.setAttribute('href',LECS[0].href);cta.setAttribute('data-go','');}
+  else if(!next){ct.textContent='Repasar las lecturas';cta.setAttribute('href','#ruta');cta.removeAttribute('data-go');}
+  else{ct.textContent=(started?'Continuar con Lectura ':'Empezar con Lectura ')+next.n;cta.setAttribute('href',next.href);cta.setAttribute('data-go','');}
+  $('hp-done').textContent=td; $('hp-total').textContent=ts; $('hp-pts').textContent=tp; $('hp-ptot').textContent=tpt;
+  $('hp-act').textContent=lecDone+presDone; $('hp-actn').textContent=LECS.length+PRES.length;
+  $('hp-pdone').textContent=pd; $('hp-ptotal').textContent=ps;
+  var seg='', lab='';
+  LECS.forEach(function(m,k){
+    seg+='<div class="seg-g s'+m.n+'" style="--n:'+m.secs+'">';
+    for(i=0;i<m.secs;i++)seg+='<i class="'+(i<prs[k].done?'f':'')+'"></i>';
+    seg+='</div>'; lab+='<span style="--n:'+m.secs+'">L'+m.n+'</span>';
+  });
+  var pseg='', plab='';
+  PRES.forEach(function(p,k){
+    pseg+='<div class="seg-g sp" style="--n:'+p.secs+'">';
+    for(i=0;i<p.secs;i++)pseg+='<i class="'+(i<pps[k].done?'f':'')+'"></i>';
+    pseg+='</div>'; plab+='<span style="--n:'+p.secs+'">P'+p.n+'</span>';
+  });
+  $('hp-pseg').innerHTML=pseg; $('hp-pseg').setAttribute('aria-label',pd+' de '+ps+' momentos de presentación completados'); $('hp-pseg-l').innerHTML=plab;
+  $('hp-seg').innerHTML=seg; $('hp-seg').setAttribute('aria-label',td+' de '+ts+' secciones completadas'); $('hp-seg-l').innerHTML=lab;
+  $('hp-id').innerHTML=reg
+    ? '<b>'+esc(reg.name)+'</b> · '+(reg.mode==='grupo'?'Grupal ('+(reg.members||[]).length+' integrantes)':'Individual')+'<br><button type="button" class="link-btn" id="hp-edit">Editar mi registro</button>'
+    : '<button type="button" class="link-btn" id="hp-reg">Identifícate para guardar tu avance</button>';
+  var b=$('hp-edit')||$('hp-reg'); if(b)b.addEventListener('click',function(){openDlg(null);});
+  var has=anyProg(); if(!has)askReset=false;
+  if(has){
+    var hr=document.createElement('div'); hr.className='hp-rr';
+    hr.innerHTML=askReset
+      ? '<div class="hp-rst" role="group" aria-labelledby="hp-rst-t"><p id="hp-rst-t"><b>¿Borrar todo tu avance?</b></p><p>Se borrarán las respuestas y el avance de las tres lecturas y las tres presentaciones, en este navegador. Tu identificación se mantiene.'+(reg?' Tu docente conservará el registro de lo que ya hiciste.':'')+'</p><div class="hp-rst-a"><button type="button" class="y" id="hp-rst-yes">Sí, borrar todo</button><button type="button" class="n" id="hp-rst-no">Cancelar</button></div></div>'
+      : '<br><button type="button" class="link-btn danger" id="hp-rst">Borrar todo mi avance y empezar de nuevo</button>';
+    $('hp-id').appendChild(hr);
+    if($('hp-rst'))$('hp-rst').addEventListener('click',function(){askReset=true;render();var n=$('hp-rst-no');if(n)n.focus();});
+    if($('hp-rst-no'))$('hp-rst-no').addEventListener('click',function(){askReset=false;render();var q=$('hp-rst');if(q)q.focus();});
+    if($('hp-rst-yes'))$('hp-rst-yes').addEventListener('click',resetEverything);
+  }
+  /* tarjetas */
+  $('grid-lec').innerHTML=LECS.map(function(m,k){return lecCard(m,prs[k],next,started);}).join('');
+  $('grid-pre').innerHTML=PRES.map(preCard).join('');
+  art();
+}
+
+/* Diálogo de registro */
+var dlg=$('dlg'), pending=null, members=[''];
+function setMode(mode){
+  var g=mode==='grupo';
+  $('mem-wrap').hidden=!g;
+  $('f-name-l').textContent=g?'Nombre del grupo':'Tu nombre';
+  $('f-name').placeholder=g?'Ej.: Grupo 1':'Nombre y apellido';
+  $('f-name').autocomplete=g?'off':'name';
+}
+function renderMembers(){
+  $('mem-list').innerHTML=members.map(function(v,k){
+    return '<div class="mem-r"><input type="text" id="mem-'+k+'" maxlength="80" value="'+esc(v)+'" placeholder="Integrante '+(k+1)+'" aria-label="Integrante '+(k+1)+'">'
+      +(members.length>1?'<button type="button" class="mem-x" data-rm="'+k+'" aria-label="Quitar integrante '+(k+1)+'">×</button>':'')+'</div>';
+  }).join('');
+  $('mem-add').hidden=members.length>=MAX_MEM;
+}
+function showErr(t){var e=$('dlg-err');e.textContent=t||'';e.hidden=!t;}
+function openDlg(href){
+  pending=href||null;
+  var reg=getReg();
+  var mode=reg?reg.mode:'individual';
+  document.querySelector('input[name=mode][value='+mode+']').checked=true;
+  $('f-name').value=reg?reg.name:'';
+  members=reg&&reg.members&&reg.members.length?reg.members.slice(0,MAX_MEM):[''];
+  setMode(mode); renderMembers(); showErr('');
+  $('dlg-out').hidden=!reg; $('dlg-warn').hidden=storageOK; $('lo').hidden=true;
+  $('dlg-t').textContent=reg?'Tu registro':'Identifícate para guardar tu avance';
+  if(dlg.showModal)dlg.showModal(); else dlg.setAttribute('open','');
+  $('f-name').focus();
+}
+function closeDlg(){if(dlg.close)dlg.close(); else dlg.removeAttribute('open'); pending=null;}
+function toast(t){var el=$('toast');el.textContent=t;el.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(function(){el.hidden=true;},3600);}
+function go(href){
+  if(PREVIEW){toast('En esta vista previa los módulos todavía no existen. En el sitio, este botón abre la actividad.');return;}
+  location.href=href;
+}
+
+document.querySelectorAll('input[name=mode]').forEach(function(r){r.addEventListener('change',function(){setMode(this.value);});});
+$('mem-add').addEventListener('click',function(){if(members.length<MAX_MEM){members.push('');renderMembers();$('mem-'+(members.length-1)).focus();}});
+$('mem-list').addEventListener('input',function(e){var m=/^mem-(\d+)$/.exec(e.target.id);if(m)members[+m[1]]=e.target.value;});
+$('mem-list').addEventListener('click',function(e){var b=e.target.closest('[data-rm]');if(b){members.splice(+b.getAttribute('data-rm'),1);renderMembers();}});
+$('dlg-cancel').addEventListener('click',closeDlg);
+/* Cerrar sesión: si hay avance, el estudiante elige borrarlo (el docente recibe una copia) o conservarlo en este navegador */
+function doLogout(del){
+  if(del){
+    var prog=jget(KEY_PROG,{})||{};
+    MODS.forEach(function(id){
+      var raw=sget('mis_bcs_'+id), st=null;
+      try{st=raw?JSON.parse(raw):null;}catch(e){}
+      if(st)histAdd(id,st,prog[id]||null);
+      sdel('mis_bcs_'+id);
+    });
+    sdel(KEY_PROG);
+  }
+  sdel(KEY_REG); askReset=false; closeDlg(); render();
+  toast(del?'Cerraste tu sesión y se borró tu avance de este navegador. Tu docente conserva una copia.':'Cerraste tu sesión. Tu avance sigue guardado en este navegador.');
+  if(del)histFlush();
+}
+$('dlg-out').addEventListener('click',function(){
+  if(anyProg()){$('lo').hidden=false;$('lo-no').focus();$('lo').scrollIntoView({block:'nearest'});return;}
+  doLogout(false);
+});
+$('lo-del').addEventListener('click',function(){doLogout(true);});
+$('lo-keep').addEventListener('click',function(){doLogout(false);});
+$('lo-no').addEventListener('click',function(){$('lo').hidden=true;$('dlg-out').focus();});
+$('dlg-f').addEventListener('submit',function(e){
+  e.preventDefault();
+  var mode=document.querySelector('input[name=mode]:checked').value;
+  var name=$('f-name').value.trim().replace(/\s+/g,' ');
+  var ms=members.map(function(v){return v.trim().replace(/\s+/g,' ');}).filter(Boolean);
+  if(name.length<2){showErr(mode==='grupo'?'Escribe el nombre del grupo.':'Escribe tu nombre y apellido.');$('f-name').focus();return;}
+  if(mode==='grupo'&&ms.length<1){showErr('Agrega al menos un integrante.');return;}
+  var old=getReg();
+  var reg={id:old?old.id:Date.now()+'_'+Math.random().toString(36).slice(2,7),mode:mode,name:name,members:mode==='grupo'?ms:[],createdAt:old?old.createdAt:new Date().toISOString()};
+  sset(KEY_REG,JSON.stringify(reg));
+  var href=pending; closeDlg(); render();
+  if(href)go(href);
+});
+document.addEventListener('click',function(e){
+  var a=e.target.closest&&e.target.closest('a[data-go]');
+  if(a){
+    var href=a.getAttribute('href');
+    if(!getReg()){e.preventDefault();openDlg(href);return;}
+    if(PREVIEW){e.preventDefault();go(href);}
+    return;
+  }
+  var x=e.target.closest&&e.target.closest('a[data-ext]');
+  if(x&&(PREVIEW||!DASH_READY)){e.preventDefault();toast('El panel docente estará disponible próximamente.');}
+});
+$('reg-btn').addEventListener('click',function(){openDlg(null);});
+
+
+/* Tema */
+function applyTheme(t){if(t)document.documentElement.setAttribute('data-theme',t);else document.documentElement.removeAttribute('data-theme');}
+var th=jget(KEY_THEME,null)||sget(KEY_THEME); if(th==='dark'||th==='light')applyTheme(th);
+$('theme-btn').addEventListener('click',function(){
+  var cur=document.documentElement.getAttribute('data-theme')||(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+  var nx=cur==='dark'?'light':'dark'; applyTheme(nx); sset(KEY_THEME,JSON.stringify(nx));
+});
+
+render(); histFlush();
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){art()});
+window.addEventListener('storage',render);
+window.addEventListener('pageshow',render);
+})();
+</script>
+</body>
+</html>

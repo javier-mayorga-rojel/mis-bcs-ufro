@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<!--
+  Actividad de estudio · Lectura 2 (Flick, 2007, cap. 1) · Módulo cualitativo · MIS · Bachillerato en Ciencias Sociales UFRO
+  v0.1 · 2026-10-06
+  Archivo: actividad_mis_bcs_l2.html (junto a index_mis_bcs.html en el mismo repositorio)
+  PIN DOCENTE: CUALITATIVO2026 (lo pide solo dashboard_docente.html; este archivo no pide PIN)
+  Firebase: se configura una sola vez en firebase_config.js (mismo archivo para todo el sitio). Mientras diga "REEMPLAZAR", usa solo localStorage.
+  Nodo que se escribe: mis_bcs/l2/[id]/sec[n].
+  Contrato con el portal: lee mis_bcs_reg y mis_bcs_theme; escribe mis_bcs_prog.l2 = {done, pts}.
+  Reinicio: «Borrar mi avance y empezar de nuevo» guarda antes una copia del avance en mis_bcs_hist (local) y, con Firebase activo,
+  en mis_bcs_hist/l2/[id]/[clave] (solo se agrega, no se sobrescribe) y marca mis_bcs/l2/[id]/ultimoReinicio. El panel docente lee ese historial.
+-->
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lectura 2 · Relevancia y rasgos de la investigación cualitativa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+/* Concepto: un módulo de estudio sobrio, de una sola columna. Cada sección tiene su color. */
+:root{
+  --bg:#f8f5ef; --surface:#fffdf8; --ink:#0b1a33; --ink2:#4b566b; --line:#d9d0ba;
+  --gold:#c9a256; --gold-ink:#7d5f17; --gold-bg:#f3e8cc; --nav:#0b1a33; --nav-ink:#f8f5ef;
+  --teo:#1a4a7a; --teo-bg:#e6eef7; --emp:#1a5c38; --emp-bg:#e4f1e9;
+  --ok:#1a5c38; --ok-bg:#ebf7ef; --no:#9b2226; --no-bg:#fdeeee; --info:#1a4a7a; --info-bg:#eaf1f9;
+  --s0c:#1a4a7a; --s0b:#e8f0f8; --s1c:#7a3b1e; --s1b:#faf0e8; --s2c:#1a5c38; --s2b:#e8f5ee; --s3c:#4a1a6b; --s3b:#f0e8f8;
+  --focus:#0b1a33;
+  --ff-d:'Playfair Display',Georgia,'Times New Roman',serif;
+  --ff-b:'Source Serif 4',Georgia,'Times New Roman',serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0a1428; --surface:#111f3a; --ink:#f1ece0; --ink2:#aab4c6; --line:#2a3a5c;
+    --gold:#e0bd73; --gold-ink:#e0bd73; --gold-bg:#3a3118; --nav:#060d1c; --nav-ink:#f1ece0;
+    --teo:#7fb0e6; --teo-bg:#14284a; --emp:#6fcb98; --emp-bg:#12332a;
+    --ok:#6fcb98; --ok-bg:#10301f; --no:#f19a9d; --no-bg:#3a1618; --info:#8fbbea; --info-bg:#14284a;
+    --s0c:#8fbbea; --s0b:#14284a; --s1c:#e8a985; --s1b:#3a2216; --s2c:#6fcb98; --s2b:#12332a; --s3c:#c9a0e8; --s3b:#2c1a42;
+    --focus:#e0bd73; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0a1428; --surface:#111f3a; --ink:#f1ece0; --ink2:#aab4c6; --line:#2a3a5c;
+  --gold:#e0bd73; --gold-ink:#e0bd73; --gold-bg:#3a3118; --nav:#060d1c; --nav-ink:#f1ece0;
+  --teo:#7fb0e6; --teo-bg:#14284a; --emp:#6fcb98; --emp-bg:#12332a;
+  --ok:#6fcb98; --ok-bg:#10301f; --no:#f19a9d; --no-bg:#3a1618; --info:#8fbbea; --info-bg:#14284a;
+  --s0c:#8fbbea; --s0b:#14284a; --s1c:#e8a985; --s1b:#3a2216; --s2c:#6fcb98; --s2b:#12332a; --s3c:#c9a0e8; --s3b:#2c1a42;
+  --focus:#e0bd73; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--ff-b);font-size:17px;line-height:1.6;margin:0;padding:0}
+button{font:inherit;color:inherit}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--focus);outline-offset:3px;border-radius:6px}
+.wrap{max-width:960px;margin:0 auto;padding-inline:16px}
+
+/* Barra superior */
+.top{background:var(--nav);color:var(--nav-ink)}
+.top .wrap{display:flex;align-items:center;gap:14px;min-height:60px;flex-wrap:wrap;padding-block:8px}
+.top a.back{display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-weight:600;font-size:15px;color:var(--nav-ink);padding:6px 10px;border-radius:8px;border:1px solid rgba(248,245,239,.28)}
+.top a.back:hover{border-color:var(--gold)}
+.top .ttl{font-family:var(--ff-d);font-weight:600;font-size:16px;flex:1;min-width:0;line-height:1.25}
+.top .ttl small{display:block;font-family:var(--ff-b);font-weight:400;font-size:13px;opacity:.75}
+.top .who{font-size:14px;padding:4px 12px;border:1px solid rgba(248,245,239,.28);border-radius:999px;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tbtn{width:38px;height:38px;border-radius:50%;border:1px solid rgba(248,245,239,.28);background:none;color:var(--nav-ink);cursor:pointer;display:grid;place-items:center}
+.tbtn:hover{border-color:var(--gold)}
+@media (max-width:560px){.top .ttl small{display:none}.top .who{max-width:120px}}
+
+/* Aviso de identificación */
+.note{margin-top:18px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:12px 16px;border-radius:12px;background:var(--gold-bg);border:1px solid var(--gold);font-size:15px}
+.note a,.note button{font-weight:600}
+.note button{background:none;border:0;padding:0;text-decoration:underline;cursor:pointer}
+.note a.cta{display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:999px;background:var(--ink);color:var(--bg);text-decoration:none;font-weight:700;box-shadow:0 2px 0 var(--gold)}
+.note a.cta:hover{filter:brightness(1.12)}
+
+/* Inicio */
+.hero{padding-block:36px 8px}
+.eyebrow{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-ink);font-weight:600;margin:0 0 8px}
+h1{font-family:var(--ff-d);font-weight:700;font-size:clamp(30px,5.5vw,46px);line-height:1.12;margin:0 0 12px;text-wrap:balance}
+.lead{font-size:18px;color:var(--ink2);max-width:680px;margin:0}
+h2.sec-t{font-family:var(--ff-d);font-size:26px;margin:36px 0 14px;line-height:1.2}
+.goals{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:6px;max-width:720px}
+.how{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:6px}
+.how div{border-top:3px solid var(--ink);padding-top:10px}
+.how b{font-family:var(--ff-d);font-size:19px;display:block;margin-bottom:2px}
+.how span{color:var(--ink2);font-size:15.5px}
+.total{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:28px;padding:16px 18px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.total .big{font-family:var(--ff-d);font-weight:700;font-size:30px;line-height:1}
+.total small{color:var(--ink2);font-size:15px}
+.bar{height:8px;border-radius:4px;background:var(--line);overflow:hidden;flex:1;min-width:140px}
+.bar i{display:block;height:100%;background:var(--gold);border-radius:4px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.card .hd{background:var(--bg-c);color:var(--c);padding:16px 18px;display:flex;gap:12px;align-items:flex-start}
+.card .num{flex:none;width:36px;height:36px;border-radius:50%;background:var(--c);color:var(--bg-c);display:grid;place-items:center;font-family:var(--ff-d);font-weight:700}
+.card h3{font-family:var(--ff-d);font-size:20px;line-height:1.2;margin:2px 0 0}
+.card .bd{padding:14px 18px 18px;display:flex;flex-direction:column;gap:12px;flex:1}
+.card p{margin:0;font-size:15.5px;color:var(--ink2)}
+.card .meta{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:14px;color:var(--ink2)}
+.card .meta b{color:var(--ink)}
+.tagst{font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;padding:3px 9px;border-radius:999px;border:1px solid var(--line);color:var(--ink2);margin-left:auto;white-space:nowrap}
+.tagst.done{border-color:var(--ok);color:var(--ok)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:10px;padding:11px 18px;font-weight:600;cursor:pointer;background:var(--ink);color:var(--bg);text-decoration:none;font-size:16px}
+.btn.alt{background:none;color:var(--ink);border:1px solid var(--ink)}
+.btn.gold{background:var(--gold);color:#0b1a33}
+.btn:hover{filter:brightness(1.08)}
+.btn[disabled]{opacity:.4;cursor:default}
+.card .btn{margin-top:auto;align-self:flex-start}
+
+/* Sección */
+.stepper{display:flex;gap:6px;flex-wrap:wrap;margin-top:22px}
+.pill{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 14px;font-size:15px;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.pill i{font-style:normal;font-size:12px;color:var(--ink2)}
+.pill[aria-current="true"]{background:var(--c);color:var(--bg-c);border-color:var(--c)}
+.pill[aria-current="true"] i{color:var(--bg-c)}
+.pill.done i{color:var(--ok)}
+.pill[aria-current="true"].done i{color:var(--bg-c)}
+.sechd{margin-top:22px;border-radius:14px;background:var(--bg-c);color:var(--c);padding:22px 22px 20px;border:1px solid var(--c)}
+.sechd .k{font-size:13px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;margin:0 0 6px}
+.sechd h2{font-family:var(--ff-d);font-size:clamp(24px,4vw,32px);line-height:1.18;margin:0 0 10px}
+.sechd p.d{margin:0;color:var(--ink);font-size:17px}
+.sechd .g{margin:10px 0 0;font-size:14.5px;color:var(--ink2)}
+.blk{margin-top:30px}
+.blk > h3{font-family:var(--ff-d);font-size:21px;margin:0 0 4px}
+.blk > p.sub{margin:0 0 14px;color:var(--ink2);font-size:15.5px}
+.cloud{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:baseline}
+.chip{border:1px solid var(--c);background:var(--surface);color:var(--c);border-radius:999px;padding:5px 14px;cursor:pointer;font-weight:600;line-height:1.3}
+.chip[aria-pressed="true"]{background:var(--c);color:var(--bg-c)}
+.def{margin-top:14px;padding:14px 16px;border-radius:12px;background:var(--bg-c);border-left:4px solid var(--c)}
+.def b{font-family:var(--ff-d);font-size:18px;color:var(--c);display:block;margin-bottom:2px}
+.def p{margin:0}
+.prog{display:flex;align-items:center;gap:12px;margin:26px 0 0;padding:10px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);position:sticky;top:0;z-index:5}
+.prog .bar i{background:var(--c)}
+.prog span{font-size:15px;white-space:nowrap}
+
+/* Ítems */
+.q{padding:18px 0;border-bottom:1px solid var(--line)}
+.q:last-child{border-bottom:0}
+.q .qt{font-weight:600;margin:0 0 12px}
+.q .qn{color:var(--c);font-family:var(--ff-d);margin-right:6px}
+.frag{margin:0 0 12px;padding:10px 14px;border-left:4px solid var(--c);background:var(--bg-c);border-radius:0 10px 10px 0;font-style:italic}
+.fq{margin:0 0 10px;font-size:15.5px;color:var(--ink2)}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 14px;cursor:pointer;display:flex;gap:10px;align-items:flex-start;line-height:1.45}
+.opt:hover:not([disabled]){border-color:var(--c)}
+.opt .l{font-weight:700;color:var(--c);flex:none}
+.opt[disabled]{cursor:default}
+.opt.right{border-color:var(--ok);background:var(--ok-bg)}
+.opt.wrong{border-color:var(--no);background:var(--no-bg)}
+.opt.dim{opacity:.62}
+.pair{display:flex;gap:10px;flex-wrap:wrap}
+.pair .opt{flex:1 1 200px;justify-content:center;align-items:center;text-align:center;font-weight:600}
+.fb{margin-top:12px;padding:12px 14px;border-radius:10px;font-size:16px;line-height:1.55;display:flex;gap:12px;align-items:flex-start}
+.fb.ok{background:var(--ok-bg);border:1px solid var(--ok)}
+.fb.no{background:var(--info-bg);border:1px solid var(--info)}
+.fb svg{flex:none;margin-top:3px}
+.fb.ok svg{color:var(--ok)} .fb.no svg{color:var(--info)}
+.fb p{margin:0}
+.fb .ref{display:block;margin-top:6px;font-size:14px;color:var(--ink2)}
+.fb .ref b{color:var(--ink)}
+
+/* Resultado */
+.res{margin-top:34px;border:2px solid var(--c);border-radius:16px;background:var(--surface);padding:22px}
+.res h3{font-family:var(--ff-d);font-size:24px;margin:0 0 4px}
+.res .score{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:6px 0 10px}
+.res .score b{font-family:var(--ff-d);font-size:44px;line-height:1;color:var(--c)}
+.res .brk{display:flex;gap:8px 18px;flex-wrap:wrap;color:var(--ink2);font-size:15px;margin:0 0 12px}
+.res .rev{margin:14px 0 0;padding:12px 16px;border-radius:12px;background:var(--bg-c)}
+.res .rev b{display:block;margin-bottom:4px}
+.res .rev ul{margin:0;padding-left:20px}
+.acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+
+footer{margin-top:56px;background:var(--nav);color:var(--nav-ink)}
+footer .wrap{padding-block:32px}
+footer .f-n{margin:0;font:700 17px/1.3 var(--ff-d)}
+footer .f-s{margin:6px 0 0;font-size:14.5px;line-height:1.6;opacity:.82;max-width:60ch}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:10px;font-size:15px;z-index:50;max-width:calc(100% - 32px)}
+
+.reset{margin-top:36px;padding-top:20px;border-top:1px solid var(--line)}
+.reset .btn.alt{font-size:15px;padding:9px 16px}
+.reset-box{padding:16px 18px;border:1px solid var(--no);border-radius:12px;background:var(--no-bg)}
+.reset-box p{margin:0 0 6px;line-height:1.55}
+.btn.danger{background:var(--no);color:var(--bg)}
+</style>
+</head>
+<body>
+<script src="firebase_config.js"></script>
+
+
+
+<header class="top">
+  <div class="wrap">
+    <a class="back" id="back" href="index_mis_bcs.html" data-portal><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>Portal</a>
+    <div class="ttl">Lectura 2 · Relevancia y rasgos de la investigación cualitativa</div>
+    <span class="who" id="who" hidden></span>
+    <button class="tbtn" id="theme" type="button" aria-label="Cambiar entre tema claro y oscuro"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v18" /><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></svg></button>
+  </div>
+</header>
+
+<main class="wrap" id="app" aria-live="polite"></main>
+
+<footer>
+  <div class="wrap">
+    <p class="f-n">Universidad de La Frontera</p>
+    <p class="f-s">Facultad de Educación, Ciencias Sociales y Humanidades<br>Metodología de la Investigación Social | Módulo Cualitativo | 2026</p>
+  </div>
+</footer>
+<div class="toast" id="toast" role="status" hidden></div>
+
+
+<script>
+(function(){
+var PREVIEW=false;
+var CHARS=[{"title": "Relevancia de lo cualitativo y límites de lo cuantitativo", "topic": "la relevancia de la investigación cualitativa y los límites de la investigación cuantitativa", "guia": "Preguntas 1 a 9 de la guía", "desc": "Flick sostiene que la pluralización de los mundos vitales vuelve relevante a la investigación cualitativa y que la investigación cuantitativa tradicional, con sus ideales de objetividad, muestra límites como punto de partida.", "words": [{"w": "Pluralización de los mundos vitales", "d": "Diversificación de las maneras de vivir, los medios, las subculturas y los estilos de vida. Según Flick, es la razón de la relevancia específica de la investigación cualitativa para estudiar las relaciones sociales."}, {"w": "Individualización", "d": "Expresión clave que Flick toma de Beck para describir la creciente individualización de las maneras de vivir y de los patrones biográficos."}, {"w": "Narraciones limitadas", "d": "Según los defensores del postmodernismo, ya pasó la era de las grandes narraciones y teorías: hoy se requieren narraciones limitadas local, temporal y situacionalmente."}, {"w": "Falta de familiaridad", "d": "Posición inicial del científico social frente a lo que realmente ocurre en la esfera de vida que decide estudiar, según la cita de Blumer que recoge Flick."}, {"w": "Estrategia deductiva", "d": "Derivar las preguntas de investigación y las hipótesis a partir de modelos teóricos y ponerlas a prueba frente a los datos empíricos."}, {"w": "Estrategia inductiva", "d": "En lugar de partir de teorías para comprobarlas, se desarrollan las teorías a partir de estudios empíricos."}, {"w": "Conceptos sensibilizadores", "d": "Conceptos que sirven para enfocar los contextos sociales que se estudian cuando no se parte de teorías por comprobar. Están influidos por el conocimiento teórico previo."}, {"w": "Objetividad", "d": "Garantía que busca la investigación cuantitativa tradicional excluyendo al máximo la influencia del investigador y eliminando en gran parte las opiniones subjetivas de investigadores y participantes."}, {"w": "Desencanto", "d": "Pérdida de confianza en los ideales de objetividad y en las ciencias, sus métodos y sus hallazgos. El texto lo vincula con Weber (el «desencanto del mundo») y con Bonß y Hartmann."}, {"w": "Investigación de la utilización", "d": "Línea de estudios que, según Beck y Bonß, mostró que los hallazgos científicos llegan a las prácticas políticas e institucionales menos de lo esperado y de manera interpretada."}], "mc": [{"q": "Flick sostiene que los métodos cualitativos no pueden considerarse independientemente del proceso de investigación y del problema en estudio. ¿Cómo lo justifica?", "opts": ["Los métodos cualitativos se escogen recién al final del estudio, cuando ya se recogieron y ordenaron todos los datos que el investigador necesitaba reunir antes de empezar.", "Cada método cualitativo tiene reglas fijas que se aplican de la misma forma a cualquier problema de investigación, por eso no depende del proceso.", "Cada método parte de una comprensión específica de su objeto y está incrustado en el proceso, por lo que se entiende mejor desde una perspectiva de proceso.", "El proceso de investigación solo importa en los estudios cuantitativos, porque son los únicos que siguen pasos ordenados, secuenciales y estandarizados."], "ans": 2, "tip": "Flick parte de que hoy existe una gran variedad de métodos, cada uno con premisas y propósitos distintos y una comprensión propia de su objeto. Por eso el libro los presenta ubicados en los pasos del proceso (recoger e interpretar datos, evaluar y presentar resultados), y así el lector puede elegir la estrategia más apropiada para su pregunta y su problema.", "ref": "Introducción del capítulo (primer apartado)"}, {"q": "¿Qué entiende Flick por «pluralización de los mundos vitales»?", "opts": ["La diversificación de las maneras de vivir, los medios, las subculturas y los estilos de vida, que enfrenta a los investigadores con contextos sociales nuevos.", "La unificación de los estilos de vida en una sola cultura global, lo que permite aplicar un mismo modelo teórico en cualquier contexto social y en cualquier época.", "El aumento del número de métodos disponibles en las ciencias sociales y en la psicología, que hoy ofrecen muchas más opciones para investigar que antes.", "La creciente cantidad de personas que estudian ciencias sociales y participan en investigaciones como informantes, entrevistados o encuestados de distintos estudios."], "ans": 0, "tip": "El texto la ilustra con tres expresiones clave: la «nueva oscuridad» (Habermas), la individualización de las maneras de vivir y de los patrones biográficos (Beck) y la disolución de las viejas desigualdades en una nueva diversidad de medios, subculturas y estilos de vida (Hradil). Esa pluralización exige una nueva sensibilidad para el estudio empírico.", "ref": "Relevancia de la investigación cualitativa"}, {"q": "Según los defensores del postmodernismo que cita Flick, ¿qué tipo de narraciones se requiere hoy?", "opts": ["Grandes teorías generales que expliquen toda la sociedad a partir de unos pocos principios universales y válidos siempre.", "Narraciones estandarizadas que se puedan replicar con los mismos procedimientos en cualquier contexto social y en cualquier época.", "Narraciones puramente literarias, que no mantengan relación alguna con el estudio empírico de los problemas sociales concretos.", "Narraciones limitadas local, temporal y situacionalmente, porque la era de las grandes narraciones y teorías ya pasó."], "ans": 3, "tip": "Flick usa la afirmación postmodernista para reforzar su argumento: si los estilos de vida y los patrones de interpretación se pluralizan, las explicaciones también deben ser situadas. Por eso la opción de las grandes teorías es la inversa de lo que plantea el texto.", "ref": "Relevancia de la investigación cualitativa"}, {"q": "Flick cita a Blumer sobre la «falta de familiaridad» del investigador con la esfera de vida estudiada. ¿Cómo se conecta con la tesis de que las metodologías deductivas tradicionales «no tienen éxito en la diferenciación de los objetos»?", "opts": ["Si el investigador conoce bien el campo que estudia, puede omitir la recolección de datos y trabajar solo con modelos teóricos, que bastan para explicarlo todo.", "Si no conoce lo que ocurre en un contexto nuevo, no puede derivar de antemano hipótesis desde modelos teóricos, y debe recurrir a estrategias más inductivas.", "Si el investigador desconoce el campo, debe apoyarse todavía más en muestras aleatorias para asegurar la representatividad de sus resultados y su generalización.", "Si el investigador desconoce el campo, debe abandonar todo conocimiento teórico previo y trabajar sin utilizar ningún concepto de partida durante el estudio."], "ans": 1, "tip": "El cambio social rápido y la diversificación de los mundos vitales ponen a los investigadores ante contextos tan nuevos que derivar hipótesis de un modelo teórico y ponerlas a prueba no basta para distinguir los objetos. Por eso la investigación recurre cada vez más a estrategias inductivas, con conceptos que ayuden a enfocar el contexto.", "ref": "Relevancia de la investigación cualitativa"}, {"q": "Flick dice que existe un «extendido error de comprensión» sobre los conceptos sensibilizadores. ¿Cuál es?", "opts": ["Creer que están libres de teoría, cuando están influidos por el conocimiento teórico previo, aunque las teorías se desarrollen desde estudios empíricos.", "Creer que son hipótesis precisas, que deben comprobarse con datos estandarizados obtenidos de muestras representativas de toda la población que se estudia.", "Creer que solo se pueden usar en la psicología y que las demás ciencias sociales deben seguir trabajando con modelos teóricos ya establecidos y probados.", "Creer que solo se aplican al final del estudio, para interpretar los resultados que ya se obtuvieron mediante las técnicas de recolección de datos elegidas."], "ans": 0, "tip": "La estrategia inductiva no significa partir de cero. Los conceptos sensibilizadores sirven para enfocar los contextos sociales, pero están influidos por conocimiento teórico previo. La diferencia está en que aquí las teorías se desarrollan a partir de los estudios empíricos, y el conocimiento y la práctica se estudian como locales.", "ref": "Relevancia de la investigación cualitativa"}, {"q": "Según Flick, ¿qué consecuencia epistemológica extraen Bonß y Hartmann del desencanto con los ideales objetivistas y qué meta considera alcanzable para la investigación cualitativa?", "opts": ["La investigación debe renunciar a fundamentarse en material empírico y limitarse a la reflexión teórica sobre los sujetos, sus situaciones y sus contextos de vida cotidiana y social.", "Solo los estudios experimentales pueden alcanzar enunciados objetivamente verdaderos, y la investigación cualitativa debería imitar sus procedimientos para considerarse una investigación válida.", "No se puede partir de enunciados objetivamente verdaderos; quedan expresiones ligadas a sujetos y situaciones, con fundamento empírico, meta alcanzable por la investigación cualitativa.", "Las ciencias sociales deben renunciar a producir conocimiento y conformarse con describir casos individuales sin relacionarlos con ninguna situación ni con ningún contexto social específico."], "ans": 2, "tip": "Bonß y Hartmann plantean que, tras el desencanto, ya no se puede partir irreflexivamente de oraciones objetivamente verdaderas; lo que resta son expresiones relacionadas con sujetos y situaciones. Flick agrega que formularlas con buenos cimientos empíricos es una meta alcanzable con la investigación cualitativa.", "ref": "Límites de la investigación cuantitativa como punto de partida"}], "tf": [{"q": "La estrategia inductiva desarrolla teorías a partir de estudios empíricos, mientras que la deductiva deriva preguntas de investigación e hipótesis de modelos teóricos para ponerlas a prueba frente a los datos.", "ans": true, "tip": "Es verdadero. Flick contrasta las metodologías deductivas tradicionales (derivar preguntas e hipótesis de modelos teóricos y probarlas con datos empíricos) con las estrategias inductivas, que no parten de teorías por comprobar y requieren conceptos sensibilizadores para enfocar los contextos que se estudian.", "ref": "Relevancia de la investigación cualitativa"}, {"q": "Durante mucho tiempo la investigación psicológica se basó casi exclusivamente en encuestas estandarizadas, y la investigación social empírica en diseños experimentales.", "ans": false, "tip": "Es falso, porque está invertido: en psicología dominaron los diseños experimentales y en la investigación social empírica las encuestas estandarizadas. Ambos responden a principios rectores como aislar causas y efectos, operacionalizar relaciones teóricas, medir y cuantificar fenómenos, generalizar hallazgos y formular leyes generales.", "ref": "Límites de la investigación cuantitativa como punto de partida"}, {"q": "Weber proclamó el «desencanto del mundo» como tarea de la ciencia, y Bonß y Hartmann hablan de un desencanto creciente con las ciencias, sus métodos y sus hallazgos.", "ans": true, "tip": "Es verdadero. Flick reconstruye así la genealogía del desencanto con los ideales de objetividad: de Weber (1919) a Bonß y Hartmann (1985), y como indicador en las ciencias sociales señala el bajo grado de aplicabilidad y de capacidad de conexión de los resultados.", "ref": "Límites de la investigación cuantitativa como punto de partida"}, {"q": "La investigación de la utilización mostró que los hallazgos científicos se adoptan en las prácticas políticas e institucionales más de lo esperado y sin que se reinterpreten.", "ans": false, "tip": "Es falso. Según Beck y Bonß, los hallazgos llegan menos de lo esperado y, cuando se adoptan, se interpretan y desmenuzan. La ciencia ya no produce «verdades absolutas» que puedan adoptarse sin crítica, sino ofertas limitadas de interpretación que se usan con flexibilidad.", "ref": "Límites de la investigación cuantitativa como punto de partida"}, {"q": "Los resultados de las ciencias sociales rara vez se perciben y utilizan en la vida cotidiana, en parte porque, para cumplir estándares metodológicos, sus investigaciones suelen quedar muy alejadas de las preguntas y problemas cotidianos.", "ans": true, "tip": "Es verdadero. Es una de las razones que da el texto para el bajo grado de aplicabilidad: el cuidado por los estándares metodológicos aleja las investigaciones y sus hallazgos de las preguntas y problemas de la vida diaria.", "ref": "Límites de la investigación cuantitativa como punto de partida"}, {"q": "Según Flick, los intereses y el trasfondo social y cultural de los implicados dejan de intervenir en la investigación cuando se aplican suficientes controles metodológicos.", "ans": false, "tip": "Es falso. Flick sostiene que los ideales de objetividad no pueden satisfacerse del todo: a pesar de los controles, los intereses y el trasfondo social y cultural de los implicados intervienen inevitablemente, tanto al formular preguntas e hipótesis como al interpretar los datos.", "ref": "Límites de la investigación cuantitativa como punto de partida"}], "frags": [{"t": "Un equipo investigador llega a un contexto social cambiante que no conoce: su posición inicial es la falta de familiaridad con lo que ocurre en esa esfera de vida. Como derivar hipótesis desde un modelo teórico no le permite diferenciar los objetos, recurre a conceptos sensibilizadores para enfocar el contexto.", "ok": true, "tip": "Sí corresponde. Reúne la relevancia de la investigación cualitativa (contextos nuevos por la diversificación de los mundos vitales) con el límite de la estrategia deductiva tradicional, que no logra diferenciar los objetos cuando se conoce poco el campo.", "ref": "Relevancia de la investigación cualitativa"}, {"t": "Una investigadora anota en un diario de investigación sus impresiones, accesos de irritación y sentimientos durante el trabajo de campo, y los incorpora a la interpretación como datos de propio derecho.", "ok": false, "tip": "No corresponde a esta sección. Es un ejemplo del poder de reflexión del investigador, uno de los rasgos esenciales de la investigación cualitativa que se trabaja en la Sección 2.", "ref": "Poder de reflexión del investigador y la investigación"}, {"t": "Una investigadora diseña una encuesta con muestra aleatoria para asegurar representatividad, controla las condiciones en que ocurre el fenómeno y organiza el estudio para excluir al máximo la influencia del entrevistador, con el fin de garantizar la objetividad. Luego reconoce que, pese a esos controles, los intereses y el trasfondo social y cultural de los implicados intervienen en sus preguntas y en su interpretación.", "ok": true, "tip": "Sí corresponde. Describe los principios rectores de la investigación cuantitativa tradicional (muestras aleatorias, control de condiciones, exclusión de la influencia del investigador) y muestra el límite que señala Flick: los ideales de objetividad no se satisfacen del todo.", "ref": "Límites de la investigación cuantitativa como punto de partida"}, {"t": "Una revisión señala que hay tres cadenas de investigación cualitativa: una parte de los puntos de vista subjetivos, otra estudia la causa y el curso de las interacciones, y una tercera reconstruye las estructuras del campo social y el significado latente de las prácticas.", "ok": false, "tip": "No corresponde a esta sección. Es un ejemplo de la variedad de enfoques y métodos, otro de los rasgos esenciales de la investigación cualitativa, tema de la Sección 2.", "ref": "Variedad de enfoques y métodos en la investigación cualitativa"}]}, {"title": "Rasgos esenciales de la investigación cualitativa", "topic": "los rasgos esenciales de la investigación cualitativa", "guia": "Preguntas 10 a 16 de la guía", "desc": "Flick presenta cuatro rasgos de la investigación cualitativa: conveniencia de los métodos y las teorías, perspectivas de los participantes y su diversidad, capacidad de reflexión del investigador y variedad de enfoques y métodos.", "words": [{"w": "Conveniencia de métodos y teorías", "d": "Primer rasgo de la investigación cualitativa: elegir métodos y teorías apropiados al objeto. Flick lo discute a partir de la propuesta de Bortz de comprobar la «conveniencia de las ideas para las investigaciones»."}, {"w": "Apertura hacia el objeto", "d": "Diseñar métodos tan abiertos que hagan justicia a la complejidad del objeto en estudio. Cada método la garantiza de modos diferentes."}, {"w": "Análisis multinivel", "d": "Ejemplo de la segunda solución que menciona Flick: tomar en cuenta las condiciones contextuales en diseños cuantitativos complejos. La abstracción metodológica dificulta reintroducir los hallazgos en la vida cotidiana."}, {"w": "Criterios de calidad", "d": "En la investigación cualitativa, los hallazgos deben fundamentarse en material empírico y los métodos haberse seleccionado y aplicado de modo apropiado al objeto. La relevancia y el poder de reflexión son criterios adicionales."}, {"w": "Perspectivas de los participantes", "d": "Los puntos de vista y las prácticas en el campo difieren por las distintas perspectivas subjetivas y los ambientes sociales de los participantes. La investigación cualitativa estudia su conocimiento y sus prácticas."}, {"w": "Estudios epidemiológicos", "d": "Muestran la frecuencia de un trastorno en la población y cómo varía su distribución. No aclaran la dirección de la correlación ni el significado subjetivo de la enfermedad."}, {"w": "Significado subjetivo", "d": "Lo que una enfermedad (o la salud) significa para las personas directamente relacionadas con ella. El texto lo plantea como una pregunta que los estudios epidemiológicos dejan abierta."}, {"w": "Poder de reflexión", "d": "Rasgo por el cual la comunicación del investigador con el campo y sus miembros, y las subjetividades de ambos, son parte explícita de la producción de conocimiento."}, {"w": "Diario de investigación", "d": "Documento, junto con los protocolos de contexto, donde se registran las reflexiones, impresiones, irritaciones y sentimientos del investigador, que se vuelven datos de propio derecho."}, {"w": "Variedad de enfoques", "d": "La investigación cualitativa no se basa en un concepto teórico y metodológico unificado. Se distinguen puntos de vista subjetivos, curso de las interacciones y estructuras del campo con el significado latente."}], "mc": [{"q": "¿Qué propone Bortz sobre la «conveniencia de las ideas para las investigaciones» y qué criterio usa para juzgar el objeto de estudio?", "opts": ["Aceptar cualquier objeto que el investigador considere relevante, sin importar si existen métodos disponibles para estudiarlo en la práctica de la investigación.", "Escoger solo ideas que puedan estudiarse empíricamente, y juzgar el objeto según si los métodos disponibles, y más aceptados, pueden utilizarse para estudiarlo.", "Evaluar las ideas según su aporte a la comprensión de los significados subjetivos de las personas que se desea estudiar en el terreno o en su contexto.", "Preferir las personas y situaciones excepcionales, porque permiten estudiar cada caso con mayor detalle y no exigen contar con muestras numerosas ni extensas."], "ans": 1, "tip": "Para Bortz, deben escogerse solo las ideas que se puedan estudiar empíricamente y excluirse, por ejemplo, el contenido filosófico, los conceptos imprecisos o las personas especiales. Flick reconoce que tiene sentido reflexionar sobre si algo es estudiable empíricamente, pero advierte que Bortz juzga el objeto según si los métodos disponibles, y más aceptados, pueden usarse; Flick propone lo contrario: el objeto determina el método.", "ref": "Conveniencia de los métodos y las teorías"}, {"q": "Flick plantea tres soluciones al problema de analizar causas que comprenden rasgos diferentes. ¿Qué se pierde en la primera, la que sigue el modelo de relaciones claras de causa y efecto?", "opts": ["Se pierde la posibilidad de usar métodos estadísticos, porque este modelo renuncia a cuantificar y a medir el fenómeno estudiado en cualquier circunstancia.", "Se pierde la comprensión del contexto, porque este modelo abandona el estudio de los casos concretos en favor de teorías abstractas y muy generales.", "Se pierde la objetividad, porque en este modelo el investigador participa directamente en el campo y conversa con los participantes durante el estudio.", "Se tendrían que excluir todos los objetos complejos, porque solo se estudiarían fenómenos que pueden aislarse en relaciones simples de causa y efecto."], "ans": 3, "tip": "Flick señala que la mayoría de los fenómenos no pueden explicarse de manera aislada, por la complejidad de la realidad. Si todos los estudios siguieran el modelo de relaciones claras de causa y efecto, quedarían fuera los objetos complejos. Esa es la primera solución y su costo.", "ref": "Conveniencia de los métodos y las teorías"}, {"q": "¿Qué problema subsiste en la segunda solución, que incorpora las condiciones contextuales en diseños cuantitativos complejos como los análisis multinivel?", "opts": ["El estudio solo puede mostrar lo que ya abarca el modelo de realidad subyacente, y la abstracción metodológica dificulta volver a la situación cotidiana.", "Es imposible incluir alguna condición contextual en un diseño cuantitativo, por muy complejo que sea el modelo que se utilice para analizar los datos recogidos.", "Los resultados no pueden expresarse estadísticamente, por lo que no permiten comparar entre grupos ni analizar la relación entre las distintas variables.", "El modelo se vuelve demasiado abierto y no logra delimitar qué se va a estudiar, lo que impide dirigir la recolección de datos hacia un objetivo preciso."], "ans": 0, "tip": "La segunda solución sí toma en cuenta el contexto y comprende modelos complejos de forma empírica y estadística, pero Flick advierte que el problema básico no se resuelve: el estudio muestra únicamente aquello que ya incluye el modelo de realidad en que se apoya, y esa abstracción dificulta volver a la vida cotidiana.", "ref": "Conveniencia de los métodos y las teorías"}, {"q": "Flick afirma que «el objeto en estudio es el factor determinante para escoger un método, y no al revés». ¿Qué implica eso para los campos de estudio y para la meta de la investigación?", "opts": ["El investigador elige primero el método que mejor domina y luego busca los objetos que pueda estudiar con ese procedimiento, sin modificarlo aunque el objeto lo exija.", "Los campos de estudio son situaciones de laboratorio controladas, que permiten aislar cada variable del objeto con mayor claridad y precisión, lejos del contexto cotidiano.", "Los campos son las prácticas e interacciones de la vida cotidiana, no situaciones artificiales, y la meta es descubrir lo nuevo y fundamentar teorías empíricamente.", "La meta es comprobar teorías formuladas con anterioridad, usando muestras representativas y procedimientos estandarizados de medición en cada caso que se estudie."], "ans": 2, "tip": "La tercera solución consiste en diseñar métodos tan abiertos que hagan justicia a la complejidad del objeto. Por eso los objetos no se reducen a variables aisladas, se estudian en su complejidad y contexto cotidiano, y la meta es menos examinar lo que ya se conoce bien que descubrir lo nuevo y desarrollar teorías fundamentadas empíricamente.", "ref": "Conveniencia de los métodos y las teorías"}, {"q": "Según el texto, ¿con qué criterios se evalúa la calidad de un estudio cualitativo y en qué se diferencian de los de la investigación cuantitativa?", "opts": ["Que se use una muestra aleatoria suficientemente grande y que los resultados puedan generalizarse al conjunto de la población estudiada en la investigación.", "Que los hallazgos se fundamenten en material empírico y los métodos se apliquen bien al objeto; la validez se juzga según el objeto, no solo con criterios abstractos.", "Que los procedimientos eliminen la influencia del investigador en la mayor medida posible, para garantizar la objetividad del estudio y de sus resultados.", "Que los hallazgos coincidan con las teorías formuladas con anterioridad por la comunidad científica y con los resultados que otros publicaron antes."], "ans": 1, "tip": "En la investigación cualitativa la validez se evalúa con referencia al objeto analizado y no solo con criterios académicos abstractos, como ocurre en la cuantitativa. Son centrales el fundamento empírico de los hallazgos y la selección y aplicación apropiadas de los métodos; la relevancia de los hallazgos y el poder de reflexión de los procedimientos se suman como criterios adicionales.", "ref": "Conveniencia de los métodos y las teorías"}, {"q": "¿Por qué Flick afirma que la investigación cualitativa no se basa en un concepto teórico y metodológico unificado?", "opts": ["Porque los métodos cualitativos todavía no se han sistematizado y carecen de procedimientos reconocidos por la comunidad científica en ninguna disciplina ni área de estudio.", "Porque cada investigador cualitativo inventa su propio método sin apoyarse en ninguna tradición teórica ni en estudios realizados anteriormente por otros investigadores.", "Porque la investigación cualitativa se limita a un único enfoque, el de los puntos de vista subjetivos de las personas que participan en el estudio que se realiza.", "Porque coexisten enfoques teóricos y métodos distintos (puntos de vista subjetivos, curso de las interacciones, estructuras del campo), de líneas evolutivas diferentes."], "ans": 3, "tip": "El texto distingue tres cadenas de investigación: una parte de los puntos de vista subjetivos, otra estudia la causa y el curso de las interacciones y otra reconstruye las estructuras del campo social y el significado latente de las prácticas. Esa variedad deriva de líneas evolutivas distintas, algunas paralelas y otras sucesivas.", "ref": "Variedad de enfoques y métodos en la investigación cualitativa"}], "tf": [{"q": "Los estudios epidemiológicos muestran la frecuencia de la esquizofrenia y cómo varía su distribución según la clase social, pero no aclaran en qué dirección va la correlación.", "ans": true, "tip": "Es verdadero. Los estudios muestran que los trastornos graves son más frecuentes en las clases bajas, pero no permiten saber si las condiciones de vida promueven el trastorno o si las personas con problemas mentales descienden hacia esas clases.", "ref": "Perspectivas de los participantes y su diversidad"}, {"q": "Los hallazgos epidemiológicos sobre la esquizofrenia permiten conocer el significado subjetivo que tiene la enfermedad para los pacientes y sus familiares.", "ans": false, "tip": "Es falso. Flick señala que esos hallazgos no aportan nada sobre lo que significa vivir con la enfermedad: no clarifican el significado subjetivo ni captan la diversidad de perspectivas en el contexto de las personas implicadas. Esas son las preguntas de la investigación cualitativa.", "ref": "Perspectivas de los participantes y su diversidad"}, {"q": "En los métodos cualitativos, la comunicación del investigador con el campo y sus miembros se toma como parte explícita de la producción de conocimiento.", "ans": true, "tip": "Es verdadero. A diferencia de la investigación cuantitativa, que la excluye lo más posible como variable, los métodos cualitativos la incorporan: las subjetividades del investigador y de quienes se estudian forman parte del proceso de investigación.", "ref": "Poder de reflexión del investigador y la investigación"}, {"q": "Las impresiones y los sentimientos del investigador deben excluirse de la investigación cualitativa porque son variables que distorsionan los datos.", "ans": false, "tip": "Es falso. En la investigación cualitativa las reflexiones, impresiones, accesos de irritación y sentimientos del investigador se convierten en datos de propio derecho, forman parte de la interpretación y se documentan en diarios de investigación o protocolos de contexto.", "ref": "Poder de reflexión del investigador y la investigación"}, {"q": "En la investigación cualitativa los objetos no se reducen a variables individuales: se estudian en su complejidad y totalidad dentro de su contexto cotidiano.", "ans": true, "tip": "Es verdadero. Es la consecuencia de la tercera solución: si el objeto determina el método, no se lo reduce a variables aisladas. Los campos de estudio son las prácticas e interacciones de los sujetos en la vida diaria, no situaciones artificiales de laboratorio.", "ref": "Conveniencia de los métodos y las teorías"}, {"q": "La validez de un estudio cualitativo se evalúa exclusivamente con los criterios académicos abstractos de la ciencia, como ocurre en la investigación cuantitativa.", "ans": false, "tip": "Es falso. Según el texto, la validez se evalúa con referencia al objeto analizado y no sigue exclusivamente esos criterios abstractos. Son centrales el fundamento empírico de los hallazgos y la aplicación apropiada de los métodos al objeto.", "ref": "Conveniencia de los métodos y las teorías"}], "frags": [{"t": "Un manual de investigación empírica recomienda comprobar la «conveniencia de las ideas» y descartar el estudio de personas especiales, como los problemas psicológicos de los enanos, y de contenidos filosóficos, como el significado de la vida. Flick responde que el criterio de ese manual es si los métodos disponibles pueden usarse con el objeto, y propone invertirlo: el objeto determina el método.", "ok": true, "tip": "Sí corresponde. Ilustra el rasgo de la conveniencia de los métodos y las teorías: Flick discute el criterio de Bortz y plantea que el objeto en estudio es el factor determinante para escoger un método, y no al revés.", "ref": "Conveniencia de los métodos y las teorías"}, {"t": "Un análisis señala que los hallazgos de la investigación social se han abierto camino en contextos políticos y cotidianos menos de lo esperado y de una manera muy diferente: cuando se adoptan, se interpretan y se desmenuzan.", "ok": false, "tip": "No corresponde a esta sección. Es un ejemplo de la investigación de la utilización (Beck y Bonß) y del desencanto con los ideales de objetividad, tema de la Sección 1.", "ref": "Límites de la investigación cuantitativa como punto de partida"}, {"t": "Una investigación sobre la enfermedad mental pregunta qué significa la esquizofrenia para el paciente y para sus familiares, cómo hacen frente a ella, qué influencias tuvieron en su trayectoria las instituciones que lo trataron y qué ideas, metas y rutinas guían su terapia.", "ok": true, "tip": "Sí corresponde. Muestra el rasgo de las perspectivas de los participantes y su diversidad: la investigación cualitativa estudia los significados subjetivos y sociales y las prácticas de pacientes, familiares y profesionales, que los estudios epidemiológicos dejan sin responder.", "ref": "Perspectivas de los participantes y su diversidad"}, {"t": "Un investigador observa que hoy las maneras de vivir se individualizan y que las viejas desigualdades se disuelven en una diversidad de medios, subculturas y estilos de vida, lo que exige una nueva sensibilidad para estudiar empíricamente los problemas.", "ok": false, "tip": "No corresponde a esta sección. Es la pluralización de los mundos vitales, el argumento con que Flick explica la relevancia de la investigación cualitativa, tema de la Sección 1.", "ref": "Relevancia de la investigación cualitativa"}]}];
+var MAXI=16, TOTAL=CHARS.length*MAXI;
+var KEYS={reg:'mis_bcs_reg',prog:'mis_bcs_prog',theme:'mis_bcs_theme',mod:'mis_bcs_l2'};
+var FIREBASE_CONFIG=window.MIS_FIREBASE||{apiKey:"REEMPLAZAR",authDomain:"REEMPLAZAR",databaseURL:"REEMPLAZAR",projectId:"REEMPLAZAR",storageBucket:"REEMPLAZAR",messagingSenderId:"REEMPLAZAR",appId:"REEMPLAZAR"};
+var FB_OK=FIREBASE_CONFIG.apiKey.indexOf('REEMPLAZAR')<0;
+
+function $(s,r){return (r||document).querySelector(s)}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function lsGet(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}}
+function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function lsDel(k){try{localStorage.removeItem(k)}catch(e){}}
+function toast(m){var t=$('#toast');t.textContent=m;t.hidden=false;clearTimeout(toast.h);toast.h=setTimeout(function(){t.hidden=true},3200)}
+
+/* Estado persistente */
+var ST=lsGet(KEYS.mod)||{};
+function freshST(){return {v:1,secs:CHARS.map(function(){return {ans:{mc:[],tf:[],fr:[]},done:false,best:0,last:0,attempts:0}})}}
+if(!ST.secs||ST.secs.length!==CHARS.length){ST=freshST();}
+var view={name:'home',si:0,word:null};
+function save(){lsSet(KEYS.mod,ST);syncProg()}
+function syncProg(){
+  var done=0,pts=0; ST.secs.forEach(function(s){if(s.done)done++;pts+=s.best||0});
+  var p=lsGet(KEYS.prog)||{}; p.l2={done:done,pts:pts,ts:Date.now()}; lsSet(KEYS.prog,p);
+}
+function reg(){return lsGet(KEYS.reg)}
+function score(si){
+  var ch=CHARS[si],a=ST.secs[si].ans,mc=0,tf=0,fr=0;
+  ch.mc.forEach(function(q,i){if(a.mc[i]===q.ans)mc++});
+  ch.tf.forEach(function(q,i){if(a.tf[i]===q.ans)tf++});
+  ch.frags.forEach(function(q,i){if(a.fr[i]===q.ok)fr++});
+  return {mc:mc,tf:tf,fr:fr,t:mc+tf+fr};
+}
+function answered(si){
+  var a=ST.secs[si].ans,n=0;
+  ['mc','tf','fr'].forEach(function(k){for(var i=0;i<(k==='fr'?4:6);i++)if(a[k][i]!==undefined&&a[k][i]!==null)n++});
+  return n;
+}
+function totalPts(){var p=0;ST.secs.forEach(function(s){p+=s.best||0});return p}
+function doneCount(){return ST.secs.filter(function(s){return s.done}).length}
+
+/* Reporte opcional a Firebase (si se configura); sin configuración no hace nada */
+function report(si){
+  if(!FB_OK||PREVIEW)return;
+  try{
+    var r=reg()||{id:'anon',name:'Sin identificar'},sc=score(si);
+    var payload={id:r.id,name:r.name,mode:r.mode||'individual',members:r.members||[],lectura:'l2',seccion:si+1,pts:sc.t,max:MAXI,intento:ST.secs[si].attempts,ts:Date.now()};
+    var go=function(){if(!firebase.apps.length)firebase.initializeApp(FIREBASE_CONFIG);firebase.database().ref('mis_bcs/l2/'+r.id+'/sec'+(si+1)).set(payload)};
+    if(window.firebase){go();return}
+    var a=document.createElement('script');a.src='https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js';
+    a.onload=function(){var b=document.createElement('script');b.src='https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js';b.onload=go;document.head.appendChild(b)};
+    document.head.appendChild(a);
+  }catch(e){}
+}
+
+/* ===== Reinicio de la lectura ===== */
+var MODID='l2';
+/* Registro para el docente: cada reinicio guarda una copia del avance previo (bandeja local mis_bcs_hist)
+   y la envía a Firebase en mis_bcs_hist/[módulo]/[id]/[clave]; así el registro no depende de que el estudiante conserve su avance.
+   Solo se registra si el estudiante está identificado. */
+var HK='mis_bcs_hist';
+function histAdd(estado,prog){
+  var r=reg();if(!r||!r.id)return;
+  var a=lsGet(HK)||[],ts=Date.now();
+  a.push({k:'r'+ts+'_'+MODID,mod:MODID,sid:r.id,name:r.name||'',mode:r.mode||'individual',members:r.members||[],ts:ts,prog:prog||null,estado:estado,sent:false});
+  if(a.length>40)a=a.slice(-40);
+  lsSet(HK,a);
+}
+function fbLoad(cb){
+  var ini=function(){if(!firebase.apps.length)firebase.initializeApp(FIREBASE_CONFIG);cb()};
+  if(window.firebase){ini();return}
+  var a=document.createElement('script');a.src='https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js';
+  a.onload=function(){var b=document.createElement('script');b.src='https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js';b.onload=ini;document.head.appendChild(b)};
+  document.head.appendChild(a);
+}
+function histFlush(){
+  if(!FB_OK||PREVIEW)return;
+  var a=lsGet(HK)||[];
+  if(!a.some(function(x){return !x.sent}))return;
+  try{fbLoad(function(){
+    (lsGet(HK)||[]).forEach(function(x){
+      if(x.sent)return;
+      var db=firebase.database();
+      db.ref('mis_bcs_hist/'+x.mod+'/'+x.sid+'/'+x.k).set({id:x.sid,name:x.name,mode:x.mode,members:x.members,mod:x.mod,ts:x.ts,prog:x.prog,estado:x.estado})
+        .then(function(){return db.ref('mis_bcs/'+x.mod+'/'+x.sid+'/ultimoReinicio').transaction(function(c){return Math.max(c||0,x.ts)})})
+        .then(function(){var b=lsGet(HK)||[];b.forEach(function(y){if(y.k===x.k)y.sent=true});lsSet(HK,b)})
+        .catch(function(){});
+    });
+  })}catch(e){}
+}
+function hasProgress(){return ST.secs.some(function(s,i){return s.done||s.attempts>0||answered(i)>0})}
+function resetBlock(){
+  if(!view.ask)return '<div class="reset"><button type="button" class="btn alt" data-ask>Borrar mi avance y empezar de nuevo</button></div>';
+  return '<div class="reset"><div class="reset-box" role="group" aria-labelledby="rst-t"><p id="rst-t"><b>¿Borrar tu avance en esta lectura?</b></p>'
+   +'<p>Se borrarán tus respuestas, tu puntaje y las secciones completadas, en este navegador.'+(reg()?' Tu docente conservará el registro de lo que ya hiciste.':'')+'</p>'
+   +'<div class="acts"><button type="button" class="btn danger" data-rst-yes>Sí, borrar y empezar de nuevo</button><button type="button" class="btn alt" id="rst-no" data-rst-no>Cancelar</button></div></div></div>';
+}
+function resetAll(){
+  if(hasProgress())histAdd(JSON.parse(JSON.stringify(ST)),(lsGet(KEYS.prog)||{})[MODID]||null);
+  ST=freshST();lsDel(KEYS.mod);var pg=lsGet(KEYS.prog)||{};delete pg[MODID];lsSet(KEYS.prog,pg);
+  view={name:'home',si:0,word:null};render();window.scrollTo(0,0);
+  histFlush();
+  toast('Empezaste de nuevo. Tu avance en esta lectura quedó en cero.');
+}
+
+/* Tema */
+function applyTheme(t){if(t)document.documentElement.setAttribute('data-theme',t);else document.documentElement.removeAttribute('data-theme')}
+(function(){var t=lsGet(KEYS.theme);if(t==='light'||t==='dark')applyTheme(t)})();
+$('#theme').addEventListener('click',function(){
+  var cur=document.documentElement.getAttribute('data-theme');
+  var dark=cur?cur==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;
+  var n=dark?'light':'dark'; applyTheme(n); lsSet(KEYS.theme,n);
+});
+
+/* Cabecera: identificación */
+function paintWho(){var r=reg(),w=$('#who');if(r&&r.name){w.textContent=(r.mode==='grupo'?'Grupo: ':'')+r.name;w.hidden=false}else w.hidden=true}
+$('#back').addEventListener('click',function(e){if(PREVIEW){e.preventDefault();toast('En esta vista previa el portal no está disponible. En el sitio, este botón vuelve al portal.')}});
+
+/* Vistas */
+var app=$('#app');
+function secStyle(i){return '--c:var(--s'+i+'c);--bg-c:var(--s'+i+'b)'}
+function stat(i){var s=ST.secs[i],n=answered(i);return s.done&&n===MAXI?'Completada':(n>0?'En curso':'Sin empezar')}
+
+function vHome(){
+  var noreg=!reg();
+  var h='<section class="hero"><p class="eyebrow">Lectura 2 · Flick (2007), Introducción a la investigación cualitativa, capítulo 1, pp. 15-24</p><h1>Relevancia y rasgos de la investigación cualitativa</h1>'
+   +'<p class="lead">Estudia por qué Flick considera relevante la investigación cualitativa y cuáles son sus rasgos esenciales, en dos secciones. Cada una te propone preguntas sobre el texto y te explica, apenas respondes, dónde repasar. Las preguntas siguen la guía de lectura (pp. 15-20 del texto).</p></section>';
+  if(noreg)h+='<div class="note"><span>Aún no te has identificado. Tu avance no quedará registrado en el sistema.</span>'+(PREVIEW?'':'<a class="cta" href="index_mis_bcs.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/></svg>Ingresa en el portal para identificarte</a>')+'</div>';
+  h+='<h2 class="sec-t">Lo que vas a lograr</h2><ul class="goals">'
+   +'<li>Explicar por qué la pluralización de los mundos vitales hace relevante a la investigación cualitativa.</li>'
+   +'<li>Reconocer los límites de la investigación cuantitativa tradicional como punto de partida: objetividad, desencanto y uso de los hallazgos.</li>'
+   +'<li>Distinguir los rasgos esenciales de la investigación cualitativa y relacionarlos con los ejemplos del texto.</li></ul>';
+  h+='<h2 class="sec-t">Cómo funciona</h2><div class="how">'
+   +'<div><b>16 preguntas por sección</b><span>6 de selección múltiple, 6 de verdadero o falso y 4 fragmentos de ejemplos del capítulo.</span></div>'
+   +'<div><b>Respuesta inmediata</b><span>Después de cada respuesta ves la explicación y el apartado del capítulo donde puedes revisarla.</span></div>'
+   +'<div><b>Repite cuando quieras</b><span>Puedes volver a hacer cada sección las veces que necesites. Se conserva tu mejor puntaje.</span></div></div>';
+  h+='<div class="total"><div><div class="big">'+totalPts()+' <small>de '+TOTAL+' puntos</small></div></div><div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="'+CHARS.length+'" aria-valuenow="'+doneCount()+'" aria-label="Secciones completadas"><i style="width:'+Math.round(doneCount()/CHARS.length*100)+'%"></i></div><small>'+doneCount()+' de '+CHARS.length+' secciones completadas</small></div>';
+  h+='<h2 class="sec-t">Secciones</h2><div class="cards">';
+  CHARS.forEach(function(c,i){
+    var s=ST.secs[i],n=answered(i),st=stat(i),lbl=st==='Completada'?'Repasar':(n>0?'Continuar':'Empezar');
+    h+='<article class="card" style="'+secStyle(i)+'"><div class="hd"><span class="num" aria-hidden="true">'+(i+1)+'</span><div><h3>'+esc(c.title)+'</h3></div><span class="tagst'+(st==='Completada'?' done':'')+'">'+st+'</span></div>'
+     +'<div class="bd"><p>'+esc(c.desc)+'</p><div class="meta"><span>'+esc(c.guia)+'</span><span><b>'+(s.best||0)+'</b> de '+MAXI+' puntos (mejor intento)</span>'+(s.attempts?'<span>'+s.attempts+(s.attempts===1?' intento':' intentos')+'</span>':'')+'</div>'
+     +'<button type="button" class="btn" data-open="'+i+'">'+lbl+'</button></div></article>';
+  });
+  h+='</div>';
+  if(hasProgress())h+=resetBlock();
+  app.innerHTML=h;
+}
+
+function optBtn(i,k,idx,label,val,state){
+  // state: undefined (sin responder) | {chosen, correct}
+  var cls='opt',dis='';
+  if(state){dis=' disabled';if(val===state.correct)cls+=' right';else if(val===state.chosen)cls+=' wrong';else cls+=' dim'}
+  return '<button type="button" class="'+cls+'"'+dis+' data-k="'+k+'" data-i="'+idx+'" data-v="'+val+'">'+label+'</button>';
+}
+function fb(ok,tip,ref){
+  var ic=ok?'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>':'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></svg>';
+  return '<div class="fb '+(ok?'ok':'no')+'">'+ic+'<div><p><b>'+(ok?'Correcto. ':'Para revisar. ')+'</b>'+esc(tip)+'</p><span class="ref"><b>Dónde repasarlo:</b> '+esc(ref)+'</span></div></div>';
+}
+function qMC(si,i,q){
+  var a=ST.secs[si].ans.mc[i],has=a!==undefined&&a!==null;
+  var o=q.opts.map(function(t,oi){return optBtn(si,'mc',i,'<span class="l">'+String.fromCharCode(65+oi)+'.</span><span>'+esc(t)+'</span>',oi,has?{chosen:a,correct:q.ans}:null)}).join('');
+  return '<div class="q"><p class="qt"><span class="qn">'+(i+1)+'.</span>'+esc(q.q)+'</p><div class="opts">'+o+'</div>'+(has?fb(a===q.ans,q.tip,q.ref):'')+'</div>';
+}
+function qTF(si,i,q){
+  var a=ST.secs[si].ans.tf[i],has=a!==undefined&&a!==null;
+  var st=has?{chosen:a,correct:q.ans}:null;
+  return '<div class="q"><p class="qt"><span class="qn">'+(i+1)+'.</span>'+esc(q.q)+'</p><div class="pair">'+optBtn(si,'tf',i,'Verdadero',true,st)+optBtn(si,'tf',i,'Falso',false,st)+'</div>'+(has?fb(a===q.ans,q.tip,q.ref):'')+'</div>';
+}
+function qFR(si,i,q,topic){
+  var a=ST.secs[si].ans.fr[i],has=a!==undefined&&a!==null;
+  var st=has?{chosen:a,correct:q.ok}:null;
+  return '<div class="q"><p class="frag">'+esc(q.t)+'</p><p class="fq">¿Este fragmento ilustra '+esc(topic)+'?</p><div class="pair">'+optBtn(si,'fr',i,'Sí, lo ilustra',true,st)+optBtn(si,'fr',i,'No, corresponde a otra sección',false,st)+'</div>'+(has?fb(a===q.ok,q.tip,q.ref):'')+'</div>';
+}
+function levelTxt(p){return p>=85?'Logro destacado':(p>=70?'Logro esperado':'Conviene repasar esta sección')}
+function vSec(){
+  var si=view.si,c=CHARS[si],s=ST.secs[si],n=answered(si);
+  var h='<div class="stepper" role="navigation" aria-label="Secciones">'+CHARS.map(function(x,i){var d=ST.secs[i].done&&answered(i)===MAXI;return '<button type="button" class="pill'+(d?' done':'')+'" style="'+secStyle(i)+'" data-open="'+i+'"'+(i===si?' aria-current="true"':'')+'>Sección '+(i+1)+'<i>'+(d?'completada':answered(i)+'/'+MAXI)+'</i></button>'}).join('')+'<button type="button" class="pill" data-home>Inicio</button></div>';
+  h+='<div style="'+secStyle(si)+'"><section class="sechd"><p class="k">Sección '+(si+1)+' de '+CHARS.length+'</p><h2>'+esc(c.title)+'</h2><p class="d">'+esc(c.desc)+'</p><p class="g">'+esc(c.guia)+'</p></section>';
+  h+='<div class="blk"><h3>Conceptos clave</h3><p class="sub">Toca un concepto para ver su definición según el capítulo.</p><div class="cloud">'
+    +c.words.map(function(w,i){var fs=i===0?20:(i<3?18:16);return '<button type="button" class="chip" style="font-size:'+fs+'px" data-word="'+i+'" aria-pressed="'+(view.word===i)+'">'+esc(w.w)+'</button>'}).join('')+'</div>'
+    +(view.word!==null?'<div class="def"><b>'+esc(c.words[view.word].w)+'</b><p>'+esc(c.words[view.word].d)+'</p></div>':'')+'</div>';
+  h+='<div class="prog" role="status"><span><b>'+n+'</b> de '+MAXI+' respondidas</span><div class="bar"><i style="width:'+Math.round(n/MAXI*100)+'%"></i></div></div>';
+  h+='<div class="blk"><h3>Parte A · Selección múltiple</h3><p class="sub">Elige la opción que mejor responde, según el capítulo.</p>'+c.mc.map(function(q,i){return qMC(si,i,q)}).join('')+'</div>';
+  h+='<div class="blk"><h3>Parte B · Verdadero o falso</h3><p class="sub">Decide si cada afirmación es verdadera o falsa.</p>'+c.tf.map(function(q,i){return qTF(si,i,q)}).join('')+'</div>';
+  h+='<div class="blk"><h3>Parte C · Fragmentos de ejemplos del capítulo</h3><p class="sub">Cada fragmento reescribe un ejemplo del texto. Decide si ilustra el tema de esta sección.</p>'+c.frags.map(function(q,i){return qFR(si,i,q,c.topic)}).join('')+'</div>';
+  if(n===MAXI){
+    var sc=score(si),p=Math.round(sc.t/MAXI*100),miss=[];
+    c.mc.forEach(function(q,i){if(s.ans.mc[i]!==q.ans&&miss.indexOf(q.ref)<0)miss.push(q.ref)});
+    c.tf.forEach(function(q,i){if(s.ans.tf[i]!==q.ans&&miss.indexOf(q.ref)<0)miss.push(q.ref)});
+    c.frags.forEach(function(q,i){if(s.ans.fr[i]!==q.ok&&miss.indexOf(q.ref)<0)miss.push(q.ref)});
+    h+='<section class="res" id="res" aria-labelledby="res-t"><h3 id="res-t">Resultado de la sección '+(si+1)+'</h3><div class="score"><b>'+sc.t+'</b><span>de '+MAXI+' puntos · '+p+'%</span></div>'
+     +'<p style="margin:0 0 6px"><b>'+levelTxt(p)+'.</b> Tu mejor intento en esta sección es de '+s.best+' puntos.</p>'
+     +'<div class="brk"><span>Selección múltiple: '+sc.mc+' de 6</span><span>Verdadero o falso: '+sc.tf+' de 6</span><span>Fragmentos: '+sc.fr+' de 4</span></div>'
+     +(miss.length?'<div class="rev"><b>Apartados del capítulo para repasar</b><ul>'+miss.map(function(m){return '<li>'+esc(m)+'</li>'}).join('')+'</ul></div>':'<div class="rev"><b>Sin errores en este intento.</b> Puedes pasar a la siguiente sección o repetir esta para afianzarla.</div>')
+     +'<div class="acts"><button type="button" class="btn alt" data-retry="'+si+'">Repetir esta sección</button>'
+     +(si<CHARS.length-1?'<button type="button" class="btn" data-open="'+(si+1)+'">Ir a la sección '+(si+2)+'</button>':'<button type="button" class="btn" data-home>Volver al inicio</button>')
+     +'<button type="button" class="btn alt" data-home>Ver todas las secciones</button></div></section>';
+  }
+  h+='</div>';
+  app.innerHTML=h;
+}
+
+function render(keep){
+  var y=window.scrollY;
+  paintWho();
+  if(view.name==='home')vHome(); else vSec();
+  if(keep)window.scrollTo(0,y);
+}
+function openSec(i){view={name:'sec',si:i,word:null};render();window.scrollTo(0,0);try{history.replaceState(null,'','#s'+(i+1))}catch(e){}}
+function goHome(){view={name:'home',si:0,word:null};render();window.scrollTo(0,0);try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}}
+
+function answer(si,k,i,v){
+  var s=ST.secs[si],a=s.ans[k];
+  if(a[i]!==undefined&&a[i]!==null)return;
+  a[i]=v;
+  var finished=answered(si)===MAXI;
+  if(finished){var sc=score(si);s.done=true;s.last=sc.t;s.best=Math.max(s.best||0,sc.t);s.attempts=(s.attempts||0)+1;s.ts=Date.now()}
+  save();
+  var y=window.scrollY;
+  render(true);
+  if(finished){report(si);var r=$('#res');if(r){r.scrollIntoView({behavior:'smooth',block:'start'});}} else window.scrollTo(0,y);
+}
+
+app.addEventListener('click',function(e){
+  var t=e.target.closest('button,a');if(!t)return;
+  if(t.hasAttribute('data-ask')){view.ask=true;render(true);var rn=$('#rst-no');if(rn){rn.focus();rn.scrollIntoView({block:'center'})}return}
+  if(t.hasAttribute('data-rst-no')){view.ask=false;render(true);return}
+  if(t.hasAttribute('data-rst-yes')){resetAll();return}
+  if(t.hasAttribute('data-open')){openSec(+t.getAttribute('data-open'));return}
+  if(t.hasAttribute('data-home')){goHome();return}
+  if(t.hasAttribute('data-retry')){var si=+t.getAttribute('data-retry');ST.secs[si].ans={mc:[],tf:[],fr:[]};save();view.word=null;render();window.scrollTo(0,0);toast('Sección reiniciada. Tu mejor puntaje se conserva.');return}
+  if(t.hasAttribute('data-word')){var w=+t.getAttribute('data-word');view.word=(view.word===w?null:w);render(true);return}
+  if(t.hasAttribute('data-k')){
+    var v=t.getAttribute('data-v');v=(v==='true')?true:(v==='false'?false:+v);
+    answer(view.si,t.getAttribute('data-k'),+t.getAttribute('data-i'),v);return}
+});
+
+/* Inicio */
+syncProg();
+var m=/^#s([1-9])$/.exec(location.hash||'');
+if(m&&+m[1]<=CHARS.length){view={name:'sec',si:+m[1]-1,word:null}}
+render();
+histFlush();
+window.addEventListener('storage',function(e){if(e.key===KEYS.mod&&e.newValue===null){ST=freshST();view={name:'home',si:0,word:null};render()}});
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<!--
+  Actividad de estudio · Lectura 1 (Ragin, 2007, cap. 3) · Módulo cualitativo · MIS · Bachillerato en Ciencias Sociales UFRO
+  v0.1 · 2026-10-06
+  Archivo: actividad_mis_bcs_l1.html (junto a index_mis_bcs.html en el mismo repositorio)
+  PIN DOCENTE: CUALITATIVO2026 (lo pide solo dashboard_docente.html; este archivo no pide PIN)
+  Firebase: se configura una sola vez en firebase_config.js (mismo archivo para todo el sitio). Mientras diga "REEMPLAZAR", usa solo localStorage.
+  Nodo que se escribe: mis_bcs/l1/[id]/sec[n].
+  Contrato con el portal: lee mis_bcs_reg y mis_bcs_theme; escribe mis_bcs_prog.l1 = {done, pts}.
+  Reinicio: «Borrar mi avance y empezar de nuevo» guarda antes una copia del avance en mis_bcs_hist (local) y, con Firebase activo,
+  en mis_bcs_hist/l1/[id]/[clave] (solo se agrega, no se sobrescribe) y marca mis_bcs/l1/[id]/ultimoReinicio. El panel docente lee ese historial.
+-->
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lectura 1 · Diálogo entre ideas y pruebas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+/* Concepto: un módulo de estudio sobrio, de una sola columna. Cada sección tiene su color; el mapa del modelo vive dentro de la Sección 1. */
+:root{
+  --bg:#f8f5ef; --surface:#fffdf8; --ink:#0b1a33; --ink2:#4b566b; --line:#d9d0ba;
+  --gold:#c9a256; --gold-ink:#7d5f17; --gold-bg:#f3e8cc; --nav:#0b1a33; --nav-ink:#f8f5ef;
+  --teo:#1a4a7a; --teo-bg:#e6eef7; --emp:#1a5c38; --emp-bg:#e4f1e9;
+  --ok:#1a5c38; --ok-bg:#ebf7ef; --no:#9b2226; --no-bg:#fdeeee; --info:#1a4a7a; --info-bg:#eaf1f9;
+  --s0c:#1a4a7a; --s0b:#e8f0f8; --s1c:#7a3b1e; --s1b:#faf0e8; --s2c:#1a5c38; --s2b:#e8f5ee; --s3c:#4a1a6b; --s3b:#f0e8f8;
+  --focus:#0b1a33;
+  --ff-d:'Playfair Display',Georgia,'Times New Roman',serif;
+  --ff-b:'Source Serif 4',Georgia,'Times New Roman',serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0a1428; --surface:#111f3a; --ink:#f1ece0; --ink2:#aab4c6; --line:#2a3a5c;
+    --gold:#e0bd73; --gold-ink:#e0bd73; --gold-bg:#3a3118; --nav:#060d1c; --nav-ink:#f1ece0;
+    --teo:#7fb0e6; --teo-bg:#14284a; --emp:#6fcb98; --emp-bg:#12332a;
+    --ok:#6fcb98; --ok-bg:#10301f; --no:#f19a9d; --no-bg:#3a1618; --info:#8fbbea; --info-bg:#14284a;
+    --s0c:#8fbbea; --s0b:#14284a; --s1c:#e8a985; --s1b:#3a2216; --s2c:#6fcb98; --s2b:#12332a; --s3c:#c9a0e8; --s3b:#2c1a42;
+    --focus:#e0bd73; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0a1428; --surface:#111f3a; --ink:#f1ece0; --ink2:#aab4c6; --line:#2a3a5c;
+  --gold:#e0bd73; --gold-ink:#e0bd73; --gold-bg:#3a3118; --nav:#060d1c; --nav-ink:#f1ece0;
+  --teo:#7fb0e6; --teo-bg:#14284a; --emp:#6fcb98; --emp-bg:#12332a;
+  --ok:#6fcb98; --ok-bg:#10301f; --no:#f19a9d; --no-bg:#3a1618; --info:#8fbbea; --info-bg:#14284a;
+  --s0c:#8fbbea; --s0b:#14284a; --s1c:#e8a985; --s1b:#3a2216; --s2c:#6fcb98; --s2b:#12332a; --s3c:#c9a0e8; --s3b:#2c1a42;
+  --focus:#e0bd73; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--ff-b);font-size:17px;line-height:1.6;margin:0;padding:0}
+button{font:inherit;color:inherit}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--focus);outline-offset:3px;border-radius:6px}
+.wrap{max-width:960px;margin:0 auto;padding-inline:16px}
+
+/* Barra superior */
+.top{background:var(--nav);color:var(--nav-ink)}
+.top .wrap{display:flex;align-items:center;gap:14px;min-height:60px;flex-wrap:wrap;padding-block:8px}
+.top a.back{display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-weight:600;font-size:15px;color:var(--nav-ink);padding:6px 10px;border-radius:8px;border:1px solid rgba(248,245,239,.28)}
+.top a.back:hover{border-color:var(--gold)}
+.top .ttl{font-family:var(--ff-d);font-weight:600;font-size:16px;flex:1;min-width:0;line-height:1.25}
+.top .ttl small{display:block;font-family:var(--ff-b);font-weight:400;font-size:13px;opacity:.75}
+.top .who{font-size:14px;padding:4px 12px;border:1px solid rgba(248,245,239,.28);border-radius:999px;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tbtn{width:38px;height:38px;border-radius:50%;border:1px solid rgba(248,245,239,.28);background:none;color:var(--nav-ink);cursor:pointer;display:grid;place-items:center}
+.tbtn:hover{border-color:var(--gold)}
+@media (max-width:560px){.top .ttl small{display:none}.top .who{max-width:120px}}
+
+/* Aviso de identificación */
+.note{margin-top:18px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:12px 16px;border-radius:12px;background:var(--gold-bg);border:1px solid var(--gold);font-size:15px}
+.note a,.note button{font-weight:600}
+.note button{background:none;border:0;padding:0;text-decoration:underline;cursor:pointer}
+.note a.cta{display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:999px;background:var(--ink);color:var(--bg);text-decoration:none;font-weight:700;box-shadow:0 2px 0 var(--gold)}
+.note a.cta:hover{filter:brightness(1.12)}
+
+/* Inicio */
+.hero{padding-block:36px 8px}
+.eyebrow{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-ink);font-weight:600;margin:0 0 8px}
+h1{font-family:var(--ff-d);font-weight:700;font-size:clamp(30px,5.5vw,46px);line-height:1.12;margin:0 0 12px;text-wrap:balance}
+.lead{font-size:18px;color:var(--ink2);max-width:680px;margin:0}
+h2.sec-t{font-family:var(--ff-d);font-size:26px;margin:36px 0 14px;line-height:1.2}
+.goals{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:6px;max-width:720px}
+.how{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:6px}
+.how div{border-top:3px solid var(--ink);padding-top:10px}
+.how b{font-family:var(--ff-d);font-size:19px;display:block;margin-bottom:2px}
+.how span{color:var(--ink2);font-size:15.5px}
+.total{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:28px;padding:16px 18px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.total .big{font-family:var(--ff-d);font-weight:700;font-size:30px;line-height:1}
+.total small{color:var(--ink2);font-size:15px}
+.bar{height:8px;border-radius:4px;background:var(--line);overflow:hidden;flex:1;min-width:140px}
+.bar i{display:block;height:100%;background:var(--gold);border-radius:4px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.card .hd{background:var(--bg-c);color:var(--c);padding:16px 18px;display:flex;gap:12px;align-items:flex-start}
+.card .num{flex:none;width:36px;height:36px;border-radius:50%;background:var(--c);color:var(--bg-c);display:grid;place-items:center;font-family:var(--ff-d);font-weight:700}
+.card h3{font-family:var(--ff-d);font-size:20px;line-height:1.2;margin:2px 0 0}
+.card .bd{padding:14px 18px 18px;display:flex;flex-direction:column;gap:12px;flex:1}
+.card p{margin:0;font-size:15.5px;color:var(--ink2)}
+.card .meta{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:14px;color:var(--ink2)}
+.card .meta b{color:var(--ink)}
+.tagst{font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;padding:3px 9px;border-radius:999px;border:1px solid var(--line);color:var(--ink2);margin-left:auto;white-space:nowrap}
+.tagst.done{border-color:var(--ok);color:var(--ok)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:10px;padding:11px 18px;font-weight:600;cursor:pointer;background:var(--ink);color:var(--bg);text-decoration:none;font-size:16px}
+.btn.alt{background:none;color:var(--ink);border:1px solid var(--ink)}
+.btn.gold{background:var(--gold);color:#0b1a33}
+.btn:hover{filter:brightness(1.08)}
+.btn[disabled]{opacity:.4;cursor:default}
+.card .btn{margin-top:auto;align-self:flex-start}
+
+/* Sección */
+.stepper{display:flex;gap:6px;flex-wrap:wrap;margin-top:22px}
+.pill{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 14px;font-size:15px;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.pill i{font-style:normal;font-size:12px;color:var(--ink2)}
+.pill[aria-current="true"]{background:var(--c);color:var(--bg-c);border-color:var(--c)}
+.pill[aria-current="true"] i{color:var(--bg-c)}
+.pill.done i{color:var(--ok)}
+.pill[aria-current="true"].done i{color:var(--bg-c)}
+.sechd{margin-top:22px;border-radius:14px;background:var(--bg-c);color:var(--c);padding:22px 22px 20px;border:1px solid var(--c)}
+.sechd .k{font-size:13px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;margin:0 0 6px}
+.sechd h2{font-family:var(--ff-d);font-size:clamp(24px,4vw,32px);line-height:1.18;margin:0 0 10px}
+.sechd p.d{margin:0;color:var(--ink);font-size:17px}
+.sechd .g{margin:10px 0 0;font-size:14.5px;color:var(--ink2)}
+.blk{margin-top:30px}
+.blk > h3{font-family:var(--ff-d);font-size:21px;margin:0 0 4px}
+.blk > p.sub{margin:0 0 14px;color:var(--ink2);font-size:15.5px}
+.cloud{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:baseline}
+.chip{border:1px solid var(--c);background:var(--surface);color:var(--c);border-radius:999px;padding:5px 14px;cursor:pointer;font-weight:600;line-height:1.3}
+.chip[aria-pressed="true"]{background:var(--c);color:var(--bg-c)}
+.def{margin-top:14px;padding:14px 16px;border-radius:12px;background:var(--bg-c);border-left:4px solid var(--c)}
+.def b{font-family:var(--ff-d);font-size:18px;color:var(--c);display:block;margin-bottom:2px}
+.def p{margin:0}
+details.map{border:1px solid var(--line);border-radius:14px;background:var(--surface);margin-top:26px}
+details.map > summary{cursor:pointer;padding:14px 18px;font-family:var(--ff-d);font-size:19px;font-weight:600;list-style:none;display:flex;gap:10px;align-items:center}
+details.map > summary::-webkit-details-marker{display:none}
+details.map > summary::before{content:"";width:9px;height:9px;border-right:2px solid var(--ink);border-bottom:2px solid var(--ink);transform:rotate(-45deg);transition:transform .15s;flex:none}
+details.map[open] > summary::before{transform:rotate(45deg)}
+details.map > summary small{font-family:var(--ff-b);font-weight:400;font-size:14.5px;color:var(--ink2);margin-left:auto}
+details.map .inner{padding:4px 16px 18px}
+.prog{display:flex;align-items:center;gap:12px;margin:26px 0 0;padding:10px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);position:sticky;top:0;z-index:5}
+.prog .bar i{background:var(--c)}
+.prog span{font-size:15px;white-space:nowrap}
+
+/* Ítems */
+.q{padding:18px 0;border-bottom:1px solid var(--line)}
+.q:last-child{border-bottom:0}
+.q .qt{font-weight:600;margin:0 0 12px}
+.q .qn{color:var(--c);font-family:var(--ff-d);margin-right:6px}
+.frag{margin:0 0 12px;padding:10px 14px;border-left:4px solid var(--c);background:var(--bg-c);border-radius:0 10px 10px 0;font-style:italic}
+.fq{margin:0 0 10px;font-size:15.5px;color:var(--ink2)}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 14px;cursor:pointer;display:flex;gap:10px;align-items:flex-start;line-height:1.45}
+.opt:hover:not([disabled]){border-color:var(--c)}
+.opt .l{font-weight:700;color:var(--c);flex:none}
+.opt[disabled]{cursor:default}
+.opt.right{border-color:var(--ok);background:var(--ok-bg)}
+.opt.wrong{border-color:var(--no);background:var(--no-bg)}
+.opt.dim{opacity:.62}
+.pair{display:flex;gap:10px;flex-wrap:wrap}
+.pair .opt{flex:1 1 200px;justify-content:center;align-items:center;text-align:center;font-weight:600}
+.fb{margin-top:12px;padding:12px 14px;border-radius:10px;font-size:16px;line-height:1.55;display:flex;gap:12px;align-items:flex-start}
+.fb.ok{background:var(--ok-bg);border:1px solid var(--ok)}
+.fb.no{background:var(--info-bg);border:1px solid var(--info)}
+.fb svg{flex:none;margin-top:3px}
+.fb.ok svg{color:var(--ok)} .fb.no svg{color:var(--info)}
+.fb p{margin:0}
+.fb .ref{display:block;margin-top:6px;font-size:14px;color:var(--ink2)}
+.fb .ref b{color:var(--ink)}
+
+/* Resultado */
+.res{margin-top:34px;border:2px solid var(--c);border-radius:16px;background:var(--surface);padding:22px}
+.res h3{font-family:var(--ff-d);font-size:24px;margin:0 0 4px}
+.res .score{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:6px 0 10px}
+.res .score b{font-family:var(--ff-d);font-size:44px;line-height:1;color:var(--c)}
+.res .brk{display:flex;gap:8px 18px;flex-wrap:wrap;color:var(--ink2);font-size:15px;margin:0 0 12px}
+.res .rev{margin:14px 0 0;padding:12px 16px;border-radius:12px;background:var(--bg-c)}
+.res .rev b{display:block;margin-bottom:4px}
+.res .rev ul{margin:0;padding-left:20px}
+.acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+
+footer{margin-top:56px;background:var(--nav);color:var(--nav-ink)}
+footer .wrap{padding-block:32px}
+footer .f-n{margin:0;font:700 17px/1.3 var(--ff-d)}
+footer .f-s{margin:6px 0 0;font-size:14.5px;line-height:1.6;opacity:.82;max-width:60ch}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:10px;font-size:15px;z-index:50;max-width:calc(100% - 32px)}
+
+.reset{margin-top:36px;padding-top:20px;border-top:1px solid var(--line)}
+.reset .btn.alt{font-size:15px;padding:9px 16px}
+.reset-box{padding:16px 18px;border:1px solid var(--no);border-radius:12px;background:var(--no-bg)}
+.reset-box p{margin:0 0 6px;line-height:1.55}
+.btn.danger{background:var(--no);color:var(--bg)}
+/* ===== Mapa del modelo (dentro de la Sección 1) ===== */
+.mapm{container-type:inline-size;container-name:mapm}
+.mapm .stage{display:grid;grid-template-columns:minmax(0,1fr);gap:20px;align-items:start}
+.mapm .dia-box{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:22px 16px 16px}
+.mapm .dia{--nh:84px;display:grid;grid-template-columns:minmax(0,.7fr) minmax(0,1.15fr) minmax(0,1.15fr)}
+.mapm .node{height:var(--nh);border-radius:10px;border:2px solid var(--mc);background:var(--mbg);display:flex;flex-direction:column;justify-content:center;gap:2px;padding:8px 14px;text-align:left;cursor:pointer;transition:box-shadow .15s,transform .15s;grid-column:2}
+.mapm .node:hover{transform:translateY(-1px)}
+.mapm .node .t{font-family:var(--ff-d);font-weight:700;font-size:18px;line-height:1.2;color:var(--mc)}
+.mapm .node .s{font-size:14px;color:var(--ink2);line-height:1.3}
+.mapm .node.on{box-shadow:0 0 0 4px var(--gold)}
+.mapm .n-teo{--mc:var(--teo);--mbg:var(--teo-bg)}
+.mapm .n-emp{--mc:var(--emp);--mbg:var(--emp-bg)}
+.mapm .n-rep{--mc:var(--gold-ink);--mbg:var(--gold-bg);width:100%;grid-column:auto}
+.mapm .con{grid-column:1 / 3;display:grid;grid-template-columns:minmax(0,.7fr) minmax(0,1.15fr);align-items:center;background:none;border:0;padding:6px 0;cursor:pointer;text-align:right;border-radius:10px}
+.mapm .con .lab{padding-right:14px;display:flex;flex-direction:column;gap:1px}
+.mapm .con .lab b{font-size:15px;line-height:1.25;font-weight:600}
+.mapm .con .lab span{font-size:13px;color:var(--ink2);line-height:1.25}
+.mapm .con .arr{display:flex;justify-content:center}
+.mapm .con svg{width:64px;height:56px;color:var(--ink2);overflow:visible}
+.mapm .con:hover svg,.mapm .con.on svg{color:var(--gold-ink)}
+.mapm .con.on{background:var(--gold-bg)}
+.mapm .rep{grid-column:3;grid-row:3 / 6;position:relative;display:flex;align-items:center;padding-left:46px}
+.mapm .rep::before{content:"";position:absolute;left:0;top:calc(var(--nh) / 2);bottom:calc(var(--nh) / 2);width:22px;border:2px solid var(--ink2);border-right:0}
+.mapm .rep::after{content:"";position:absolute;left:22px;top:50%;width:16px;height:2px;background:var(--ink2);transform:translateY(-1px)}
+.mapm .rep .head-a{position:absolute;left:36px;top:50%;width:0;height:0;border-left:9px solid var(--ink2);border-top:6px solid transparent;border-bottom:6px solid transparent;transform:translateY(-6px)}
+.mapm .rep .node{width:100%;height:calc(var(--nh) + 8px);overflow-wrap:break-word}
+.mapm .rep .node .t{font-size:16px}
+.mapm .rep-cap{display:none}
+.mapm .legend{display:flex;flex-wrap:wrap;gap:8px 20px;margin-top:16px;padding-top:12px;border-top:1px solid var(--line);font-size:14px;color:var(--ink2)}
+.mapm .legend span{display:inline-flex;align-items:center;gap:8px}
+.mapm .legend i{width:14px;height:14px;border-radius:4px;border:2px solid var(--mc);background:var(--mbg);display:inline-block}
+.mapm .legend .key{display:flex;gap:10px;align-items:center;flex-basis:100%}
+.mapm .legend .key svg{width:44px;height:14px;color:var(--ink2);flex:none}
+.mapm .panel{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.mapm #mp-body{display:flex;flex-direction:column;gap:14px}
+.mapm .modes{display:flex;gap:4px;padding:4px;background:var(--surface);border:1px solid var(--line);border-radius:10px}
+.mapm .modes button{flex:1;border:0;background:none;padding:8px 10px;border-radius:7px;font-weight:600;font-size:15px;cursor:pointer;color:var(--ink2)}
+.mapm .modes button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.mapm .tag{font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;color:var(--gold-ink);margin:0}
+.mapm .panel h4{font-family:var(--ff-d);font-size:24px;line-height:1.2;margin:2px 0 0;text-wrap:balance}
+.mapm .panel p{margin:0}
+.mapm .mb{display:flex;flex-direction:column;gap:6px}
+.mapm .mb h5{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink2);margin:0;font-weight:600}
+.mapm .mb ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+.mapm .chips{display:flex;flex-wrap:wrap;gap:6px}
+.mapm .mchip{font-size:13px;padding:3px 10px;border-radius:999px;border:1px solid var(--line);color:var(--ink2);background:var(--surface)}
+.mapm .hint{color:var(--ink2);font-size:15px}
+.mapm .tour-pick{display:flex;flex-wrap:wrap;gap:8px}
+.mapm .tour-pick button{border:1px solid var(--line);background:var(--surface);padding:7px 12px;border-radius:8px;font-size:15px;cursor:pointer}
+.mapm .tour-pick button[aria-pressed="true"]{border-color:var(--gold);background:var(--gold-bg);font-weight:600}
+.mapm .step{display:flex;flex-direction:column;gap:8px;border-left:4px solid var(--gold);padding-left:14px}
+.mapm .step .k{font-size:13px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;color:var(--ink2)}
+.mapm .step .tx{font-size:17.5px;line-height:1.5}
+.mapm .dots{display:flex;gap:6px}
+.mapm .dots i{height:6px;flex:1;border-radius:3px;background:var(--line)}
+.mapm .dots i.done{background:var(--gold)}
+.mapm .nav{display:flex;gap:10px}
+.mapm .nav button{flex:1;border:1px solid var(--ink);background:none;padding:10px 12px;border-radius:9px;font-weight:600;cursor:pointer}
+.mapm .nav .next{background:var(--ink);color:var(--bg)}
+.mapm .nav button[disabled]{opacity:.35;cursor:default}
+@container mapm (min-width:860px){
+  .mapm .stage{grid-template-columns:minmax(0,1.3fr) minmax(0,1fr)}
+}
+@container mapm (max-width:560px){
+  .mapm .dia{grid-template-columns:minmax(0,.7fr) minmax(0,1.3fr)}
+  .mapm .con{grid-template-columns:minmax(0,.7fr) minmax(0,1.3fr)}
+  .mapm .node{height:auto;min-height:var(--nh)}
+  .mapm .node .t{font-size:17px}
+  .mapm .con .lab b{font-size:14px}
+  .mapm .rep{grid-column:1 / 3;grid-row:9 !important;padding:6px 0 0}
+  .mapm .rep::before,.mapm .rep::after,.mapm .rep .head-a{display:none}
+  .mapm .rep .node{height:auto;min-height:var(--nh)}
+  .mapm .rep-cap{display:block;grid-column:1 / 3;font-size:14px;color:var(--ink2);text-align:center;padding-top:14px}
+}
+@media (prefers-reduced-motion:reduce){.mapm .node,details.map > summary::before{transition:none}.mapm .node:hover{transform:none}}
+</style>
+</head>
+<body>
+<script src="firebase_config.js"></script>
+
+
+
+<header class="top">
+  <div class="wrap">
+    <a class="back" id="back" href="index_mis_bcs.html" data-portal><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>Portal</a>
+    <div class="ttl">Lectura 1 · Diálogo entre ideas y pruebas</div>
+    <span class="who" id="who" hidden></span>
+    <button class="tbtn" id="theme" type="button" aria-label="Cambiar entre tema claro y oscuro"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v18" /><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></svg></button>
+  </div>
+</header>
+
+<main class="wrap" id="app" aria-live="polite"></main>
+
+<footer>
+  <div class="wrap">
+    <p class="f-n">Universidad de La Frontera</p>
+    <p class="f-s">Facultad de Educación, Ciencias Sociales y Humanidades<br>Metodología de la Investigación Social | Módulo Cualitativo | 2026</p>
+  </div>
+</footer>
+<div class="toast" id="toast" role="status" hidden></div>
+
+<template id="map-tpl">
+<div class="mapm" id="mapm">
+  <div class="stage">
+    <div class="dia-box">
+      <div class="dia" id="mp-dia" role="group" aria-label="Modelo simple de la investigación social (Gráfico 3.1)">
+        <button type="button" class="node n-teo" data-id="ideas" style="grid-row:1"><span class="t">Ideas</span><span class="s">Teoría social</span></button>
+        <button type="button" class="con" data-id="deduc" style="grid-row:2" aria-label="Movimiento principalmente deductivo">
+          <span class="lab"><b>Principalmente deductivo</b><span>de las ideas a los marcos</span></span>
+          <span class="arr"><svg viewBox="0 0 64 56" aria-hidden="true"><line x1="22" y1="4" x2="22" y2="42" stroke="currentColor" stroke-width="3.4"/><polygon points="22,53 14,40 30,40" fill="currentColor"/><line x1="44" y1="52" x2="44" y2="14" stroke="currentColor" stroke-width="1.8" stroke-dasharray="4 3.5"/><polygon points="44,4 38,15 50,15" fill="currentColor"/></svg></span>
+        </button>
+        <button type="button" class="node n-teo" data-id="marcos" style="grid-row:3"><span class="t">Marcos analíticos</span><span class="s">Formas de ver el fenómeno</span></button>
+        <button type="button" class="con" data-id="retro" style="grid-row:4" aria-label="Retroducción entre marcos analíticos e imágenes">
+          <span class="lab"><b>Retroducción</b><span>ida y vuelta entre marco e imagen</span></span>
+          <span class="arr"><svg viewBox="0 0 64 56" aria-hidden="true"><line x1="22" y1="4" x2="22" y2="42" stroke="currentColor" stroke-width="3"/><polygon points="22,53 14,40 30,40" fill="currentColor"/><line x1="42" y1="52" x2="42" y2="14" stroke="currentColor" stroke-width="3"/><polygon points="42,4 34,17 50,17" fill="currentColor"/></svg></span>
+        </button>
+        <button type="button" class="node n-emp" data-id="imagenes" style="grid-row:5"><span class="t">Imágenes</span><span class="s">Síntesis de las pruebas</span></button>
+        <button type="button" class="con" data-id="induc" style="grid-row:6" aria-label="Movimiento principalmente inductivo">
+          <span class="lab"><b>Principalmente inductivo</b><span>de las pruebas a las imágenes</span></span>
+          <span class="arr"><svg viewBox="0 0 64 56" aria-hidden="true"><line x1="22" y1="4" x2="22" y2="42" stroke="currentColor" stroke-width="1.8" stroke-dasharray="4 3.5"/><polygon points="22,53 16,42 28,42" fill="currentColor"/><line x1="44" y1="52" x2="44" y2="14" stroke="currentColor" stroke-width="3.4"/><polygon points="44,3 36,16 52,16" fill="currentColor"/></svg></span>
+        </button>
+        <button type="button" class="node n-emp" data-id="pruebas" style="grid-row:7"><span class="t">Pruebas o datos</span><span class="s">Lo que se observa y se registra</span></button>
+        <div class="rep" style="grid-row:3 / 6"><span class="head-a" aria-hidden="true"></span>
+          <button type="button" class="node n-rep" data-id="rep"><span class="t">Representaciones de la vida social</span><span class="s">Resultado del diálogo</span></button>
+        </div>
+        <p class="rep-cap" style="grid-row:8">La representación nace de la interacción entre marcos analíticos e imágenes.</p>
+      </div>
+      <div class="legend" aria-label="Cómo leer el diagrama">
+        <span style="--mc:var(--teo);--mbg:var(--teo-bg)"><i></i>Lado de las ideas</span>
+        <span style="--mc:var(--emp);--mbg:var(--emp-bg)"><i></i>Lado de las pruebas</span>
+        <span style="--mc:var(--gold-ink);--mbg:var(--gold-bg)"><i></i>Resultado</span>
+        <span class="key"><svg viewBox="0 0 44 14" aria-hidden="true"><line x1="0" y1="4" x2="36" y2="4" stroke="currentColor" stroke-width="3.2"/><line x1="0" y1="11" x2="36" y2="11" stroke="currentColor" stroke-width="1.8" stroke-dasharray="4 3.5"/></svg>Trazo grueso: movimiento principal. Trazo fino: movimiento de retorno (ninguno es exclusivo).</span>
+      </div>
+    </div>
+    <aside class="panel" id="mp-panel" aria-live="polite">
+      <div class="modes" role="group" aria-label="Modo del mapa">
+        <button type="button" id="mp-exp" aria-pressed="true">Explorar</button>
+        <button type="button" id="mp-tour" aria-pressed="false">Seguir un ejemplo</button>
+      </div>
+      <div id="mp-body"></div>
+    </aside>
+  </div>
+</div>
+</template>
+
+<script>
+var MAPITEMS={
+ ideas:{kind:'Bloque · lado de las ideas',title:'Ideas (teoría social)',
+  text:'«Ideas» es la palabra cotidiana para lo que las ciencias sociales llaman teoría social. Pueden surgir de cualquier parte: la vida diaria, una novela, un malentendido, una broma. La mayoría resulta equivocada o sin salida; las que superan el escrutinio de otros investigadores pasan a formar el repertorio de la teoría social.',
+  ej:['Determinismo climático: la idea de que los climas templados originan civilizaciones más desarrolladas. Se mostró poco útil porque ignoraba las culturas no occidentales.','Elección racional: ve el voto como un cálculo individual de costos y beneficios.','Influencia social: dirige la mirada hacia las redes sociales a las que pertenecen los votantes.'],
+  guia:[6,7,8]},
+ marcos:{kind:'Bloque · lado de las ideas',title:'Marcos analíticos',
+  text:'Son las formas de ver las cosas que se construyen a partir de las ideas: esquemas detallados de lo que se piensa sobre un fenómeno. En la vida cotidiana son implícitos; en la investigación social se especifican con cuidado y se discuten. Clasifican el fenómeno (a qué caso corresponde) y lo caracterizan (por sus aspectos).',
+  ej:['Mesa y fiesta: marcos cotidianos que permiten reconocer la categoría y describir cómo varían sus ejemplos.','Café: con un marco que enfatiza la comunicación no verbal se ve la «no interacción» como actividad social significativa, y no como «no pasa nada».','Soldados: estudiarlos como «trabajo» o como «iniciados» produce representaciones muy distintas.','Yugoslavia bajo Tito: un caso de «control exitoso del conflicto étnico».'],
+  guia:[3,9,10,11]},
+ pruebas:{kind:'Bloque · lado de las pruebas',title:'Pruebas o datos',
+  text:'«Pruebas» es el término cotidiano de lo que se llama datos. Las fuentes son muy variadas: observación de campo, entrevistas en profundidad, documentos históricos y estadísticas oficiales, además de encuestas, que usa solo una proporción pequeña de quienes investigan. El detalle posible es ilimitado, así que siempre hay que seleccionar; esa selección puede arrastrar prejuicios no reconocidos, y la barrera real es que la ciencia se construye colectivamente.',
+  ej:['Tomar notas de una clase magistral de una hora: el escenario, el contenido, los gestos, la reacción de cada estudiante. Registrarlo todo es imposible.'],
+  guia:[1,12,13,14]},
+ imagenes:{kind:'Bloque · lado de las pruebas',title:'Imágenes',
+  text:'Se construyen a partir de las pruebas: el investigador sintetiza datos seleccionados y los conecta para darles coherencia. Tienen tres cualidades: son idealizaciones de casos reales, casi todas incorporan explicaciones y sirven de guía para investigaciones posteriores.',
+  ej:['Gueto urbano y comunidad minoritaria exitosa: dos imágenes unidas por el «éxodo» de la clase media.','Trabajadores que hacen funcionar las máquinas tan rápido que se rompen: imagen de trabajadores «insurgentes».','Estudiantes de medicina: la formación los lleva a hacer coincidir la protección frente a acusaciones de negligencia con el «mejor interés» del paciente.'],
+  guia:[3,15,16,17]},
+ rep:{kind:'Resultado',title:'Representaciones de la vida social',
+  text:'Son el resultado del diálogo entre ideas y pruebas: datos configurados por ideas y presentados junto con las ideas que guiaron su elaboración. Surgen de la interacción entre marcos analíticos e imágenes y se van refinando. El texto las compara con las fotografías: el enfoque y los límites destacan unas cosas y dejan otras fuera.',
+  ej:['Quien estudia el café explica cómo se logra la no interacción; quien estudia a los estudiantes de medicina explica cómo hacen coincidir presiones prácticas y compromisos con los pacientes.'],
+  guia:[4,18,19]},
+ deduc:{kind:'Movimiento',title:'Principalmente deductivo',
+  text:'Va de las ideas a los marcos analíticos: las ideas se articulan en marcos que guían la caracterización del fenómeno y orientan qué datos recoger. El texto aclara que no es solo deducción, porque el conocimiento del que se derivan esas ideas es una síntesis de pruebas acumuladas.',
+  ej:['Con la idea de elección racional, el marco hace ver el voto como un cálculo. Con la idea de influencia social, el mismo acto se descompone en redes.'],
+  guia:[5]},
+ induc:{kind:'Movimiento',title:'Principalmente inductivo',
+  text:'Va de las pruebas a las imágenes: al sintetizar los datos se construye una imagen del caso. El texto aclara que tampoco es solo inducción, porque las pruebas que se usan fueron elegidas según las ideas y los marcos, y es difícil formar una imagen sin algún marco inicial.',
+  ej:['Del registro de trabajadores que rompen sus máquinas se construye la imagen de trabajadores insurgentes, que a su vez sugiere nuevos datos por buscar.'],
+  guia:[5]},
+ retro:{kind:'Movimiento',title:'Retroducción',
+  text:'Es la interacción entre imágenes y marcos analíticos. Según el capítulo, el término viene de la filosofía de la ciencia y describe cómo funcionan juntas la inducción y la deducción. Si la imagen es compatible con la caracterización inicial, sirve para afinar el marco; si la contradice, obliga a buscar o desarrollar marcos nuevos. El texto remite al capítulo 4 para profundizar.',
+  ej:['Estudiantes de medicina: la imagen construida con los datos desarrolla y contradice el marco inicial de «poner al paciente por encima de todo».'],
+  guia:[17]}
+};
+var MAPTOURS=[
+ {id:'med',name:'Estudiantes de medicina',steps:[
+  {n:['ideas'],k:'Idea',t:'El investigador parte de nociones sobre las profesiones: cada una defiende ciertos valores, y la socialización profesional consiste en aprender a aplicarlos en situaciones cotidianas.'},
+  {n:['deduc','marcos'],k:'Marco analítico',t:'Esa idea se vuelve un marco que destaca la aplicación de principios abstractos. Para la medicina, un valor central sería poner la salud del paciente por encima de todo.'},
+  {n:['pruebas'],k:'Pruebas',t:'El marco orienta qué mirar: unas semanas de observación de la práctica clínica en un hospital universitario, que producen un gran volumen de notas de campo.'},
+  {n:['induc','imagenes'],k:'Imagen',t:'De las notas surge una imagen: la formación lleva a los estudiantes a hacer coincidir la protección frente a acusaciones de negligencia con el «mejor interés» del paciente, por ejemplo pidiendo muchos análisis de laboratorio.'},
+  {n:['retro'],k:'Retroducción',t:'La imagen desarrolla y contradice el marco inicial: los valores profesionales se aprenden dentro de preocupaciones prácticas e institucionales.'},
+  {n:['rep'],k:'Representación',t:'La representación explica cómo los estudiantes terminan haciendo coincidir las preocupaciones prácticas de médicos y hospitales con su compromiso con los pacientes.'}]},
+ {id:'trab',name:'Trabajadores y máquinas',steps:[
+  {n:['ideas'],k:'Idea',t:'El investigador parte de ideas sobre la resistencia en el trabajo.'},
+  {n:['deduc','marcos'],k:'Marco analítico',t:'Con ellas arma un marco de la «resistencia» que especifica distintas condiciones en que aparece. El marco lo lleva a considerar la perturbación de la producción como una posible forma de resistencia.'},
+  {n:['pruebas'],k:'Pruebas',t:'Observa a trabajadores que hacen funcionar sus máquinas tan rápido que terminan rompiéndose.'},
+  {n:['induc','imagenes'],k:'Imagen',t:'Sintetiza lo observado en una imagen: trabajadores problemáticos o insurgentes que perturban la producción mientras aparentan trabajar mucho.'},
+  {n:['induc','pruebas'],k:'De vuelta a las pruebas',t:'La imagen sugiere nuevas preguntas, como en qué momento de la jornada, la semana o el contrato ocurren las interrupciones. Eso lleva a recoger más datos y a refinar la imagen.'},
+  {n:['retro'],k:'Retroducción',t:'La imagen puede confirmar el marco inicial, rectificarlo o inspirar marcos nuevos.'}]}
+];
+
+</script>
+<script>
+(function(){
+var PREVIEW=false;
+var CHARS=[{"title": "El modelo de investigación social", "topic": "el modelo y la interacción entre sus bloques", "guia": "Preguntas 1 a 5 de la guía", "desc": "La investigación social es un diálogo entre ideas y pruebas empíricas. El Gráfico 3.1 lo resume en cuatro bloques (ideas, marcos analíticos, imágenes y pruebas) que interactúan hasta producir una representación de la vida social.", "words": [{"w": "Pruebas empíricas", "d": "Término cotidiano para lo que los científicos sociales llaman datos. Pueden provenir de observación de campo, entrevistas, documentos, estadísticas oficiales o encuestas."}, {"w": "Ideas", "d": "Término cotidiano para la teoría social: el conocimiento abstracto sobre la vida social que los investigadores usan para darle sentido a lo que estudian."}, {"w": "Marco analítico", "d": "Forma de ver un fenómeno construida a partir de las ideas. Es un esquema detallado de lo que se piensa sobre ese fenómeno."}, {"w": "Imagen", "d": "Descripción construida a partir de las pruebas empíricas: el investigador las sintetiza y las conecta para darles coherencia."}, {"w": "Representación", "d": "Resultado del diálogo entre ideas y pruebas: datos configurados por ideas y presentados junto con las ideas que guiaron su elaboración."}, {"w": "Principalmente deductivo", "d": "Movimiento del modelo que va de las ideas a los marcos analíticos y orienta qué datos recoger."}, {"w": "Principalmente inductivo", "d": "Movimiento del modelo que va de las pruebas empíricas a la construcción de imágenes."}, {"w": "Retroducción", "d": "Término de la filosofía de la ciencia que el capítulo usa para describir cómo funcionan juntas la inducción y la deducción en la interacción entre imágenes y marcos."}, {"w": "Análisis", "d": "Dividir un fenómeno en sus partes constituyentes y estudiarlas en relación con el todo."}, {"w": "Síntesis", "d": "Contraparte del análisis: juntar fragmentos separados para darles sentido, construyendo un mundo coherente a partir de partes."}], "mc": [{"q": "¿Qué papel cumplen los marcos analíticos y las imágenes en el modelo del Gráfico 3.1?", "opts": ["Son el punto de partida y el de llegada de la investigación: se parte de las imágenes y se termina en los marcos.", "Son el espacio de contacto donde las ideas y las pruebas empíricas interactúan.", "Son dos nombres distintos para designar las pruebas empíricas que el investigador recoge en terreno.", "Son técnicas de recolección de datos que el investigador elige antes de comenzar su estudio."], "ans": 1, "tip": "En el modelo, las ideas están arriba y las pruebas abajo, y ambas se encuentran en el centro: los marcos analíticos se derivan de las ideas y las imágenes se derivan de las pruebas. Por eso no son ni el inicio ni el final del proceso, sino el espacio donde se produce el diálogo.", "ref": "Un modelo simple de investigación social (Gráfico 3.1)"}, {"q": "Según Ragin, ¿qué cuenta como «pruebas empíricas» en la investigación social?", "opts": ["Cualquier aspecto de la vida social que ofrezca información, como observaciones de campo, entrevistas o documentos.", "Únicamente las respuestas obtenidas mediante cuestionarios y encuestas aplicadas a muestras amplias y representativas de la población.", "Solo la información numérica reunida sobre un gran número de casos y analizada estadísticamente.", "Las ideas de la teoría social que ya fueron comprobadas por otros investigadores y publicadas."], "ans": 0, "tip": "El capítulo aclara que «pruebas» es la palabra cotidiana para lo que se llama datos, y que prácticamente cualquier cosa puede ser un dato en potencia. Las encuestas son solo una fuente más: apenas una proporción relativamente pequeña de los científicos sociales investiga con ellas.", "ref": "Un modelo simple de investigación social; Pruebas empíricas"}, {"q": "¿Qué distingue a un marco analítico de una imagen?", "opts": ["El marco es propio de la investigación cuantitativa y la imagen es propia de la investigación cualitativa.", "El marco se construye después de la imagen, con el único fin de justificarla ante la audiencia.", "El marco describe casos concretos y la imagen es una teoría abstracta que los explica.", "El marco se deriva de las ideas, y la imagen se construye a partir de las pruebas empíricas."], "ans": 3, "tip": "Los marcos analíticos están del lado de las ideas (son formas de ver que se construyen a partir de ellas) y las imágenes están del lado de las pruebas (son síntesis de los datos). La opción que dice que el marco describe casos concretos y la imagen es una teoría abstracta invierte la relación: las imágenes son abstracciones con un fundamento específico en pruebas, y las teorías son más generales y abstractas.", "ref": "Introducción; Un modelo simple de investigación social"}, {"q": "¿Por qué Ragin describe la investigación social como un «diálogo» entre ideas y pruebas?", "opts": ["Porque el investigador conversa con otros investigadores antes de empezar a recoger sus datos.", "Porque las ideas del investigador se confirman siempre con los datos que luego obtiene en terreno.", "Porque las ideas dan sentido a las pruebas y las pruebas sirven para ampliar, revisar y comprobar las ideas.", "Porque primero se recogen todos los datos y las ideas se agregan solo al final, cuando se redacta el informe de la investigación."], "ans": 2, "tip": "Se llama diálogo porque la influencia es mutua: las ideas orientan la lectura de las pruebas y las pruebas, a su vez, modifican las ideas. El resultado de ese ir y venir es una representación de la vida social.", "ref": "Introducción"}, {"q": "Un investigador parte de una idea teórica, la convierte en un marco analítico y con él decide qué datos recoger. ¿Qué movimiento del modelo predomina en ese tramo?", "opts": ["El principalmente inductivo, que va de las pruebas empíricas a la construcción de las imágenes.", "El principalmente deductivo, que va de las ideas a los marcos y luego a la recolección de datos.", "La retroducción, porque en este tramo siempre se vuelve desde la imagen hacia el marco inicial.", "La síntesis, porque se reúnen fragmentos separados en una descripción coherente del fenómeno."], "ans": 1, "tip": "Cuando se avanza desde las ideas hacia los marcos y de ahí hacia qué observar, el movimiento es principalmente deductivo. La inducción corresponde a construir imágenes desde las pruebas, y la retroducción nombra la interacción de ida y vuelta entre imágenes y marcos, que aquí aún no aparece.", "ref": "Imágenes (interacción entre imágenes y marcos analíticos)"}, {"q": "¿Qué puede ocurrir cuando la imagen construida con los datos no coincide con el marco analítico inicial?", "opts": ["La imagen puede rectificar el marco o inspirar marcos nuevos, y se evalúa si los datos admiten otras imágenes.", "Se concluye que los datos fueron mal recogidos y se descartan, para proteger la coherencia del marco con el que se empezó.", "El estudio se declara inválido, porque el marco inicial debe confirmarse siempre con los datos.", "Se conserva el marco inicial y se ignora la imagen para no alterar el diseño de la investigación."], "ans": 0, "tip": "El capítulo plantea que las imágenes pueden confirmar o rectificar el marco, o inspirar otros nuevos, y que el investigador debe considerar si se pueden derivar otras imágenes de los datos o construir otros marcos. Esa interacción conduce a imágenes más depuradas y a marcos mejor especificados.", "ref": "Imágenes"}], "tf": [{"q": "Las ideas y las pruebas empíricas interactúan a través de los marcos analíticos y las imágenes, que ocupan la parte central del modelo.", "ans": true, "tip": "Es verdadero. En el Gráfico 3.1 las ideas están arriba y las pruebas abajo, y no se conectan directamente: se encuentran en el centro, mediadas por marcos analíticos e imágenes.", "ref": "Un modelo simple de investigación social (Gráfico 3.1)"}, {"q": "En el modelo de Ragin, la investigación comienza recogiendo datos sin ninguna idea previa, y las ideas aparecen solo al final para interpretarlos.", "ans": false, "tip": "Es falso. Las ideas y los marcos analíticos dirigen la atención hacia ciertas pruebas desde el inicio, y es difícil formar una imagen sin algún marco inicial. Las ideas intervienen durante todo el proceso, no solo al final.", "ref": "Imágenes; Pruebas empíricas"}, {"q": "El análisis consiste en dividir un fenómeno en sus partes y estudiarlas en relación con el todo, y la síntesis es su contraparte: juntar fragmentos para darles sentido.", "ans": true, "tip": "Es verdadero. El capítulo ejemplifica el análisis con un movimiento revolucionario dividido en grupos, contexto e ideología, y la síntesis con la construcción de una imagen coherente a partir de las pruebas reunidas.", "ref": "Introducción"}, {"q": "La construcción de imágenes es un proceso puramente inductivo, que no depende de las ideas ni de los marcos analíticos.", "ans": false, "tip": "Es falso. Aunque la construcción de imágenes es principalmente inductiva, usa pruebas cuya relevancia fue determinada por las ideas y los marcos con los que trabaja el investigador. Por eso el capítulo advierte que sería un error reducir estas actividades a una sola lógica.", "ref": "Imágenes (interacción entre imágenes y marcos analíticos)"}, {"q": "La representación de la vida social que ofrece el investigador es producto de la interacción entre imágenes y marcos analíticos.", "ans": true, "tip": "Es verdadero. La representación reúne pruebas empíricas moldeadas por ideas, que a su vez fueron seleccionadas y quizás revisadas en respuesta a esas pruebas.", "ref": "Imágenes; Representaciones"}, {"q": "Dos investigaciones sobre el mismo tema producen la misma representación, porque el diálogo entre ideas y pruebas es igual en todas.", "ans": false, "tip": "Es falso. El carácter de la representación depende de cómo se desarrolla ese diálogo. El capítulo compara a un investigador que convive con un pequeño grupo de soldados y a otro que encuesta a una muestra aleatoria de soldados: ambos dialogan con ideas y pruebas, pero de maneras muy distintas y con representaciones distintas.", "ref": "Introducción"}], "frags": [{"t": "Un investigador parte de un marco sobre la «resistencia» y observa a trabajadores que hacen funcionar sus máquinas tan rápido que se rompen. Construye la imagen de trabajadores insurgentes y se pregunta en qué momento de la jornada ocurren esas interrupciones, lo que lo lleva a recoger más datos.", "ok": true, "tip": "Sí corresponde. El fragmento recorre el modelo completo: un marco orienta qué observar, las pruebas se sintetizan en una imagen y esa imagen sugiere nuevos datos por recoger. Es el diálogo entre ideas y pruebas funcionando.", "ref": "Un modelo simple de investigación social"}, {"t": "Un equipo piensa en cómo registrar una clase magistral de una hora. Podría anotar el escenario, el contenido, los gestos de quien expone y las reacciones de cada estudiante, y advierte que es imposible anotarlo todo, por lo que debe decidir qué registrar.", "ok": false, "tip": "No corresponde a esta sección. Este fragmento trata de la selección de las pruebas empíricas, porque los hechos disponibles son ilimitados. Es un tema de la Sección 3.", "ref": "Pruebas empíricas"}, {"t": "Una investigadora estudia un movimiento revolucionario. Separa los grupos que se sumaron (campesinos, trabajadores, soldados), los que no lo hicieron, el contexto político y la ideología, y luego examina cómo esas ideas centrales se corresponden con las preocupaciones de cada grupo.", "ok": true, "tip": "Sí corresponde. Divide el fenómeno en partes y las vuelve a relacionar con el todo, que es lo que el capítulo llama análisis. Además contrasta las ideas con lo observado en cada grupo, es decir, hace dialogar ideas y pruebas empíricas, que es lo que estructura el modelo.", "ref": "Introducción"}, {"t": "Un investigador afirma que estudiar la antigua Yugoslavia bajo Tito vale la pena porque es un ejemplo de «control exitoso del conflicto étnico», es decir, un caso de una categoría más general.", "ok": false, "tip": "No corresponde a esta sección. Ubicar un estudio dentro de una categoría más amplia es caracterizar el fenómeno a partir del caso, una operación propia de los marcos analíticos que se trabaja en la Sección 2.", "ref": "Marcos analíticos"}]}, {"title": "Ideas y marcos analíticos", "topic": "las ideas y los marcos analíticos", "guia": "Preguntas 6 a 11 de la guía", "desc": "Las ideas pueden surgir de cualquier parte y la mayoría no resiste el escrutinio; las que sí lo hacen forman la teoría social. Los marcos analíticos convierten las ideas en formas de ver un fenómeno: lo clasifican a partir del caso y lo caracterizan a partir de sus aspectos.", "words": [{"w": "Idea", "d": "Noción sobre la sociedad que puede surgir de cualquier lugar. La mayoría termina siendo equivocada o sin salida; las que superan el escrutinio pasan a la teoría social."}, {"w": "Teoría social", "d": "Conocimiento abstracto acumulado sobre la vida social. Mucha gente conoce parte de él sin haberlo estudiado, y la teoría vale porque lo explora en profundidad."}, {"w": "Elección racional", "d": "Idea de que las personas actúan para maximizar sus propios intereses. Aplicada al voto, lo presenta como un cálculo individual de costos y beneficios."}, {"w": "Influencia social", "d": "Idea que destaca los procesos de influencia social. Aplicada al voto, dirige la atención hacia las redes sociales a las que se unen los votantes."}, {"w": "Marco analítico", "d": "Forma de ver un fenómeno construida a partir de ideas. Define una categoría de fenómenos y da herramientas para diferenciar los que pertenecen a ella."}, {"w": "Marco implícito", "d": "Marco que se usa en la vida cotidiana sin articularlo, como el que permite reconocer una fiesta o una mesa. En la investigación, en cambio, se especifica y se discute."}, {"w": "Categoría", "d": "Conjunto amplio de fenómenos al que se asigna un caso, por ejemplo «fiestas» o «control exitoso del conflicto étnico»."}, {"w": "A partir del caso", "d": "Caracterizar un fenómeno respondiendo a qué caso general corresponde. Por ejemplo, la vida del café como caso de no interacción consciente."}, {"w": "A partir de los aspectos", "d": "Caracterizar un fenómeno especificando los aspectos en que varían los casos dentro de una misma categoría."}, {"w": "Presencia y ausencia", "d": "Un marco guía qué está presente y qué falta en un caso. Sin él se tiende a mirar solo lo presente, aunque lo ausente puede explicar mucho."}], "mc": [{"q": "Según el capítulo, ¿qué ocurre con las ideas que surgen espontáneamente en la vida cotidiana, en una novela o en una broma?", "opts": ["Todas se incorporan a la teoría social, porque cualquier idea sobre la sociedad resulta valiosa y útil para investigar el mundo social.", "Solo valen las que provienen de la vida cotidiana, porque están más cerca de la experiencia de las personas.", "La mayoría resulta equivocada o sin salida; solo las que superan el escrutinio de otros investigadores pasan a la teoría social.", "Son válidas mientras no las contradiga una encuesta, que es el único modo de ponerlas a prueba."], "ans": 2, "tip": "El capítulo reconoce que las ideas pueden venir de cualquier lugar, pero que la mayoría no prospera. Como ejemplo, la idea de que los climas templados originaban civilizaciones más desarrolladas resultó poco útil, porque ignoraba las culturas no occidentales.", "ref": "Ideas"}, {"q": "¿Por qué Ragin afirma que la mayoría de las personas conoce bastante teoría social sin haberla estudiado?", "opts": ["Porque la teoría social se reduce al sentido común y no agrega nada a lo que ya sabe cualquier persona por su propia experiencia de vida.", "Porque todas las personas estudian en algún momento de su vida la teoría de las organizaciones.", "Porque la teoría social se limita a la teoría de la elección racional, que es la única que existe.", "Porque muchas ideas de la teoría social se conocen por la experiencia diaria; la teoría vale por explorarlas en profundidad."], "ans": 3, "tip": "El autor no dice que la teoría social sea solo sentido común: dice que parte de su contenido es familiar y que su valor está en explorar esas ideas en profundidad. Pone como ejemplos la teoría de las organizaciones y la teoría de la elección racional.", "ref": "Ideas"}, {"q": "Un investigador quiere dar voz a un grupo ignorado o interpretar un acontecimiento histórico. ¿Cómo se relaciona con la teoría social, según el capítulo?", "opts": ["La ve como repertorio de interpretaciones y guía, y busca contribuir a la teoría con conocimiento sobre lo ignorado.", "La ignora, porque este tipo de investigación no necesita ninguna idea previa para comenzar su trabajo.", "La comprueba punto por punto, como en cualquier estudio que se propone poner a prueba hipótesis.", "La reemplaza por un marco analítico fijo, definido al comienzo y que no cambia durante el estudio."], "ans": 0, "tip": "Estas investigaciones no se apoyan principalmente en comprobar teoría, pero tampoco prescinden de ella: usan alguna guía teórica y dialogan continuamente con las ideas. Su aporte consiste en ampliar el conocimiento sobre lo que había sido ignorado o mal representado.", "ref": "Ideas"}, {"q": "¿En qué se diferencia un marco analítico de una idea?", "opts": ["Son lo mismo con distinto nombre, porque toda idea teórica ya es en sí misma un marco analítico.", "El marco es la forma de ver construida desde la idea: define una categoría de fenómenos y cómo varían en ella.", "La idea es empírica y el marco es teórico, porque el marco proviene siempre de los datos que el investigador recogió en terreno.", "El marco se construye siempre después de recoger los datos, con el único propósito de ordenarlos."], "ans": 1, "tip": "Con la idea de «fiesta», por ejemplo, el marco define esa categoría de fenómenos y las herramientas para distinguir una fiesta más o menos exitosa o formal. Por eso se dice que los marcos analíticos estructuran las ideas.", "ref": "Marcos analíticos"}, {"q": "En el ejemplo del café, ¿qué permite ver la «no interacción» como una actividad social significativa y no como «que no ocurre nada»?", "opts": ["Un cuestionario aplicado a todos los clientes del café para preguntarles por qué no conversan.", "El silencio de los clientes, que resulta evidente por sí solo para cualquier observador atento.", "La comparación del café con una gran cantidad de cafés de distintas ciudades del mundo.", "Un marco analítico que enfatiza la comunicación no verbal, como los gestos y el uso de periódicos o libros."], "ans": 3, "tip": "Sin un marco que permita ver la producción de no interacción, el investigador puede quedar ciego ante ella. Con un marco que atiende a gestos y objetos como periódicos o libros, se ve que mantener la distancia social exige un esfuerzo consciente.", "ref": "Marcos analíticos (ejemplo del café)"}, {"q": "¿Cuál es la diferencia entre caracterizar un fenómeno «a partir del caso» y «a partir de sus aspectos»?", "opts": ["La primera usa datos cualitativos y la segunda datos cuantitativos, según la técnica del estudio.", "La primera describe un único caso y la segunda compara varios países entre sí, a lo largo del tiempo y en distintos contextos.", "La primera responde a qué caso general corresponde el fenómeno; la segunda precisa en qué aspectos varían los casos.", "Son dos nombres para una misma operación, que consiste en clasificar el fenómeno en una categoría."], "ans": 2, "tip": "Ambos son componentes de los marcos analíticos. Si se dice que la vida del café es un caso de no interacción consciente, se caracteriza a partir del caso; si luego se pregunta cómo varía la no interacción entre cafés, aeropuertos o ascensores, se caracteriza a partir de los aspectos.", "ref": "Marcos analíticos"}], "tf": [{"q": "Un mismo acto, como votar, puede describirse de maneras muy distintas según la idea y el marco analítico con que se lo mire.", "ans": true, "tip": "Es verdadero. Con la idea de elección racional, el voto se ve como un cálculo individual de costos y beneficios; con la de influencia social, la atención pasa a las redes en que participan los votantes.", "ref": "Marcos analíticos"}, {"q": "Los marcos analíticos son exclusivos de la investigación social: en la vida cotidiana las personas no clasifican ni caracterizan lo que las rodea.", "ans": false, "tip": "Es falso. En la vida diaria se usan marcos implícitos todo el tiempo: se distingue una fiesta de un grupo de personas de pie en una habitación y se sabe qué la hace divertida. La diferencia es que en la investigación social los marcos se especifican y se discuten.", "ref": "Marcos analíticos"}, {"q": "Estudiar a los soldados desde el marco del «trabajo» o desde el de los «iniciados» lleva a construir representaciones muy diferentes de ellos.", "ans": true, "tip": "Es verdadero. El marco del «trabajo» y el de los «iniciados», que examina el cambio de identidad al ingresar a una institución que invade la vida, orientan hacia aspectos distintos y contribuyen a conjuntos de conocimiento distintos.", "ref": "Marcos analíticos"}, {"q": "Decir que la Yugoslavia de Tito es un ejemplo de control exitoso del conflicto étnico basta para caracterizar completamente el caso.", "ans": false, "tip": "Es falso. Esa afirmación solo ubica el caso en una categoría; falta caracterizarlo a partir de sus aspectos, es decir, de las distintas formas en que se puede controlar el conflicto étnico y de las políticas que cada una combina.", "ref": "Marcos analíticos"}, {"q": "Sin un marco analítico que guíe el análisis, es fácil atender solo a lo que está presente en un caso e ignorar lo que está ausente.", "ans": true, "tip": "Es verdadero. A veces lo ausente es lo que mejor explica por qué un fenómeno toma una forma y no otra. En el ejemplo de Yugoslavia, un marco permite considerar el efecto de rasgos ausentes, como una democracia multipartidista, que sí existen en otros casos.", "ref": "Marcos analíticos"}, {"q": "Los casos que se agrupan en una categoría deben ser siempre de gran escala o muy abstractos, como un país o la interacción social.", "ans": false, "tip": "Es falso. Los elementos de una categoría pueden tener prácticamente cualquier tamaño: desde conflictos entre movimientos sociales, pasando por fraternidades y hermandades como «grupos comunitarios del mismo sexo», hasta un ritual breve como el saludo.", "ref": "Marcos analíticos"}], "frags": [{"t": "Un investigador quiere comprender por qué la gente vota como lo hace. Parte de la idea de que las personas buscan maximizar sus intereses y construye un marco que describe el voto como un cálculo de ganancias y pérdidas individuales, que varía según el ingreso y el tamaño de la familia.", "ok": true, "tip": "Sí corresponde. Muestra cómo una idea teórica se convierte en un marco analítico concreto, es decir, en una forma específica de mirar el fenómeno y de dividir sus componentes principales.", "ref": "Marcos analíticos"}, {"t": "Un investigador que observó la práctica clínica en un hospital universitario concluye que los estudiantes exageran la correspondencia entre protegerse frente a acusaciones de negligencia y el «mejor interés» del paciente, y advierte que esa conclusión contradice su punto de partida.", "ok": false, "tip": "No corresponde a esta sección. Es una imagen construida a partir de las pruebas empíricas que contradice el marco inicial, tema de la Sección 3.", "ref": "Imágenes"}, {"t": "Una investigadora presenta el conflicto entre organizaciones sindicales y organizaciones empresariales por la legislación del «derecho al trabajo» como otro caso de «movimientos sociales polarizados», ubicándolo en una categoría más amplia.", "ok": true, "tip": "Sí corresponde. Asignar el fenómeno a una categoría más general es caracterizarlo a partir del caso, una de las dos operaciones de los marcos analíticos.", "ref": "Marcos analíticos"}, {"t": "Una investigadora que estudió un café concluye su informe explicando cómo los clientes logran la no interacción, es decir, ofrece una explicación de los aspectos principales del fenómeno que estudió.", "ok": false, "tip": "No corresponde a esta sección. Es un ejemplo del lugar que ocupa la explicación en el centro de toda representación, tema de la Sección 4.", "ref": "Representaciones"}]}, {"title": "Pruebas empíricas e imágenes", "topic": "las pruebas empíricas y las imágenes", "guia": "Preguntas 12 a 17 de la guía", "desc": "Las pruebas empíricas son prácticamente ilimitadas, por lo que toda investigación exige seleccionar. Con las pruebas seleccionadas el investigador construye imágenes: idealizaciones de casos reales que incorporan explicaciones y orientan nuevas búsquedas.", "words": [{"w": "Selección", "d": "Como el detalle empírico es ilimitado, la mayoría de los hechos debe descartarse. El investigador selecciona según sus ideas, marcos, intereses y estudios previos."}, {"w": "Fuentes de pruebas", "d": "Observación de campo, entrevistas en profundidad, documentos históricos, estadísticas oficiales y también encuestas, que usa solo una proporción pequeña de los investigadores."}, {"w": "Prejuicio no reconocido", "d": "Sesgo en la selección de las pruebas que puede darse sin mala fe, por conciencia limitada o por recursos limitados."}, {"w": "Construcción colectiva", "d": "La ciencia social se escribe para otros científicos sociales y es juzgada por ellos. Para Ragin, siguiendo a Merton, esa revisión es la única barrera real frente al prejuicio no reconocido."}, {"w": "Imagen", "d": "Producto del esfuerzo por darle coherencia a los datos, vinculando de maneras significativas pruebas seleccionadas de un todo."}, {"w": "Idealización", "d": "Proceso de abstraer a partir de casos empíricos para construir imágenes conceptualmente complejas. No significa «deseable»: las imágenes son casos puros o idealizados."}, {"w": "Explicación causal", "d": "Casi todas las imágenes incorporan explicaciones: relatos sobre por qué las cosas son como son, que destacan conexiones entre fenómenos."}, {"w": "Términos causales", "d": "Palabras como «éxodo» que describen la acción dentro de una imagen y la ligan con los marcos analíticos, las ideas y la teoría social."}, {"w": "Guía para investigar", "d": "Las imágenes inspiran nuevas preguntas y caminos de exploración, y ayudan a ver lo que de otra forma se desconocería."}, {"w": "Interacción marco-imagen", "d": "Las imágenes pueden confirmar o rectificar el marco inicial o inspirar otros nuevos. El capítulo describe este proceso como retroducción."}], "mc": [{"q": "¿Por qué toda investigación social exige seleccionar los hechos?", "opts": ["Porque el trabajo empírico no tiene límites en detalle y complejidad, y la mayoría de los hechos debe descartarse.", "Porque los investigadores todavía no cuentan con herramientas tecnológicas para registrar toda la información que está disponible.", "Porque las encuestas solo admiten un número limitado de preguntas y de personas entrevistadas.", "Porque las ideas del investigador le impiden mirar ciertos datos, y por eso debe elegir otros."], "ans": 0, "tip": "Con el ejemplo de tomar notas de una clase magistral de una hora, el capítulo muestra que cada aspecto de la vida social ofrece una cantidad prácticamente infinita de información. Si no se seleccionara, la investigación sería imposible.", "ref": "Pruebas empíricas (ejemplo de la clase magistral)"}, {"q": "¿Qué dice el capítulo sobre las fuentes de pruebas empíricas?", "opts": ["Las encuestas son la fuente dominante, porque la mayoría de los científicos sociales investiga con ellas.", "Solo las fuentes cuantitativas pueden considerarse pruebas empíricas válidas para la investigación social.", "Hay muchas fuentes (campo, entrevistas, documentos, estadísticas) y solo una parte pequeña investiga con encuestas.", "Los documentos históricos no sirven como pruebas, porque no los recoge directamente el investigador."], "ans": 2, "tip": "Aunque muchas personas piensan primero en cuestionarios y encuestas telefónicas, el capítulo insiste en que los científicos sociales no se limitan a ellas. Muchos fenómenos ni siquiera pueden abordarse con cuestionarios.", "ref": "Pruebas empíricas"}, {"q": "¿Cómo puede el «prejuicio no reconocido» sesgar la selección de las pruebas, según el capítulo?", "opts": ["Solo se produce cuando el investigador actúa deliberadamente de mala fe, para defender un punto de vista que ya traía definido.", "Puede ocurrir sin mala fe: por conciencia o recursos limitados se ignoran pruebas relevantes, como el sexismo.", "Se corrige solo cuando el estudio usa una muestra suficientemente grande y representativa de casos.", "Afecta únicamente a las investigaciones cualitativas y no a las que se basan en encuestas."], "ans": 1, "tip": "Ragin distingue entre ignorar pruebas de manera voluntaria (cuando el autor defiende un punto de vista) y hacerlo de manera no intencional. Antes de que se conocieran bien las perspectivas feministas, muchos estudios no veían el sexismo cotidiano y por eso no lo registraban.", "ref": "Pruebas empíricas"}, {"q": "¿Cuál es la única barrera real frente al prejuicio no reconocido, según Ragin siguiendo a Merton (1973)?", "opts": ["Que el investigador utilice siempre un muestreo aleatorio para elegir las pruebas de su estudio.", "La buena fe y la honestidad personal que cada investigador mantiene a lo largo de todo su trabajo.", "Que los resultados se difundan en medios de comunicación masivos, para que el público general los revise y los critique.", "Que la construcción de la ciencia social es colectiva: otros científicos sociales examinan y juzgan el trabajo."], "ans": 3, "tip": "No existe una medida de protección automática, y los científicos sociales no están libres de prejuicios. Lo que sí actúa es el escrutinio del resto de los científicos sociales, antes y después de la publicación, aunque puede tardar en detectar prejuicios que casi todos comparten; los científicos sociales confían en que generaciones futuras los descubran y corrijan.", "ref": "Pruebas empíricas"}, {"q": "¿Qué quiere decir Ragin cuando afirma que las imágenes son «idealizaciones de casos reales»?", "opts": ["Que son abstracciones hechas con fragmentos escogidos de información y por eso no reproducen el caso real.", "Que presentan el caso en su versión más deseable, la que mejor resulta para el propio investigador.", "Que son hipótesis que todavía no se han contrastado con ningún dato obtenido en terreno.", "Que se construyen sin pruebas empíricas, solamente a partir de las ideas del investigador."], "ans": 0, "tip": "«Idealizado» no se usa en sentido de deseable, como en «clima ideal». Se refiere a casos puros: abstracciones que, a diferencia de las ideas teóricas, tienen un fundamento específico en un conjunto de pruebas empíricas. Ningún barrio real encaja del todo en la imagen de «comunidad minoritaria exitosa» o de «gueto urbano».", "ref": "Imágenes (primera cualidad de las imágenes)"}, {"q": "En el ejemplo del «éxodo» de la clase media, ¿qué función cumple ese término dentro de las imágenes?", "opts": ["Es un dato estadístico que mide cuántas familias se mudaron del barrio durante un período de tiempo determinado.", "Es un marco analítico fijo, definido antes de recoger los datos para comprobar una hipótesis.", "Es un término causal: describe la acción y liga las imágenes con los marcos, las ideas y la teoría social.", "Es una pregunta de encuesta que se aplica a las familias que permanecieron en el barrio."], "ans": 2, "tip": "Los términos causales son la parte más importante de las imágenes, porque describen la acción. «Éxodo» connota un abandono colectivo y voluntario de una localidad, y conecta con teorías que estudian los factores que atraen o expulsan a las personas.", "ref": "Imágenes (segunda cualidad de las imágenes)"}], "tf": [{"q": "Las imágenes construidas a partir de las pruebas pueden contradecir el marco analítico con que se inició la investigación.", "ans": true, "tip": "Es verdadero. En el ejemplo de los estudiantes de medicina, el marco inicial era «poner al paciente por encima de todo», pero la imagen construida con las observaciones mostró que los valores profesionales se aprenden dentro de preocupaciones prácticas e institucionales.", "ref": "Imágenes (ejemplo de los estudiantes de medicina)"}, {"q": "Una imagen debe encajar perfectamente con un caso real; si no lo hace, la investigación ha fracasado.", "ans": false, "tip": "Es falso. Los casos reales son infinitamente detallados y cambiantes, y las imágenes se construyen con fragmentos escogidos, por lo que son exageraciones o casos puros. No reproducir perfectamente un caso es parte de lo que son, no un fallo.", "ref": "Imágenes (primera cualidad de las imágenes)"}, {"q": "Mientras el investigador no actúe de mala fe, la selección de las pruebas empíricas no puede estar sesgada.", "ans": false, "tip": "Es falso. El capítulo señala que ignorar pruebas no siempre es un acto voluntario: puede deberse a una conciencia limitada o a recursos limitados, y no hay ninguna medida de protección automática frente a ello.", "ref": "Pruebas empíricas"}, {"q": "En el ejemplo de los estudiantes de medicina, la imagen indica que los valores profesionales se aprenden en el contexto de preocupaciones prácticas e institucionales, y no solo como principios abstractos.", "ans": true, "tip": "Es verdadero. La imagen construida con las observaciones clínicas desarrolla y a la vez contradice el marco inicial: la formación lleva a los estudiantes a exagerar la correspondencia entre protegerse frente a acusaciones de negligencia y el «mejor interés» del paciente.", "ref": "Imágenes (ejemplo de los estudiantes de medicina)"}, {"q": "Las imágenes solo describen lo observado: no contienen explicaciones ni conectan fenómenos entre sí.", "ans": false, "tip": "Es falso. Casi todas las imágenes implican o incorporan explicaciones, normalmente causales. Al explicar el declive de los barrios del centro urbano por el éxodo de la clase media se está proponiendo una conexión causal.", "ref": "Imágenes (segunda cualidad de las imágenes)"}, {"q": "Las imágenes iniciales pueden sugerir nuevas preguntas y llevar a recoger más pruebas, con lo que la imagen se va refinando.", "ans": true, "tip": "Es verdadero. Es la tercera cualidad de las imágenes: son guías para investigaciones posteriores. En el ejemplo, el investigador podría preguntarse si omitió algún aspecto importante en las dos imágenes del barrio o si existen vecindades que no encajan en ellas.", "ref": "Imágenes (tercera cualidad de las imágenes)"}], "frags": [{"t": "A partir de lo observado en barrios del centro urbano, un investigador contrasta dos retratos: una comunidad minoritaria con distintos niveles de ingreso y liderazgo local, y un gueto con alto desempleo y violencia. Las une la salida de la clase media.", "ok": true, "tip": "Sí corresponde. Son dos imágenes construidas a partir de las pruebas, que idealizan casos reales, incorporan una explicación causal (el éxodo) y sugieren nuevas preguntas de investigación.", "ref": "Imágenes"}, {"t": "Una persona sabe distinguir entre «gente de pie en una habitación» y una fiesta, y sabe qué elementos hacen que una fiesta sea divertida, sin haber definido nunca de manera explícita qué es una fiesta.", "ok": false, "tip": "No corresponde a esta sección. Es un ejemplo de marco analítico implícito en la vida cotidiana, tema de la Sección 2.", "ref": "Marcos analíticos"}, {"t": "Un investigador observó la práctica clínica en un hospital universitario y concluye que los estudiantes exageran la correspondencia entre protegerse frente a acusaciones de negligencia y el «mejor interés» del paciente. Esa conclusión contradice el punto de partida de su estudio.", "ok": true, "tip": "Sí corresponde. La imagen construida con las pruebas empíricas desarrolla y contradice el marco inicial, que ejemplifica cómo se construye una imagen a partir de las pruebas y por qué puede contradecir el marco con que se empezó.", "ref": "Imágenes (ejemplo de los estudiantes de medicina)"}, {"t": "Una investigadora compara su informe con una fotografía: lo que queda nítido y el encuadre elegido transmiten el mensaje, mientras el resto del mundo queda fuera de la imagen.", "ok": false, "tip": "No corresponde a esta sección. La analogía con la fotografía, con su enfoque y sus límites, se refiere a las representaciones de la vida social, tema de la Sección 4.", "ref": "Representaciones"}]}, {"title": "Representar la vida social", "topic": "la representación y los tipos de marcos analíticos", "guia": "Preguntas 18 a 23 de la guía", "desc": "Los resultados se presentan como representaciones que, como una fotografía, destacan unas cosas y dejan otras fuera, y en su centro hay una explicación. Según el estudio, los marcos pueden ser fijos, flexibles o fluidos, y el desafío es construir representaciones vigorosas e instructivas que dialoguen con la teoría social.", "words": [{"w": "Representación", "d": "Producto final del diálogo entre ideas y pruebas. Se presenta como algo acabado aunque sea el resultado de un largo proceso entre marcos e imágenes posibles."}, {"w": "Enfoque", "d": "En la analogía con la fotografía, lo que queda en primer plano por estar nítido, mientras otras partes quedan en segundo plano."}, {"w": "Límites", "d": "En la analogía con la fotografía, el encuadre que recorta la imagen y condiciona su significado. El marco analítico fija los límites conceptuales de la imagen."}, {"w": "Explicación", "d": "Relato, explícito o implícito, sobre los aspectos principales del fenómeno. Es lo que da coherencia a la representación."}, {"w": "Marco fijo", "d": "Marco definido al comienzo que permanece casi inalterado. Es necesario, por ejemplo, para comprobar teorías, y es más compatible con la investigación cuantitativa."}, {"w": "Marco flexible", "d": "Guía de investigación que muestra qué factores podrían ser relevantes, sin hipótesis específicas sobre sus relaciones. Es útil para explorar diversidad o construir teoría."}, {"w": "Marco fluido", "d": "Marco que se deja a un lado o cambia durante el estudio, o varios marcos entre los que se transita según los datos. Es más común en la investigación cualitativa."}, {"w": "Caso rico", "d": "Caso al que se aplican distintos marcos que se aportan ideas entre sí, y que entrega abundante materia prima para el pensamiento social."}, {"w": "Dar voz", "d": "Fin de investigación que busca visibilizar a un grupo. Suele llevar a limitar el peso de las ideas preexistentes para poder oír a quienes se estudia."}, {"w": "Audiencia científica", "d": "Principal audiencia de la investigación social: otros científicos sociales, que refuerzan el régimen exigente de especificar ideas y examinar sistemáticamente las pruebas."}], "mc": [{"q": "En la analogía entre una representación sociocientífica y una fotografía, ¿qué papel cumplen el «enfoque» y los «límites»?", "opts": ["Indican cuánta información cuantitativa contiene la representación y qué tan precisa es esa información.", "Muestran que toda representación de la vida social es falsa, porque siempre deja algo fuera.", "Solo se aplican a las representaciones visuales y no tienen relación con la investigación social.", "El enfoque destaca elementos en primer plano y los límites recortan la imagen; ambos condicionan su significado."], "ans": 3, "tip": "El fotógrafo selecciona qué incluir, qué dejar nítido y cómo encuadrar. De igual modo, el marco analítico establece límites conceptuales alrededor de la imagen construida con las pruebas, y sin un encuadre adecuado la imagen no es clara.", "ref": "Representaciones"}, {"q": "¿Por qué, según el capítulo, toda representación necesita una explicación, aunque sea implícita?", "opts": ["Porque las revistas académicas lo exigen como requisito formal para publicar cualquier investigación de este tipo en sus páginas.", "Porque es muy difícil contar algo sobre la vida social sin ofrecer algún relato sobre ella, y eso da coherencia.", "Porque sin una explicación no existirían pruebas empíricas con las cuales construir las imágenes.", "Porque la explicación reemplaza a las imágenes en la versión final de la representación."], "ans": 1, "tip": "En el centro de cualquier representación sociocientífica hay una explicación de los aspectos principales del fenómeno. Quien estudia el café explica cómo se logra la no interacción; quien estudia a los estudiantes de medicina explica cómo terminan estableciendo una correspondencia entre presiones prácticas y compromisos profesionales.", "ref": "Representaciones"}, {"q": "¿En cuál de estas situaciones es más habitual y necesario un marco analítico fijo?", "opts": ["En un estudio que busca dar voz a un grupo marginado y oír las categorías que ese grupo usa.", "En un estudio que explora la diversidad de casos con el fin de construir una teoría nueva.", "En un estudio que busca comprobar una teoría, donde el marco pone en práctica la hipótesis que se desea probar.", "En un estudio que, al comenzar, aún no sabe a qué caso corresponde el fenómeno y necesita explorar varias alternativas."], "ans": 2, "tip": "Si el marco concreta una hipótesis, las imágenes construidas con los datos permiten confirmarla o rechazarla, y para eso el marco debe mantenerse. Los marcos fijos también son comunes en estudios predictivos y en los que documentan patrones generales amplios.", "ref": "Procesos y estrategias de la investigación social (marcos fijos)"}, {"q": "¿Qué distingue a un marco flexible de uno fijo?", "opts": ["El flexible es una guía que indica dónde mirar y qué factores buscar, sin hipótesis precisas sobre ellos.", "El flexible no guía la investigación: se define recién cuando se escribe el informe final.", "El flexible solo se usa en estudios que comprueban teorías mediante encuestas aplicadas a muestras amplias de población.", "El flexible se abandona por completo apenas comienza la recolección de los datos en terreno."], "ans": 0, "tip": "Un marco flexible es útil para explorar diversidad o construir teoría. En el ejemplo de los tiranos del siglo XX, el marco indica qué factores examinar y, al ver que los más ideológicos causaron más sufrimiento, el investigador puede reelaborarlo con dos imágenes distintas.", "ref": "Procesos y estrategias de la investigación social (marcos flexibles)"}, {"q": "¿Por qué los marcos fluidos son especialmente apropiados cuando se busca «dar voz» y qué riesgo implicaría un marco fijo?", "opts": ["Eliminan la necesidad de tener alguna idea inicial sobre el grupo que se quiere estudiar y comprender mediante su trabajo en terreno.", "Permiten comprobar teorías con mayor precisión estadística, porque el marco se ajusta a cada dato.", "Garantizan que el investigador no tenga ningún prejuicio sobre las personas que estudia.", "Limitan el peso de las ideas previas o permiten moverse entre varios marcos; uno fijo podría impedir oír las voces."], "ans": 3, "tip": "El capítulo aclara que se necesitan algunas ideas iniciales, pues de otro modo no podría empezar la investigación, pero que pueden dejarse a un lado rápidamente. La alternativa es comenzar con varios marcos y desplazarse entre ellos según se acumulan las pruebas.", "ref": "Procesos y estrategias de la investigación social (marcos fluidos)"}, {"q": "¿Qué significa que un caso se vuelva «rico» al aplicarle distintos marcos analíticos?", "opts": ["Que el caso acumula una gran cantidad de datos numéricos recogidos a lo largo de varios años.", "Que los distintos marcos se aportan ideas entre sí y el caso da abundante materia prima al pensamiento social.", "Que muchos investigadores distintos lo han estudiado antes y existe abundante bibliografía publicada en revistas especializadas sobre él.", "Que el caso se ajusta perfectamente a un único marco ya existente y comprobado por otros."], "ans": 1, "tip": "El ejemplo es la guerra civil estadounidense, que puede leerse como una lucha en torno a la esclavitud, como una disputa entre derechos de los estados y el sistema federal, o como un choque entre una sociedad de cultivos extensivos y una industrial emergente. Los marcos pueden integrarse en una descripción única.", "ref": "Procesos y estrategias de la investigación social (marcos fluidos)"}], "tf": [{"q": "Los productos acabados que presentan las investigaciones son el resultado de una interacción larga entre posibles marcos e imágenes potenciales.", "ans": true, "tip": "Es verdadero. Las audiencias ven la representación como algo completo, con sus imágenes y marcos, pero detrás hay un largo proceso en el que marcos e imágenes se influyen mutuamente.", "ref": "Representaciones"}, {"q": "Los investigadores sociales usan con igual frecuencia documentales, sociodramas y presentaciones multimedia que libros y artículos escritos.", "ans": false, "tip": "Es falso. Aunque se podrían imaginar muchas formas de representar los resultados, el capítulo señala que los investigadores usan casi exclusivamente medios escritos tradicionales, como libros académicos y artículos de revistas especializadas, aunque con formatos variados como tablas, transcripciones o viñetas.", "ref": "Representaciones"}, {"q": "Con un marco fijo que pone en práctica una hipótesis, si las imágenes construidas con los datos no concuerdan con ella, se rechaza la hipótesis.", "ans": true, "tip": "Es verdadero. Es el caso del marco que concibe a los votantes como actores racionales: se traduce en una encuesta y, si las imágenes obtenidas no se corresponden con la idea de elección racional, se rechaza la hipótesis.", "ref": "Procesos y estrategias de la investigación social (marcos fijos)"}, {"q": "En la investigación cualitativa es habitual que los marcos analíticos permanezcan idénticos del comienzo al final del estudio.", "ans": false, "tip": "Es falso. Los marcos fijos son más compatibles con la investigación cuantitativa que estudia la covariación, mientras que los marcos fluidos son más comunes en la cualitativa, donde muchas veces el investigador aún no sabe a qué caso corresponde el fenómeno que estudia.", "ref": "Procesos y estrategias de la investigación social (marcos fijos y fluidos)"}, {"q": "El desafío de la investigación social es construir representaciones vigorosas e instructivas que contribuyan a los diálogos de la teoría social y que abarquen muchas pruebas de forma sistemática o estudien menos pruebas con mayor profundidad.", "ans": true, "tip": "Es verdadero. El capítulo cierra planteando que ese reto se supera construyendo un diálogo entre ideas y pruebas, entre marcos analíticos e imágenes, y que el régimen de la investigación social exige especificar con claridad las ideas y examinar sistemáticamente las pruebas.", "ref": "El desafío que tiene ante sí la investigación social"}, {"q": "La principal audiencia de la investigación social es el público general, por lo que sus representaciones no se someten al escrutinio de otros científicos sociales.", "ans": false, "tip": "Es falso. Según el capítulo, la principal audiencia son los propios científicos sociales, y ese escrutinio refuerza el régimen exigente de la investigación social, que difiere del de otras formas de representar la vida social, como la poesía.", "ref": "El desafío que tiene ante sí la investigación social"}], "frags": [{"t": "Un investigador interesado en la tiranía estudia a los grandes tiranos del siglo XX con un marco que le indica qué mirar (cómo llegaron al poder, quién los apoyó, cuánto sufrimiento causaron), sin hipótesis específicas. Al ver que los más ideológicos causaron mayor sufrimiento, reelabora el marco.", "ok": true, "tip": "Sí corresponde. Es un marco flexible: sirve de guía para explorar la diversidad de casos y puede reelaborarse a partir de las imágenes que surgen de las pruebas.", "ref": "Procesos y estrategias de la investigación social (marcos flexibles)"}, {"t": "Una investigadora sintetiza sus notas de campo y construye la imagen de trabajadores que hacen funcionar sus máquinas tan rápido que terminan rompiéndolas, como una forma de perturbar la producción mientras aparentan trabajar mucho.", "ok": false, "tip": "No corresponde a esta sección. Es la construcción de una imagen a partir de las pruebas empíricas, tema de la Sección 3.", "ref": "Un modelo simple de investigación social"}, {"t": "Para estudiar la guerra civil estadounidense, un investigador la lee como una lucha por la esclavitud, como una disputa entre derechos de los estados y gobierno federal, y como un choque entre una sociedad de cultivos extensivos y una industrial emergente, e integra las lecturas en una sola descripción.", "ok": true, "tip": "Sí corresponde. Usa varios marcos que se aportan ideas entre sí y conserva todos en la representación final, lo que vuelve «rico» al caso. Es un uso de marcos fluidos.", "ref": "Procesos y estrategias de la investigación social (marcos fluidos)"}, {"t": "Un investigador sostiene que la vida de un café es un caso de no interacción consciente y luego se pregunta en qué aspectos varía esa no interacción entre cafés, aeropuertos, ascensores y salas de espera.", "ok": false, "tip": "No corresponde a esta sección. Primero caracteriza el fenómeno a partir del caso y luego a partir de sus aspectos, las dos operaciones de los marcos analíticos que se trabajan en la Sección 2.", "ref": "Marcos analíticos"}]}];
+var MAXI=16, TOTAL=CHARS.length*MAXI;
+var KEYS={reg:'mis_bcs_reg',prog:'mis_bcs_prog',theme:'mis_bcs_theme',l1:'mis_bcs_l1'};
+var FIREBASE_CONFIG=window.MIS_FIREBASE||{apiKey:"REEMPLAZAR",authDomain:"REEMPLAZAR",databaseURL:"REEMPLAZAR",projectId:"REEMPLAZAR",storageBucket:"REEMPLAZAR",messagingSenderId:"REEMPLAZAR",appId:"REEMPLAZAR"};
+var FB_OK=FIREBASE_CONFIG.apiKey.indexOf('REEMPLAZAR')<0;
+
+function $(s,r){return (r||document).querySelector(s)}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function lsGet(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}}
+function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function lsDel(k){try{localStorage.removeItem(k)}catch(e){}}
+function toast(m){var t=$('#toast');t.textContent=m;t.hidden=false;clearTimeout(toast.h);toast.h=setTimeout(function(){t.hidden=true},3200)}
+
+/* Estado persistente */
+var ST=lsGet(KEYS.l1)||{};
+function freshST(){return {v:1,secs:CHARS.map(function(){return {ans:{mc:[],tf:[],fr:[]},done:false,best:0,last:0,attempts:0}})}}
+if(!ST.secs||ST.secs.length!==CHARS.length){ST=freshST();}
+var view={name:'home',si:0,word:null};
+function save(){lsSet(KEYS.l1,ST);syncProg()}
+function syncProg(){
+  var done=0,pts=0; ST.secs.forEach(function(s){if(s.done)done++;pts+=s.best||0});
+  var p=lsGet(KEYS.prog)||{}; p.l1={done:done,pts:pts,ts:Date.now()}; lsSet(KEYS.prog,p);
+}
+function reg(){return lsGet(KEYS.reg)}
+function score(si){
+  var ch=CHARS[si],a=ST.secs[si].ans,mc=0,tf=0,fr=0;
+  ch.mc.forEach(function(q,i){if(a.mc[i]===q.ans)mc++});
+  ch.tf.forEach(function(q,i){if(a.tf[i]===q.ans)tf++});
+  ch.frags.forEach(function(q,i){if(a.fr[i]===q.ok)fr++});
+  return {mc:mc,tf:tf,fr:fr,t:mc+tf+fr};
+}
+function answered(si){
+  var a=ST.secs[si].ans,n=0;
+  ['mc','tf','fr'].forEach(function(k){for(var i=0;i<(k==='fr'?4:6);i++)if(a[k][i]!==undefined&&a[k][i]!==null)n++});
+  return n;
+}
+function totalPts(){var p=0;ST.secs.forEach(function(s){p+=s.best||0});return p}
+function doneCount(){return ST.secs.filter(function(s){return s.done}).length}
+
+/* Reporte opcional a Firebase (si se configura); sin configuración no hace nada */
+function report(si){
+  if(!FB_OK||PREVIEW)return;
+  try{
+    var r=reg()||{id:'anon',name:'Sin identificar'},sc=score(si);
+    var payload={id:r.id,name:r.name,mode:r.mode||'individual',members:r.members||[],lectura:'l1',seccion:si+1,pts:sc.t,max:MAXI,intento:ST.secs[si].attempts,ts:Date.now()};
+    var go=function(){if(!firebase.apps.length)firebase.initializeApp(FIREBASE_CONFIG);firebase.database().ref('mis_bcs/l1/'+r.id+'/sec'+(si+1)).set(payload)};
+    if(window.firebase){go();return}
+    var a=document.createElement('script');a.src='https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js';
+    a.onload=function(){var b=document.createElement('script');b.src='https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js';b.onload=go;document.head.appendChild(b)};
+    document.head.appendChild(a);
+  }catch(e){}
+}
+
+/* ===== Reinicio de la lectura ===== */
+var MODID='l1';
+/* Registro para el docente: cada reinicio guarda una copia del avance previo (bandeja local mis_bcs_hist)
+   y la envía a Firebase en mis_bcs_hist/[módulo]/[id]/[clave]; así el registro no depende de que el estudiante conserve su avance.
+   Solo se registra si el estudiante está identificado. */
+var HK='mis_bcs_hist';
+function histAdd(estado,prog){
+  var r=reg();if(!r||!r.id)return;
+  var a=lsGet(HK)||[],ts=Date.now();
+  a.push({k:'r'+ts+'_'+MODID,mod:MODID,sid:r.id,name:r.name||'',mode:r.mode||'individual',members:r.members||[],ts:ts,prog:prog||null,estado:estado,sent:false});
+  if(a.length>40)a=a.slice(-40);
+  lsSet(HK,a);
+}
+function fbLoad(cb){
+  var ini=function(){if(!firebase.apps.length)firebase.initializeApp(FIREBASE_CONFIG);cb()};
+  if(window.firebase){ini();return}
+  var a=document.createElement('script');a.src='https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js';
+  a.onload=function(){var b=document.createElement('script');b.src='https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js';b.onload=ini;document.head.appendChild(b)};
+  document.head.appendChild(a);
+}
+function histFlush(){
+  if(!FB_OK||PREVIEW)return;
+  var a=lsGet(HK)||[];
+  if(!a.some(function(x){return !x.sent}))return;
+  try{fbLoad(function(){
+    (lsGet(HK)||[]).forEach(function(x){
+      if(x.sent)return;
+      var db=firebase.database();
+      db.ref('mis_bcs_hist/'+x.mod+'/'+x.sid+'/'+x.k).set({id:x.sid,name:x.name,mode:x.mode,members:x.members,mod:x.mod,ts:x.ts,prog:x.prog,estado:x.estado})
+        .then(function(){return db.ref('mis_bcs/'+x.mod+'/'+x.sid+'/ultimoReinicio').transaction(function(c){return Math.max(c||0,x.ts)})})
+        .then(function(){var b=lsGet(HK)||[];b.forEach(function(y){if(y.k===x.k)y.sent=true});lsSet(HK,b)})
+        .catch(function(){});
+    });
+  })}catch(e){}
+}
+function hasProgress(){return ST.secs.some(function(s,i){return s.done||s.attempts>0||answered(i)>0})}
+function resetBlock(){
+  if(!view.ask)return '<div class="reset"><button type="button" class="btn alt" data-ask>Borrar mi avance y empezar de nuevo</button></div>';
+  return '<div class="reset"><div class="reset-box" role="group" aria-labelledby="rst-t"><p id="rst-t"><b>¿Borrar tu avance en esta lectura?</b></p>'
+   +'<p>Se borrarán tus respuestas, tu puntaje y las secciones completadas, en este navegador.'+(reg()?' Tu docente conservará el registro de lo que ya hiciste.':'')+'</p>'
+   +'<div class="acts"><button type="button" class="btn danger" data-rst-yes>Sí, borrar y empezar de nuevo</button><button type="button" class="btn alt" id="rst-no" data-rst-no>Cancelar</button></div></div></div>';
+}
+function resetAll(){
+  if(hasProgress())histAdd(JSON.parse(JSON.stringify(ST)),(lsGet(KEYS.prog)||{})[MODID]||null);
+  ST=freshST();lsDel(KEYS.l1);var pg=lsGet(KEYS.prog)||{};delete pg[MODID];lsSet(KEYS.prog,pg);
+  view={name:'home',si:0,word:null};render();window.scrollTo(0,0);
+  histFlush();
+  toast('Empezaste de nuevo. Tu avance en esta lectura quedó en cero.');
+}
+
+/* Tema */
+function applyTheme(t){if(t)document.documentElement.setAttribute('data-theme',t);else document.documentElement.removeAttribute('data-theme')}
+(function(){var t=lsGet(KEYS.theme);if(t==='light'||t==='dark')applyTheme(t)})();
+$('#theme').addEventListener('click',function(){
+  var cur=document.documentElement.getAttribute('data-theme');
+  var dark=cur?cur==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;
+  var n=dark?'light':'dark'; applyTheme(n); lsSet(KEYS.theme,n);
+});
+
+/* Cabecera: identificación */
+function paintWho(){var r=reg(),w=$('#who');if(r&&r.name){w.textContent=(r.mode==='grupo'?'Grupo: ':'')+r.name;w.hidden=false}else w.hidden=true}
+$('#back').addEventListener('click',function(e){if(PREVIEW){e.preventDefault();toast('En esta vista previa el portal no está disponible. En el sitio, este botón vuelve al portal.')}});
+
+/* Vistas */
+var app=$('#app');
+function secStyle(i){return '--c:var(--s'+i+'c);--bg-c:var(--s'+i+'b)'}
+function stat(i){var s=ST.secs[i],n=answered(i);return s.done&&n===MAXI?'Completada':(n>0?'En curso':'Sin empezar')}
+
+function vHome(){
+  var noreg=!reg();
+  var h='<section class="hero"><p class="eyebrow">Lectura 1 · Ragin (2007), capítulo 3, pp. 103-135</p><h1>Diálogo entre ideas y pruebas</h1>'
+   +'<p class="lead">Estudia el modelo de investigación social de Ragin en cuatro secciones. Cada una te propone preguntas sobre el texto y te explica, apenas respondes, dónde repasar.</p></section>';
+  if(noreg)h+='<div class="note"><span>Aún no te has identificado. Tu avance no quedará registrado en el sistema.</span>'+(PREVIEW?'':'<a class="cta" href="index_mis_bcs.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/></svg>Ingresa en el portal para identificarte</a>')+'</div>';
+  h+='<h2 class="sec-t">Lo que vas a lograr</h2><ul class="goals">'
+   +'<li>Reconocer los cuatro bloques del modelo (ideas, marcos analíticos, imágenes y pruebas) y cómo dialogan hasta producir una representación.</li>'
+   +'<li>Distinguir entre idea, marco analítico, imagen y dato en los ejemplos del capítulo.</li>'
+   +'<li>Explicar cómo se seleccionan las pruebas, qué es una imagen y qué tipos de marco puede usar un estudio.</li></ul>';
+  h+='<h2 class="sec-t">Cómo funciona</h2><div class="how">'
+   +'<div><b>16 preguntas por sección</b><span>6 de selección múltiple, 6 de verdadero o falso y 4 fragmentos de ejemplos del capítulo.</span></div>'
+   +'<div><b>Respuesta inmediata</b><span>Después de cada respuesta ves la explicación y el apartado del capítulo donde puedes revisarla.</span></div>'
+   +'<div><b>Repite cuando quieras</b><span>Puedes volver a hacer cada sección las veces que necesites. Se conserva tu mejor puntaje.</span></div></div>';
+  h+='<div class="total"><div><div class="big">'+totalPts()+' <small>de '+TOTAL+' puntos</small></div></div><div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="'+CHARS.length+'" aria-valuenow="'+doneCount()+'" aria-label="Secciones completadas"><i style="width:'+Math.round(doneCount()/CHARS.length*100)+'%"></i></div><small>'+doneCount()+' de '+CHARS.length+' secciones completadas</small></div>';
+  h+='<h2 class="sec-t">Secciones</h2><div class="cards">';
+  CHARS.forEach(function(c,i){
+    var s=ST.secs[i],n=answered(i),st=stat(i),lbl=st==='Completada'?'Repasar':(n>0?'Continuar':'Empezar');
+    h+='<article class="card" style="'+secStyle(i)+'"><div class="hd"><span class="num" aria-hidden="true">'+(i+1)+'</span><div><h3>'+esc(c.title)+'</h3></div><span class="tagst'+(st==='Completada'?' done':'')+'">'+st+'</span></div>'
+     +'<div class="bd"><p>'+esc(c.desc)+'</p><div class="meta"><span>'+esc(c.guia)+'</span><span><b>'+(s.best||0)+'</b> de '+MAXI+' puntos (mejor intento)</span>'+(s.attempts?'<span>'+s.attempts+(s.attempts===1?' intento':' intentos')+'</span>':'')+'</div>'
+     +'<button type="button" class="btn" data-open="'+i+'">'+lbl+'</button></div></article>';
+  });
+  h+='</div>';
+  if(hasProgress())h+=resetBlock();
+  app.innerHTML=h;
+}
+
+function optBtn(i,k,idx,label,val,state){
+  // state: undefined (sin responder) | {chosen, correct}
+  var cls='opt',dis='';
+  if(state){dis=' disabled';if(val===state.correct)cls+=' right';else if(val===state.chosen)cls+=' wrong';else cls+=' dim'}
+  return '<button type="button" class="'+cls+'"'+dis+' data-k="'+k+'" data-i="'+idx+'" data-v="'+val+'">'+label+'</button>';
+}
+function fb(ok,tip,ref){
+  var ic=ok?'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>':'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></svg>';
+  return '<div class="fb '+(ok?'ok':'no')+'">'+ic+'<div><p><b>'+(ok?'Correcto. ':'Para revisar. ')+'</b>'+esc(tip)+'</p><span class="ref"><b>Dónde repasarlo:</b> '+esc(ref)+'</span></div></div>';
+}
+function qMC(si,i,q){
+  var a=ST.secs[si].ans.mc[i],has=a!==undefined&&a!==null;
+  var o=q.opts.map(function(t,oi){return optBtn(si,'mc',i,'<span class="l">'+String.fromCharCode(65+oi)+'.</span><span>'+esc(t)+'</span>',oi,has?{chosen:a,correct:q.ans}:null)}).join('');
+  return '<div class="q"><p class="qt"><span class="qn">'+(i+1)+'.</span>'+esc(q.q)+'</p><div class="opts">'+o+'</div>'+(has?fb(a===q.ans,q.tip,q.ref):'')+'</div>';
+}
+function qTF(si,i,q){
+  var a=ST.secs[si].ans.tf[i],has=a!==undefined&&a!==null;
+  var st=has?{chosen:a,correct:q.ans}:null;
+  return '<div class="q"><p class="qt"><span class="qn">'+(i+1)+'.</span>'+esc(q.q)+'</p><div class="pair">'+optBtn(si,'tf',i,'Verdadero',true,st)+optBtn(si,'tf',i,'Falso',false,st)+'</div>'+(has?fb(a===q.ans,q.tip,q.ref):'')+'</div>';
+}
+function qFR(si,i,q,topic){
+  var a=ST.secs[si].ans.fr[i],has=a!==undefined&&a!==null;
+  var st=has?{chosen:a,correct:q.ok}:null;
+  return '<div class="q"><p class="frag">'+esc(q.t)+'</p><p class="fq">¿Este fragmento ilustra '+esc(topic)+'?</p><div class="pair">'+optBtn(si,'fr',i,'Sí, lo ilustra',true,st)+optBtn(si,'fr',i,'No, corresponde a otra sección',false,st)+'</div>'+(has?fb(a===q.ok,q.tip,q.ref):'')+'</div>';
+}
+function levelTxt(p){return p>=85?'Logro destacado':(p>=70?'Logro esperado':'Conviene repasar esta sección')}
+function vSec(){
+  var si=view.si,c=CHARS[si],s=ST.secs[si],n=answered(si);
+  var h='<div class="stepper" role="navigation" aria-label="Secciones">'+CHARS.map(function(x,i){var d=ST.secs[i].done&&answered(i)===MAXI;return '<button type="button" class="pill'+(d?' done':'')+'" style="'+secStyle(i)+'" data-open="'+i+'"'+(i===si?' aria-current="true"':'')+'>Sección '+(i+1)+'<i>'+(d?'completada':answered(i)+'/'+MAXI)+'</i></button>'}).join('')+'<button type="button" class="pill" data-home>Inicio</button></div>';
+  h+='<div style="'+secStyle(si)+'"><section class="sechd"><p class="k">Sección '+(si+1)+' de '+CHARS.length+'</p><h2>'+esc(c.title)+'</h2><p class="d">'+esc(c.desc)+'</p><p class="g">'+esc(c.guia)+'</p></section>';
+  if(si===0)h+='<details class="map" id="map-det" open><summary>Mapa del modelo<small>consúltalo mientras estudias</small></summary><div class="inner" id="map-slot"></div></details>';
+  h+='<div class="blk"><h3>Conceptos clave</h3><p class="sub">Toca un concepto para ver su definición según el capítulo.</p><div class="cloud">'
+    +c.words.map(function(w,i){var fs=i===0?20:(i<3?18:16);return '<button type="button" class="chip" style="font-size:'+fs+'px" data-word="'+i+'" aria-pressed="'+(view.word===i)+'">'+esc(w.w)+'</button>'}).join('')+'</div>'
+    +(view.word!==null?'<div class="def"><b>'+esc(c.words[view.word].w)+'</b><p>'+esc(c.words[view.word].d)+'</p></div>':'')+'</div>';
+  h+='<div class="prog" role="status"><span><b>'+n+'</b> de '+MAXI+' respondidas</span><div class="bar"><i style="width:'+Math.round(n/MAXI*100)+'%"></i></div></div>';
+  h+='<div class="blk"><h3>Parte A · Selección múltiple</h3><p class="sub">Elige la opción que mejor responde, según el capítulo.</p>'+c.mc.map(function(q,i){return qMC(si,i,q)}).join('')+'</div>';
+  h+='<div class="blk"><h3>Parte B · Verdadero o falso</h3><p class="sub">Decide si cada afirmación es verdadera o falsa.</p>'+c.tf.map(function(q,i){return qTF(si,i,q)}).join('')+'</div>';
+  h+='<div class="blk"><h3>Parte C · Fragmentos de ejemplos del capítulo</h3><p class="sub">Cada fragmento reescribe un ejemplo del texto. Decide si ilustra el tema de esta sección.</p>'+c.frags.map(function(q,i){return qFR(si,i,q,c.topic)}).join('')+'</div>';
+  if(n===MAXI){
+    var sc=score(si),p=Math.round(sc.t/MAXI*100),miss=[];
+    c.mc.forEach(function(q,i){if(s.ans.mc[i]!==q.ans&&miss.indexOf(q.ref)<0)miss.push(q.ref)});
+    c.tf.forEach(function(q,i){if(s.ans.tf[i]!==q.ans&&miss.indexOf(q.ref)<0)miss.push(q.ref)});
+    c.frags.forEach(function(q,i){if(s.ans.fr[i]!==q.ok&&miss.indexOf(q.ref)<0)miss.push(q.ref)});
+    h+='<section class="res" id="res" aria-labelledby="res-t"><h3 id="res-t">Resultado de la sección '+(si+1)+'</h3><div class="score"><b>'+sc.t+'</b><span>de '+MAXI+' puntos · '+p+'%</span></div>'
+     +'<p style="margin:0 0 6px"><b>'+levelTxt(p)+'.</b> Tu mejor intento en esta sección es de '+s.best+' puntos.</p>'
+     +'<div class="brk"><span>Selección múltiple: '+sc.mc+' de 6</span><span>Verdadero o falso: '+sc.tf+' de 6</span><span>Fragmentos: '+sc.fr+' de 4</span></div>'
+     +(miss.length?'<div class="rev"><b>Apartados del capítulo para repasar</b><ul>'+miss.map(function(m){return '<li>'+esc(m)+'</li>'}).join('')+'</ul></div>':'<div class="rev"><b>Sin errores en este intento.</b> Puedes pasar a la siguiente sección o repetir esta para afianzarla.</div>')
+     +'<div class="acts"><button type="button" class="btn alt" data-retry="'+si+'">Repetir esta sección</button>'
+     +(si<CHARS.length-1?'<button type="button" class="btn" data-open="'+(si+1)+'">Ir a la sección '+(si+2)+'</button>':'<button type="button" class="btn" data-home>Volver al inicio</button>')
+     +'<button type="button" class="btn alt" data-home>Ver todas las secciones</button></div></section>';
+  }
+  h+='</div>';
+  app.innerHTML=h;
+  if(si===0){var slot=$('#map-slot');if(slot){slot.appendChild($('#map-tpl').content.cloneNode(true));initMap()}}
+}
+
+function render(keep){
+  var y=window.scrollY;
+  paintWho();
+  if(view.name==='home')vHome(); else vSec();
+  if(keep)window.scrollTo(0,y);
+}
+function openSec(i){view={name:'sec',si:i,word:null};render();window.scrollTo(0,0);try{history.replaceState(null,'','#s'+(i+1))}catch(e){}}
+function goHome(){view={name:'home',si:0,word:null};render();window.scrollTo(0,0);try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}}
+
+function answer(si,k,i,v){
+  var s=ST.secs[si],a=s.ans[k];
+  if(a[i]!==undefined&&a[i]!==null)return;
+  a[i]=v;
+  var finished=answered(si)===MAXI;
+  if(finished){var sc=score(si);s.done=true;s.last=sc.t;s.best=Math.max(s.best||0,sc.t);s.attempts=(s.attempts||0)+1;s.ts=Date.now()}
+  save();
+  var y=window.scrollY;
+  render(true);
+  if(finished){report(si);var r=$('#res');if(r){r.scrollIntoView({behavior:'smooth',block:'start'});}} else window.scrollTo(0,y);
+}
+
+app.addEventListener('click',function(e){
+  var t=e.target.closest('button,a');if(!t)return;
+  if(t.hasAttribute('data-ask')){view.ask=true;render(true);var rn=$('#rst-no');if(rn){rn.focus();rn.scrollIntoView({block:'center'})}return}
+  if(t.hasAttribute('data-rst-no')){view.ask=false;render(true);return}
+  if(t.hasAttribute('data-rst-yes')){resetAll();return}
+  if(t.hasAttribute('data-open')){openSec(+t.getAttribute('data-open'));return}
+  if(t.hasAttribute('data-home')){goHome();return}
+  if(t.hasAttribute('data-retry')){var si=+t.getAttribute('data-retry');ST.secs[si].ans={mc:[],tf:[],fr:[]};save();view.word=null;render();window.scrollTo(0,0);toast('Sección reiniciada. Tu mejor puntaje se conserva.');return}
+  if(t.hasAttribute('data-word')){var w=+t.getAttribute('data-word');view.word=(view.word===w?null:w);render(true);return}
+  if(t.hasAttribute('data-k')){
+    var v=t.getAttribute('data-v');v=(v==='true')?true:(v==='false'?false:+v);
+    answer(view.si,t.getAttribute('data-k'),+t.getAttribute('data-i'),v);return}
+});
+
+/* Mapa del modelo */
+function initMap(){
+  var root=$('#mapm'); if(!root)return;
+  var body=$('#mp-body',root),mode='exp',sel=null,tour=0,step=0;
+  function q(s){return root.querySelector(s)}
+  function mark(ids){root.querySelectorAll('#mp-dia [data-id]').forEach(function(b){var on=ids.indexOf(b.getAttribute('data-id'))>-1;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on?'true':'false')})}
+  function guiaTxt(g){return g.length===1?'Pregunta '+g[0]:'Preguntas '+g.slice(0,-1).join(', ')+' y '+g[g.length-1]}
+  function reveal(){if(root.clientWidth<860){var p=q('#mp-panel');if(p&&p.scrollIntoView)p.scrollIntoView({behavior:'smooth',block:'nearest'})}}
+  function renderExp(){
+    if(!sel){mark([]);
+      body.innerHTML='<div class="mb"><p class="tag">Punto de partida</p><h4>La investigación social es un diálogo entre ideas y pruebas empíricas</h4></div>'
+       +'<p>Las ideas ayudan a darle sentido a las pruebas, y las pruebas sirven para ampliar, revisar y comprobar las ideas. Ese diálogo ocurre a través de los marcos analíticos y las imágenes, y termina en una representación de la vida social.</p>'
+       +'<p class="hint">Toca cualquier bloque o flecha del diagrama para ver su definición, ejemplos del capítulo y las preguntas de la guía que lo trabajan.</p>';return}
+    var it=MAPITEMS[sel];mark([sel]);
+    body.innerHTML='<div class="mb"><p class="tag">'+esc(it.kind)+'</p><h4>'+esc(it.title)+'</h4></div>'
+     +'<div class="mb"><h5>Qué dice el capítulo</h5><p>'+esc(it.text)+'</p></div>'
+     +'<div class="mb"><h5>Ejemplos del capítulo</h5><ul>'+it.ej.map(function(e){return '<li>'+esc(e)+'</li>'}).join('')+'</ul></div>'
+     +'<div class="mb"><h5>En la guía de estudio</h5><div class="chips"><span class="mchip">'+guiaTxt(it.guia)+'</span></div></div>';
+  }
+  function renderTour(){
+    var T=MAPTOURS[tour],S=T.steps[step];mark(S.n);
+    body.innerHTML='<div class="mb"><p class="tag">Ejemplo del capítulo</p><div class="tour-pick" role="group" aria-label="Elegir ejemplo">'+MAPTOURS.map(function(x,i){return '<button type="button" data-tour="'+i+'" aria-pressed="'+(i===tour)+'">'+esc(x.name)+'</button>'}).join('')+'</div></div>'
+     +'<div class="step"><span class="k">Paso '+(step+1)+' de '+T.steps.length+' · '+esc(S.k)+'</span><p class="tx">'+esc(S.t)+'</p></div>'
+     +'<div class="dots" aria-hidden="true">'+T.steps.map(function(_,i){return '<i class="'+(i<=step?'done':'')+'"></i>'}).join('')+'</div>'
+     +'<div class="nav"><button type="button" id="mp-prev"'+(step===0?' disabled':'')+'>Anterior</button><button type="button" class="next" id="mp-next"'+(step===T.steps.length-1?' disabled':'')+'>Siguiente</button></div>';
+  }
+  function rr(){q('#mp-exp').setAttribute('aria-pressed',mode==='exp');q('#mp-tour').setAttribute('aria-pressed',mode==='tour');if(mode==='exp')renderExp();else renderTour()}
+  q('#mp-exp').addEventListener('click',function(){mode='exp';rr()});
+  q('#mp-tour').addEventListener('click',function(){mode='tour';step=0;rr()});
+  q('#mp-dia').addEventListener('click',function(e){var b=e.target.closest('[data-id]');if(!b)return;mode='exp';sel=b.getAttribute('data-id');rr();reveal()});
+  body.addEventListener('click',function(e){
+    var t=e.target.closest('[data-tour]');
+    if(t){tour=+t.getAttribute('data-tour');step=0;rr();return}
+    if(e.target.id==='mp-next'&&step<MAPTOURS[tour].steps.length-1){step++;rr();var n=q('#mp-next');if(n)n.focus()}
+    if(e.target.id==='mp-prev'&&step>0){step--;rr();var p=q('#mp-prev');if(p)p.focus()}
+  });
+  rr();
+}
+
+/* Inicio */
+syncProg();
+var m=/^#s([1-9])$/.exec(location.hash||'');
+if(m&&+m[1]<=CHARS.length){view={name:'sec',si:+m[1]-1,word:null}}
+render();
+histFlush();
+window.addEventListener('storage',function(e){if(e.key===KEYS.l1&&e.newValue===null){ST=freshST();view={name:'home',si:0,word:null};render()}});
+})();
+</script>
+
+</body>
+</html>

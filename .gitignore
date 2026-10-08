@@ -1,0 +1,4 @@
+# Nunca subir al repositorio
+*.csv
+*_preview.html
+portal_preview.html

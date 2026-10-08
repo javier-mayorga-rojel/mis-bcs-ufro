@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<!--
+  Actividad de estudio · Presentación 1 (Orientaciones generales para producir artículos y proyectos; láminas 2 a 10, 12 y 14)
+  Módulo cualitativo · Metodología de la Investigación Social · Bachillerato en Ciencias Sociales UFRO · 2026-2
+  Archivo: actividad_mis_bcs_p1.html · v0.1 · 2026-10-07
+  PIN DOCENTE: CUALITATIVO2026 (lo pide solo dashboard_docente.html; este archivo no pide PIN)
+  Estado compartido con el portal (localStorage, mismo origen): lee mis_bcs_reg y mis_bcs_theme; escribe mis_bcs_prog.p1 = {done: momentos completados de 4, pts: 0} y su estado propio en mis_bcs_p1.
+  Sin puntaje: el avance se mide en momentos completados.
+  Firebase: se configura una sola vez en firebase_config.js (mismo archivo para todo el sitio). Mientras diga "REEMPLAZAR", usa solo localStorage. Un proyecto Realtime Database (no Firestore).
+    Nodo que se escribe: mis_bcs/p1/<id del estudiante o grupo> (se actualiza al completar un cuadro, un conjunto o una pregunta, y al terminar el recorrido).
+    Incluye los TEXTOS que escribe el estudiante en las preguntas de desarrollo: avisarles que su docente los recibirá.
+    Reinicio: «Borrar mi avance y empezar de nuevo» guarda antes una copia del avance en mis_bcs_hist (local) y, con Firebase activo,
+    en mis_bcs_hist/p1/<id>/<clave> (solo se agrega, no se sobrescribe) y marca mis_bcs/p1/<id>/ultimoReinicio. El panel docente lee ese historial.
+    Reglas sugeridas (producción): { "rules": { ".write": true, ".read": "auth != null" } }. En pruebas, lectura abierta; no usar con datos reales de estudiantes.
+    Pasos: console.firebase.google.com > crear proyecto > Realtime Database > registrar app web > copiar firebaseConfig > pegar aquí y subir el archivo al repositorio (nunca subir claves reales a un repositorio público sin revisar las reglas).
+-->
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Presentación 1 · Pensar un proyecto de investigación</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+/* Concepto: un módulo de estudio sobrio, de una sola columna. Cada sección tiene su color; el mapa del modelo vive dentro de la Sección 1. */
+:root{
+  --bg:#f8f5ef; --surface:#fffdf8; --ink:#0b1a33; --ink2:#4b566b; --line:#d9d0ba;
+  --gold:#c9a256; --gold-ink:#7d5f17; --gold-bg:#f3e8cc; --nav:#0b1a33; --nav-ink:#f8f5ef;
+  --teo:#1a4a7a; --teo-bg:#e6eef7; --emp:#1a5c38; --emp-bg:#e4f1e9;
+  --ok:#1a5c38; --ok-bg:#ebf7ef; --no:#9b2226; --no-bg:#fdeeee; --info:#1a4a7a; --info-bg:#eaf1f9;
+  --s0c:#1a4a7a; --s0b:#e8f0f8; --s1c:#7a3b1e; --s1b:#faf0e8; --s2c:#1a5c38; --s2b:#e8f5ee; --s3c:#4a1a6b; --s3b:#f0e8f8;
+  --focus:#0b1a33;
+  --ff-d:'Playfair Display',Georgia,'Times New Roman',serif;
+  --ff-b:'Source Serif 4',Georgia,'Times New Roman',serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0a1428; --surface:#111f3a; --ink:#f1ece0; --ink2:#aab4c6; --line:#2a3a5c;
+    --gold:#e0bd73; --gold-ink:#e0bd73; --gold-bg:#3a3118; --nav:#060d1c; --nav-ink:#f1ece0;
+    --teo:#7fb0e6; --teo-bg:#14284a; --emp:#6fcb98; --emp-bg:#12332a;
+    --ok:#6fcb98; --ok-bg:#10301f; --no:#f19a9d; --no-bg:#3a1618; --info:#8fbbea; --info-bg:#14284a;
+    --s0c:#8fbbea; --s0b:#14284a; --s1c:#e8a985; --s1b:#3a2216; --s2c:#6fcb98; --s2b:#12332a; --s3c:#c9a0e8; --s3b:#2c1a42;
+    --focus:#e0bd73; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0a1428; --surface:#111f3a; --ink:#f1ece0; --ink2:#aab4c6; --line:#2a3a5c;
+  --gold:#e0bd73; --gold-ink:#e0bd73; --gold-bg:#3a3118; --nav:#060d1c; --nav-ink:#f1ece0;
+  --teo:#7fb0e6; --teo-bg:#14284a; --emp:#6fcb98; --emp-bg:#12332a;
+  --ok:#6fcb98; --ok-bg:#10301f; --no:#f19a9d; --no-bg:#3a1618; --info:#8fbbea; --info-bg:#14284a;
+  --s0c:#8fbbea; --s0b:#14284a; --s1c:#e8a985; --s1b:#3a2216; --s2c:#6fcb98; --s2b:#12332a; --s3c:#c9a0e8; --s3b:#2c1a42;
+  --focus:#e0bd73; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--ff-b);font-size:17px;line-height:1.6;margin:0;padding:0}
+button{font:inherit;color:inherit}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--focus);outline-offset:3px;border-radius:6px}
+.wrap{max-width:960px;margin:0 auto;padding-inline:16px}
+
+/* Barra superior */
+.top{background:var(--nav);color:var(--nav-ink)}
+.top .wrap{display:flex;align-items:center;gap:14px;min-height:60px;flex-wrap:wrap;padding-block:8px}
+.top a.back{display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-weight:600;font-size:15px;color:var(--nav-ink);padding:6px 10px;border-radius:8px;border:1px solid rgba(248,245,239,.28)}
+.top a.back:hover{border-color:var(--gold)}
+.top .ttl{font-family:var(--ff-d);font-weight:600;font-size:16px;flex:1;min-width:0;line-height:1.25}
+.top .ttl small{display:block;font-family:var(--ff-b);font-weight:400;font-size:13px;opacity:.75}
+.top .who{font-size:14px;padding:4px 12px;border:1px solid rgba(248,245,239,.28);border-radius:999px;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tbtn{width:38px;height:38px;border-radius:50%;border:1px solid rgba(248,245,239,.28);background:none;color:var(--nav-ink);cursor:pointer;display:grid;place-items:center}
+.tbtn:hover{border-color:var(--gold)}
+@media (max-width:560px){.top .ttl small{display:none}.top .who{max-width:120px}}
+
+/* Aviso de identificación */
+.note{margin-top:18px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:12px 16px;border-radius:12px;background:var(--gold-bg);border:1px solid var(--gold);font-size:15px}
+.note a,.note button{font-weight:600}
+.note button{background:none;border:0;padding:0;text-decoration:underline;cursor:pointer}
+.note a.cta{display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:999px;background:var(--ink);color:var(--bg);text-decoration:none;font-weight:700;box-shadow:0 2px 0 var(--gold)}
+.note a.cta:hover{filter:brightness(1.12)}
+
+/* Inicio */
+.hero{padding-block:36px 8px}
+.eyebrow{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-ink);font-weight:600;margin:0 0 8px}
+h1{font-family:var(--ff-d);font-weight:700;font-size:clamp(30px,5.5vw,46px);line-height:1.12;margin:0 0 12px;text-wrap:balance}
+.lead{font-size:18px;color:var(--ink2);max-width:680px;margin:0}
+h2.sec-t{font-family:var(--ff-d);font-size:26px;margin:36px 0 14px;line-height:1.2}
+.goals{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:6px;max-width:720px}
+.how{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:6px}
+.how div{border-top:3px solid var(--ink);padding-top:10px}
+.how b{font-family:var(--ff-d);font-size:19px;display:block;margin-bottom:2px}
+.how span{color:var(--ink2);font-size:15.5px}
+.total{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:28px;padding:16px 18px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.total .big{font-family:var(--ff-d);font-weight:700;font-size:30px;line-height:1}
+.total small{color:var(--ink2);font-size:15px}
+.bar{height:8px;border-radius:4px;background:var(--line);overflow:hidden;flex:1;min-width:140px}
+.bar i{display:block;height:100%;background:var(--gold);border-radius:4px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.card .hd{background:var(--bg-c);color:var(--c);padding:16px 18px;display:flex;gap:12px;align-items:flex-start}
+.card .num{flex:none;width:36px;height:36px;border-radius:50%;background:var(--c);color:var(--bg-c);display:grid;place-items:center;font-family:var(--ff-d);font-weight:700}
+.card h3{font-family:var(--ff-d);font-size:20px;line-height:1.2;margin:2px 0 0}
+.card .bd{padding:14px 18px 18px;display:flex;flex-direction:column;gap:12px;flex:1}
+.card p{margin:0;font-size:15.5px;color:var(--ink2)}
+.card .meta{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:14px;color:var(--ink2)}
+.card .meta b{color:var(--ink)}
+.tagst{font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;padding:3px 9px;border-radius:999px;border:1px solid var(--line);color:var(--ink2);margin-left:auto;white-space:nowrap}
+.tagst.done{border-color:var(--ok);color:var(--ok)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:10px;padding:11px 18px;font-weight:600;cursor:pointer;background:var(--ink);color:var(--bg);text-decoration:none;font-size:16px}
+.btn.alt{background:none;color:var(--ink);border:1px solid var(--ink)}
+.btn.gold{background:var(--gold);color:#0b1a33}
+.btn:hover{filter:brightness(1.08)}
+.btn[disabled]{opacity:.4;cursor:default}
+.card .btn{margin-top:auto;align-self:flex-start}
+
+/* Sección */
+.stepper{display:flex;gap:6px;flex-wrap:wrap;margin-top:22px}
+.pill{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 14px;font-size:15px;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.pill i{font-style:normal;font-size:12px;color:var(--ink2)}
+.pill[aria-current="true"]{background:var(--c);color:var(--bg-c);border-color:var(--c)}
+.pill[aria-current="true"] i{color:var(--bg-c)}
+.pill.done i{color:var(--ok)}
+.pill[aria-current="true"].done i{color:var(--bg-c)}
+.sechd{margin-top:22px;border-radius:14px;background:var(--bg-c);color:var(--c);padding:22px 22px 20px;border:1px solid var(--c)}
+.sechd .k{font-size:13px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;margin:0 0 6px}
+.sechd h2{font-family:var(--ff-d);font-size:clamp(24px,4vw,32px);line-height:1.18;margin:0 0 10px}
+.sechd p.d{margin:0;color:var(--ink);font-size:17px}
+.sechd .g{margin:10px 0 0;font-size:14.5px;color:var(--ink2)}
+.blk{margin-top:30px}
+.blk > h3{font-family:var(--ff-d);font-size:21px;margin:0 0 4px}
+.blk > p.sub{margin:0 0 14px;color:var(--ink2);font-size:15.5px}
+.cloud{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:baseline}
+.chip{border:1px solid var(--c);background:var(--surface);color:var(--c);border-radius:999px;padding:5px 14px;cursor:pointer;font-weight:600;line-height:1.3}
+.chip[aria-pressed="true"]{background:var(--c);color:var(--bg-c)}
+.def{margin-top:14px;padding:14px 16px;border-radius:12px;background:var(--bg-c);border-left:4px solid var(--c)}
+.def b{font-family:var(--ff-d);font-size:18px;color:var(--c);display:block;margin-bottom:2px}
+.def p{margin:0}
+details.map{border:1px solid var(--line);border-radius:14px;background:var(--surface);margin-top:26px}
+details.map > summary{cursor:pointer;padding:14px 18px;font-family:var(--ff-d);font-size:19px;font-weight:600;list-style:none;display:flex;gap:10px;align-items:center}
+details.map > summary::-webkit-details-marker{display:none}
+details.map > summary::before{content:"";width:9px;height:9px;border-right:2px solid var(--ink);border-bottom:2px solid var(--ink);transform:rotate(-45deg);transition:transform .15s;flex:none}
+details.map[open] > summary::before{transform:rotate(45deg)}
+details.map > summary small{font-family:var(--ff-b);font-weight:400;font-size:14.5px;color:var(--ink2);margin-left:auto}
+details.map .inner{padding:4px 16px 18px}
+.prog{display:flex;align-items:center;gap:12px;margin:26px 0 0;padding:10px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);position:sticky;top:0;z-index:5}
+.prog .bar i{background:var(--c)}
+.prog span{font-size:15px;white-space:nowrap}
+
+/* Ítems */
+.q{padding:18px 0;border-bottom:1px solid var(--line)}
+.q:last-child{border-bottom:0}
+.q .qt{font-weight:600;margin:0 0 12px}
+.q .qn{color:var(--c);font-family:var(--ff-d);margin-right:6px}
+.frag{margin:0 0 12px;padding:10px 14px;border-left:4px solid var(--c);background:var(--bg-c);border-radius:0 10px 10px 0;font-style:italic}
+.fq{margin:0 0 10px;font-size:15.5px;color:var(--ink2)}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 14px;cursor:pointer;display:flex;gap:10px;align-items:flex-start;line-height:1.45}
+.opt:hover:not([disabled]){border-color:var(--c)}
+.opt .l{font-weight:700;color:var(--c);flex:none}
+.opt[disabled]{cursor:default}
+.opt.right{border-color:var(--ok);background:var(--ok-bg)}
+.opt.wrong{border-color:var(--no);background:var(--no-bg)}
+.opt.dim{opacity:.62}
+.pair{display:flex;gap:10px;flex-wrap:wrap}
+.pair .opt{flex:1 1 200px;justify-content:center;align-items:center;text-align:center;font-weight:600}
+.fb{margin-top:12px;padding:12px 14px;border-radius:10px;font-size:16px;line-height:1.55;display:flex;gap:12px;align-items:flex-start}
+.fb.ok{background:var(--ok-bg);border:1px solid var(--ok)}
+.fb.no{background:var(--info-bg);border:1px solid var(--info)}
+.fb svg{flex:none;margin-top:3px}
+.fb.ok svg{color:var(--ok)} .fb.no svg{color:var(--info)}
+.fb p{margin:0}
+.fb .ref{display:block;margin-top:6px;font-size:14px;color:var(--ink2)}
+.fb .ref b{color:var(--ink)}
+
+/* Resultado */
+.res{margin-top:34px;border:2px solid var(--c);border-radius:16px;background:var(--surface);padding:22px}
+.res h3{font-family:var(--ff-d);font-size:24px;margin:0 0 4px}
+.res .score{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:6px 0 10px}
+.res .score b{font-family:var(--ff-d);font-size:44px;line-height:1;color:var(--c)}
+.res .brk{display:flex;gap:8px 18px;flex-wrap:wrap;color:var(--ink2);font-size:15px;margin:0 0 12px}
+.res .rev{margin:14px 0 0;padding:12px 16px;border-radius:12px;background:var(--bg-c)}
+.res .rev b{display:block;margin-bottom:4px}
+.res .rev ul{margin:0;padding-left:20px}
+.acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+
+footer{margin-top:56px;background:var(--nav);color:var(--nav-ink)}
+footer .wrap{padding-block:32px}
+footer .f-n{margin:0;font:700 17px/1.3 var(--ff-d)}
+footer .f-s{margin:6px 0 0;font-size:14.5px;line-height:1.6;opacity:.82;max-width:60ch}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:10px;font-size:15px;z-index:50;max-width:calc(100% - 32px)}
+
+.reset{margin-top:36px;padding-top:20px;border-top:1px solid var(--line)}
+.reset .btn.alt{font-size:15px;padding:9px 16px}
+.reset-box{padding:16px 18px;border:1px solid var(--no);border-radius:12px;background:var(--no-bg)}
+.reset-box p{margin:0 0 6px;line-height:1.55}
+.btn.danger{background:var(--no);color:var(--bg)}
+
+/* ===== Presentación: estaciones, cuadros, clasificación y desarrollo ===== */
+.muted{color:var(--ink2);font-size:15px}
+.stt{font-family:var(--ff-d);font-size:23px;line-height:1.25;margin:0 0 12px}
+.before{margin:0 0 16px;padding:14px 16px;border:1px dashed var(--c);border-radius:12px;background:var(--surface)}
+.before p{margin:0 0 10px}
+.before .btn{margin-top:4px}
+dl.items{margin:6px 0 0}
+dl.items dt{font-weight:600;color:var(--c);margin-top:14px;font-family:var(--ff-d);font-size:18px}
+dl.items dd{margin:2px 0 0;max-width:760px}
+.conn{margin-top:18px;padding:12px 16px;border-left:4px solid var(--gold);background:var(--gold-bg);border-radius:0 12px 12px 0}
+.conn b{display:block;margin-bottom:2px}
+.conn p,.conn ul{margin:0}
+.conn ul{padding-left:20px}
+.doneline{margin:12px 0 0;color:var(--ok);font-weight:600}
+.pc{border:1px solid var(--c);background:var(--surface);color:var(--ink);border-radius:10px;padding:9px 13px;text-align:left;cursor:pointer;line-height:1.4;font-size:15.5px}
+.pc:hover{background:var(--bg-c)}
+.pc[aria-pressed="true"]{outline:3px solid var(--gold);outline-offset:1px;background:var(--gold-bg)}
+.pc.ok{border-color:var(--ok);background:var(--ok-bg)}
+.pc.no{border-color:var(--no);background:var(--no-bg)}
+.pieces{display:flex;flex-wrap:wrap;gap:8px}
+.bank{margin-top:22px;display:grid;gap:16px;padding:14px 16px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.bank h5{margin:0 0 8px;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink2);font-weight:600}
+.slot{width:100%;min-height:58px;border:2px dashed var(--line);border-radius:10px;background:var(--bg);padding:9px 12px;text-align:left;cursor:pointer;color:var(--ink);line-height:1.4;font-size:15.5px}
+.slot .ph{color:var(--ink2);font-size:14.5px}
+.slot.target{border-color:var(--gold)}
+.slot.has{border-style:solid;border-color:var(--c);background:var(--surface)}
+.slot.ok{border-color:var(--ok);background:var(--ok-bg)}
+.slot.no{border-color:var(--no);background:var(--no-bg)}
+.boxes{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:14px}
+.bx{border:2px solid var(--c);border-radius:12px;background:var(--bg-c);padding:12px}
+.bx h4{margin:0 0 10px;font-family:var(--ff-d);font-size:18px;color:var(--c);line-height:1.25}
+.slotlist{display:flex;flex-direction:column;gap:8px}
+.gridb{display:grid;gap:12px}
+.grow{display:grid;grid-template-columns:minmax(110px,.55fr) repeat(var(--nc),minmax(0,1fr));gap:10px;align-items:stretch}
+.grow .rl{font-family:var(--ff-d);font-weight:700;color:var(--c);padding:8px 4px;display:flex;align-items:center;line-height:1.25}
+.ghead{position:static}
+.chd{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink2);font-weight:600;align-self:end}
+.clab{display:none;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink2);margin-bottom:4px}
+.cell{display:flex;flex-direction:column}
+.cell .slot{flex:1}
+@media (max-width:760px){
+  .grow{grid-template-columns:minmax(0,1fr);padding:10px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+  .ghead{display:none}
+  .clab{display:block}
+}
+.q .opts{gap:8px}
+textarea{width:100%;min-height:200px;font:inherit;line-height:1.55;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);resize:vertical}
+textarea.short{min-height:110px}
+.tl{display:block;font-weight:600;margin:18px 0 6px}
+.cnt{margin:6px 0 0;color:var(--ink2);font-size:14.5px}
+ol.incl{margin:0 0 10px;padding-left:22px;display:flex;flex-direction:column;gap:6px}
+.self{display:flex;flex-direction:column;gap:12px}
+.selfrow{padding-bottom:12px;border-bottom:1px solid var(--line)}
+.selfrow p{margin:0 0 8px}
+.selfrow .qn{color:var(--c);font-family:var(--ff-d);margin-right:6px;font-weight:700}
+.tri{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.tri button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 14px;cursor:pointer;font-size:15px}
+.tri button[aria-pressed="true"]{background:var(--c);color:var(--bg-c);border-color:var(--c)}
+details.refbox{margin-top:18px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+details.refbox > summary{cursor:pointer;padding:12px 16px;font-family:var(--ff-d);font-weight:600;font-size:18px}
+details.refbox .inner{padding:0 16px 14px}
+details.refbox .inner p{margin:8px 0}
+.fb ul{margin:6px 0 0;padding-left:18px}
+.fb li{margin-bottom:6px}
+.fb .ref{margin-top:6px}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<script src="firebase_config.js"></script>
+<header class="top">
+  <div class="wrap">
+    <a class="back" id="back" href="index_mis_bcs.html" data-portal><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>Portal</a>
+    <div class="ttl">Presentación 1 · Pensar un proyecto de investigación</div>
+    <span class="who" id="who" hidden></span>
+    <button class="tbtn" id="theme" type="button" aria-label="Cambiar entre tema claro y oscuro"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v18" /><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></svg></button>
+  </div>
+</header>
+<main class="wrap" id="app" aria-live="polite"></main>
+<footer>
+  <div class="wrap">
+    <p class="f-n">Universidad de La Frontera</p>
+    <p class="f-s">Facultad de Educación, Ciencias Sociales y Humanidades<br>Metodología de la Investigación Social | Módulo Cualitativo | 2026</p>
+  </div>
+</footer>
+<div class="toast" id="toast" role="status" hidden></div>
+<script>
+(function(){
+var PREVIEW=false;
+var DATA={"meta": {"id": "p1", "num": 1, "eyebrow": "Presentación 1", "h1": "Pensar un proyecto de investigación", "lead": "Estudia la presentación de la clase en cuatro momentos: recorrido guiado, cuadros por completar, ejemplos por clasificar y preguntas de desarrollo. No tiene puntaje: cada momento que terminas queda marcado como completado.", "goals": ["Explicar qué es la investigación social, qué papel cumple la teoría y cómo se distinguen un dato y una evidencia.", "Reconocer las partes de un artículo científico, las preguntas que responde cada una y los tipos de brecha de investigación.", "Aplicar esas ideas a ejemplos de las Lecturas 1, 2 y 3 y a los estudios que cita Ragin."]}, "mom": [{"id": "m1", "title": "Recorrido guiado", "desc": "Recorre las láminas por estaciones. Antes de ver cada una, piensa tu respuesta; luego compárala con lo que muestra la lámina.", "meta": "8 estaciones · ≈ 30 min"}, {"id": "m2", "title": "Completar el cuadro", "desc": "Reconstruye tres cuadros de la presentación colocando cada pieza en su lugar. Puedes comprobar y corregir cuantas veces quieras.", "meta": "3 cuadros · ≈ 15 min"}, {"id": "m3", "title": "Distinguir y comparar", "desc": "Clasifica descripciones y ejemplos del texto según las categorías de la presentación. Recibes la explicación y dónde repasar.", "meta": "3 conjuntos de ejemplos · ≈ 15 min"}, {"id": "m4", "title": "Desarrollo guiado", "desc": "Responde tres preguntas con tus propias palabras: orientaciones antes de escribir y una autoevaluación después.", "meta": "3 preguntas · ≈ 30 min"}], "S": [{"id": "e1", "title": "Qué es la investigación social y qué produce", "slides": "Láminas 2 y 3", "prompt": "Antes de ver las láminas: ¿qué diferencia a un informe científico sobre la sociedad de cualquier otra opinión sobre ella?", "items": [["Comunidades interpretativas", "personas organizadas que comparten procedimientos y formas para interpretar y representar a la sociedad; las representaciones mismas también están organizadas (lámina 2)."], ["Informe sobre la sociedad", "artefacto que establece afirmaciones de hechos, apoyadas en evidencia que acepta un determinado público, e interpretaciones de esos hechos que ese público también acepta. Ese público es el destinatario de toda comunicación de tipo científico (lámina 2)."], ["1. Qué es la investigación social", "forma de conocimiento que construye evidencia empírica a partir de la teoría, aplicando reglas de procedimiento explícitas."], ["2. Importancia de la teoría", "define qué se investigará, desde qué perspectivas y con qué metodología apropiada para esa teoría y esos objetivos."], ["3. Carácter histórico", "además de empírica, es temporal-histórica: los temas que trata y cómo los trata están profundamente afectados por las circunstancias históricas."], ["4. Valor del conocimiento científico", "su razón de ser es producir conocimiento válido, generalizable a la clase de situaciones y procesos tratados."]], "conn": "Lectura 1 (Ragin, cap. 3), apartados «Introducción» y «Un modelo simple de investigación social»: la investigación social como diálogo entre ideas y pruebas empíricas, cuyo refinamiento culmina en una representación de la vida social que el investigador ofrece en un informe."}, {"id": "e2", "title": "Diez ideas para situar la investigación social", "slides": "Láminas 4 y 5", "prompt": "Antes de ver las láminas: si tuvieras que fijar tres condiciones para llamar «científica» a una investigación social, ¿cuáles serían?", "items": [["1. Es una forma sistemática de producir conocimiento", "construye evidencia empírica a partir de la teoría y con reglas de procedimiento explícitas."], ["2. La teoría es el andamiaje", "el sostén de una investigación son las teorías, los modelos de análisis y los conceptos que estructuran un área de conocimiento."], ["3. No hay observación sin teoría", "la observación depende de la teoría y esta, a su vez, se reinterpreta y se reconstruye a partir de la evidencia empírica."], ["4. Es histórica y contextual", "los temas y la manera de tratarlos están profundamente afectados por las circunstancias históricas."], ["5. La verdad es provisional y refutable", "no existe verdad definitiva en la investigación social empírica; buscar resultados inmutables no es una meta para quien investiga."], ["6. El conocimiento se acumula con base crítica", "el carácter acumulativo de la investigación empírica se construye a partir de la duda sobre lo ya conocido."], ["7. Los objetivos deben ser acotados y realizables", "la investigación se plantea objetivos acotados, alcanzables en el corto plazo."], ["8. El trabajo empírico se articula con marcos teóricos", "los datos sin teoría, sea cual sea la manera de recogerlos, no tienen interés académico."], ["9. Las metodologías no son excluyentes", "ningún método o técnica es en principio mejor que otro: son más o menos apropiados al tema o problema que se investiga."], ["10. Lo que no es investigación científica", "los estudios arbitrarios o sin control teórico-metodológico; la lámina da como ejemplo una «inducción poética», que no cumple ninguno de los criterios que definen la investigación social científica."]], "conn": "Lectura 1 (Ragin, cap. 3): las ideas ayudan a darle sentido a las pruebas empíricas y estas sirven para ampliar, revisar y comprobar las ideas (ideas 2, 3 y 8); el apartado «El desafío que tiene ante sí la investigación social» contrasta el régimen de la poesía con el de la investigación social (idea 10: es un contraste de regímenes de representación; Ragin no usa la expresión «inducción poética»). Lectura 2 (Flick): la conveniencia de los métodos y las teorías como rasgo de la investigación cualitativa (idea 9)."}, {"id": "e3", "title": "Cómo responder a las interrogantes de un artículo", "slides": "Lámina 6", "prompt": "Antes de ver la lámina: si contaras tu estudio como una historia, ¿qué preguntas responderías en cada parte?", "items": [["1. Introducción", "¿Qué problema exploraste? ¿Cuál es el gancho: por qué importa el problema?"], ["2. Revisión de literatura", "¿A qué conversación te estás integrando? ¿Cuál es la brecha de conocimiento?"], ["3. Métodos", "¿Qué hiciste? ¿Cuál fue la justificación del diseño de investigación? ¿Es accesible la explicación?"], ["4. Resultados", "¿Cuáles son tus principales resultados? ¿Los has ilustrado de manera convincente?"], ["5. Discusión", "¿Cómo contribuye tu historia a la conversación? ¿Cómo has llenado la brecha? ¿Cómo limita el diseño de investigación tu contribución al campo del conocimiento?"], ["6. Conclusiones", "¿Cuál es la lección clave de tu historia? ¿Cuál es la historia inevitable que está por venir?"], ["El hilo que une las partes", "la lámina pide entrelazarlas con estilo y claridad: usar la gramática, la estructura de las oraciones y la organización de los párrafos para atraer y mantener la atención de los lectores."]], "conn": "Lectura 1 (Ragin, cap. 3), apartado «Representaciones»: los investigadores sociales usan casi exclusivamente medios escritos tradicionales (libros académicos, artículos de revistas especializadas, libros de texto, algún artículo en medios masivos), con formatos como tablas, gráficos, transcripciones, narrativas o viñetas de casos."}, {"id": "e4", "title": "Tipos de brecha de investigación (I)", "slides": "Lámina 7", "prompt": "Antes de ver la lámina: ¿de cuántas maneras puede quedar «incompleta» la literatura sobre un tema?", "items": [["Conceptual", "la teoría no explica el fenómeno."], ["Metodológico", "la pregunta siempre se ha estudiado de la misma manera."], ["Empírico", "existe evidencia, pero no para tu contexto específico."], ["Comparativo", "dos fenómenos se han estudiado por separado, pero nunca en conjunto."], ["Temporal", "la investigación existe, pero el mundo ya cambió."], ["Contextual", "los hallazgos no se trasladan a tu escenario o realidad específica."], ["Mecanístico", "sabemos qué ocurre, pero no por qué ocurre."], ["De traducción o implementación", "algo funciona en condiciones controladas, pero nadie ha estudiado cómo se implementa en la práctica."]], "conn": "Lectura 1 (Ragin, cap. 3), apartado «Marcos analíticos»: a veces se estudia un fenómeno porque no se sabe bien qué es ni cómo caracterizarlo, y se prueban varios marcos (por ejemplo, ser soldado entendido como un «trabajo», o los soldados vistos como «iniciados» en una institución). Compáralo con la brecha conceptual."}, {"id": "e5", "title": "Tipos de brecha de investigación (II)", "slides": "Lámina 8", "prompt": "Antes de ver la lámina: ¿cómo distinguirías una brecha de población de una brecha de método?", "items": [["Brecha de evidencia contradictoria", "los resultados de los estudios permiten conclusiones por derecho propio, pero se contradicen cuando se examinan desde un punto de vista más abstracto."], ["Brecha de vacío de conocimiento", "los hallazgos de investigación deseados no existen."], ["Brecha de conflicto entre acción y conocimiento", "el comportamiento o las prácticas profesionales se desvían de los hallazgos de investigación, o no están cubiertos por ella."], ["Brecha de método y diseño de investigación", "se requiere variar los métodos de investigación para generar nuevos conocimientos o para evitar hallazgos distorsionados."], ["Brecha de población", "la población no está adecuadamente representada o ha sido poco investigada (por ejemplo, según género, raza o etnia, edad)."], ["Brecha teórica (vacío de aplicación de teoría)", "la teoría debe aplicarse a ciertos problemas de investigación para generar nuevos conocimientos; existe una falta de teoría."], ["Brecha empírica (vacío de evaluación)", "los hallazgos o proposiciones de investigación deben evaluarse o verificarse empíricamente."], ["Fuentes de la lámina", "la propia lámina indica sus fuentes al pie; si vas a citarlas, consulta las referencias completas directamente en esos textos."]], "conn": "Lectura 1 (Ragin, cap. 3), apartado «Ideas»: quienes buscan dar voz a ciertos grupos trabajan con grupos que han sido ignorados o pobremente representados. Compáralo con la brecha de población."}, {"id": "e6", "title": "Escribir y leer artículos: el mapa y las nueve secciones", "slides": "Láminas 9 y 10", "prompt": "Antes de ver las láminas: ¿qué partes tiene un artículo científico y qué debe lograr cada una?", "items": [["El mapa de la lámina 9", "organiza lo que debemos considerar en siete ramas: introducción, estilo académico, proceso de escritura, apéndices, leer investigación, escribir tu artículo, y fuentes y referencias."], ["Dentro de «Escribir tu artículo»", "título, resumen, introducción, revisión de literatura, metodología, resultados, discusión, conclusión, agradecimientos, apéndices, referencias y bibliografía."], ["Dentro de las demás ramas", "el estilo académico (claridad y concisión, voces activa y pasiva, manuales de estilo), el proceso de escritura (planificación, escritura, revisión y edición), leer investigación (estructura del artículo, identificar fuentes, lectura activa) y fuentes y referencias (plagio, citas, lista de referencias)."], ["Sección 1 · Título y autores", "define un título específico y pertinente y ordena a los autores según su contribución, con el autor senior generalmente al final."], ["Sección 2 · Resumen", "presenta el problema, los métodos, los resultados principales, las conclusiones y el valor del trabajo; debe ser autónomo y breve."], ["Sección 3 · Introducción", "introduce el campo, identifica el problema, justifica su importancia, delimita el alcance del proyecto y ofrece una hoja de ruta del artículo."], ["Sección 4 · Antecedentes", "desarrolla los antecedentes, la discusión del problema y la revisión de literatura, mostrando cómo el trabajo previo se relaciona con la investigación propia."], ["Sección 5 · Métodos", "describe los métodos (la lámina menciona experimentales, matemáticos o computacionales); explica las decisiones de diseño y permite que otro investigador pueda reproducir el trabajo."], ["Sección 6 · Resultados y discusión", "presenta los datos, el análisis, las figuras y las tablas; explica qué se aprendió y compara los resultados con trabajos previos."], ["Sección 7 · Conclusión", "va más allá del resumen: destaca aprendizajes, innovación, impacto posible y futuras extensiones del trabajo."], ["Sección 8 · Bibliografía", "incluye las referencias citadas, numeradas según el orden de aparición y con formato consistente."], ["Sección 9 · Apéndice o material suplementario", "incorpora datos extensos, derivaciones, código u otros materiales que interrumpirían el flujo del texto principal."]], "conn": "Lectura 1 (Ragin, cap. 3), apartado «El desafío que tiene ante sí la investigación social»: el régimen de la investigación social exige especificar con claridad las ideas que guían el estudio y examinar sistemáticamente las pruebas empíricas con que se construyen las imágenes y las representaciones. Compáralo con la función de la Introducción, los Métodos y los Resultados."}, {"id": "e7", "title": "Dato y evidencia en la investigación social", "slides": "Lámina 12", "prompt": "Antes de ver la lámina: ¿es lo mismo un «dato» que una «evidencia»?", "items": [["Punto de partida", "en el modelo de Ragin, «pruebas» es el término cotidiano para lo que técnicamente se llama «datos»; en ese nivel no hay una distinción de fondo entre ambos términos."], ["Una diferencia que propone la lámina", "la lámina sostiene que Ragin, sin usar esas dos palabras, muestra que en la práctica sí hay una diferencia. Prácticamente cualquier cosa puede ser un dato en potencia (un gesto, un silencio, una palabra suelta, una estadística, un objeto sobre una mesa); pero en estado bruto un dato no responde ninguna pregunta ni confirma ni refuta nada: es materia prima sin forma."], ["Cómo un dato se vuelve evidencia", "cuando pasa por un marco analítico y se organiza en lo que Ragin llama una imagen."], ["El ejemplo de la cafetería (lámina 12, basado en Ragin)", "tomados sueltos, los registros (personas sentadas en silencio, personas conversando, personas atendiendo en las mesas, ruido de cocina, personas detrás del mostrador) parecen mostrar que no ocurre nada relevante. Con un marco que atiende la comunicación no verbal, la semiótica, la estética o incluso la estadística, esos mismos datos se vuelven evidencia de algo preciso, por ejemplo una forma deliberada y significativa de no interacción social."], ["Las definiciones de la lámina", "un dato es cualquier fragmento de la realidad social susceptible de ser registrado. La evidencia es ese mismo fragmento leído a través de una pregunta o de un marco analítico, que empieza a decir algo sobre el fenómeno. La diferencia no está en el objeto, sino en si fue puesto en diálogo con una idea y con un proceso que le da sentido."]], "conn": "Lectura 1 (Ragin, cap. 3), apartados «Pruebas empíricas» y «Marcos analíticos»: cualquier cosa puede ser un dato en potencia, pero la investigación exige seleccionar los hechos; y el ejemplo del café muestra el marco como una forma de observar."}, {"id": "e8", "title": "De dónde vienen las ideas y qué es la teoría social", "slides": "Lámina 14", "prompt": "Antes de ver la lámina: ¿de dónde vienen las ideas con las que investigamos y qué hace que una idea sea «buena»?", "items": [["Origen de las ideas", "pueden provenir de cualquier lugar: la vida cotidiana, una novela, un acontecimiento inusual, una analogía, un malentendido, una indiscreción o una broma; parecen surgir más o menos espontáneamente."], ["Qué pasa con la mayoría", "terminan siendo equivocadas o callejones sin salida. Ejemplo: la idea de que los climas templados originaban formas de civilización más desarrolladas (determinismo climático) ignoraba las culturas no occidentales y la complejidad de la mayoría de las formas culturales."], ["Las buenas ideas", "las que superan el escrutinio de otros investigadores pasan a formar parte del repertorio de conocimiento que se transmite de una generación de académicos a otra. El conocimiento abstracto sobre la vida social se llama teoría social."], ["Teoría social y sentido común", "la mayoría de las personas conoce bastante teoría social sin haberla estudiado (por ejemplo, que las burocracias pueden ahogarse en sus propios trámites). La teoría social es valiosa porque explora esas ideas en profundidad."], ["Investigación que no se apoya principalmente en la teoría", "quienes interpretan acontecimientos culturales o históricos ven la teoría social como un repertorio de interpretaciones posibles; quienes dan voz a grupos ignorados no pueden prescindir de una guía teórica, aunque su objetivo teórico principal sea contribuir a la teoría con un mayor conocimiento sobre esos grupos. Incluso quien busca aportar al repertorio de ideas debe dialogar continuamente con ellas."]], "conn": "Lectura 2 (Flick), apartado «Relevancia de la investigación cualitativa»: ante la diversificación de los mundos vitales se recurre cada vez más a estrategias inductivas, con «conceptos sensibilizadores» que están influidos por el conocimiento teórico previo; las teorías se desarrollan a partir de estudios empíricos."}], "B": [{"id": "c1", "kind": "grid", "title": "Las ideas de la investigación social", "slides": "Láminas 4 y 5", "intro": "Completa el cuadro: elige la afirmación que corresponde a cada idea.", "rows": [{"id": "an", "label": "La teoría es el andamiaje de toda investigación"}, {"id": "ns", "label": "No hay observación sin teoría"}, {"id": "vp", "label": "La verdad es provisional y refutable"}, {"id": "ac", "label": "El conocimiento se acumula con base crítica"}, {"id": "ds", "label": "El trabajo empírico se articula con marcos teóricos"}, {"id": "me", "label": "Las metodologías no son excluyentes"}], "cols": [{"id": "a", "label": "Lo que afirma la lámina"}], "chips": [{"id": "an.a", "t": "El sostén de una investigación son las teorías, los modelos de análisis y los conceptos que estructuran un área de conocimiento.", "home": "an.a", "why": "Es la idea 2: la teoría, los modelos y los conceptos sostienen la investigación como un andamiaje."}, {"id": "ns.a", "t": "La observación depende de la teoría y esta se reinterpreta y se reconstruye a partir de la evidencia empírica.", "home": "ns.a", "why": "Es la idea 3: la teoría orienta la observación y, a su vez, se reinterpreta con la evidencia."}, {"id": "vp.a", "t": "No existe verdad definitiva: buscar resultados inmutables no es una meta para quien investiga.", "home": "vp.a", "why": "Es la idea 5: la verdad en ciencias sociales es provisional y refutable."}, {"id": "ac.a", "t": "El carácter acumulativo de la investigación se construye a partir de la duda sobre lo ya conocido.", "home": "ac.a", "why": "Es la idea 6: el conocimiento se acumula, pero con base crítica."}, {"id": "ds.a", "t": "Los datos sin teoría, sea cual sea la manera de recogerlos, no tienen interés académico.", "home": "ds.a", "why": "Es la idea 8: los datos recogidos sin marco teórico no tienen interés académico; el trabajo empírico debe articularse con marcos teóricos."}, {"id": "me.a", "t": "Ningún método o técnica es en principio mejor que otro: son más o menos apropiados al problema que se investiga.", "home": "me.a", "why": "Es la idea 9: las metodologías cualitativa y cuantitativa no son excluyentes."}]}, {"id": "c2", "kind": "boxes", "title": "Las partes del artículo y sus preguntas", "slides": "Lámina 6", "intro": "Ubica cada pregunta en la parte del artículo a la que pertenece.", "slots": [{"id": "I", "label": "1. Introducción", "cap": 2}, {"id": "L", "label": "2. Revisión de literatura", "cap": 2}, {"id": "M", "label": "3. Métodos", "cap": 3}, {"id": "R", "label": "4. Resultados", "cap": 2}, {"id": "D", "label": "5. Discusión", "cap": 3}, {"id": "C", "label": "6. Conclusiones", "cap": 2}], "chips": [{"id": "i1", "t": "¿Qué problema exploraste?", "home": "I", "why": "Plantear el problema es la tarea de la Introducción."}, {"id": "i2", "t": "¿Cuál es el gancho: por qué importa el problema?", "home": "I", "why": "El gancho que justifica la importancia del problema pertenece a la Introducción."}, {"id": "l1", "t": "¿A qué conversación te estás integrando?", "home": "L", "why": "Ubicar el estudio en una conversación es la función de la Revisión de literatura."}, {"id": "l2", "t": "¿Cuál es la brecha de conocimiento?", "home": "L", "why": "La brecha se identifica en la Revisión de literatura; en la Discusión se pregunta cómo se llenó."}, {"id": "m1", "t": "¿Qué hiciste?", "home": "M", "why": "Describir lo que se hizo es propio de los Métodos."}, {"id": "m2", "t": "¿Cuál fue la justificación del diseño de investigación?", "home": "M", "why": "Justificar el diseño es parte de los Métodos."}, {"id": "m3", "t": "¿Es accesible la explicación?", "home": "M", "why": "La claridad con que se explica lo que se hizo se juzga en los Métodos."}, {"id": "r1", "t": "¿Cuáles son tus principales resultados?", "home": "R", "why": "Presentar los hallazgos principales es la tarea de los Resultados."}, {"id": "r2", "t": "¿Los has ilustrado de manera convincente?", "home": "R", "why": "Ilustrar los resultados con claridad es parte de los Resultados."}, {"id": "d1", "t": "¿Cómo contribuye tu historia a la conversación?", "home": "D", "why": "Retoma la conversación planteada en la revisión de literatura y se responde en la Discusión."}, {"id": "d2", "t": "¿Cómo has llenado la brecha?", "home": "D", "why": "Responde a la brecha planteada antes y se contesta en la Discusión."}, {"id": "d3", "t": "¿Cómo limita el diseño de investigación tu contribución al campo del conocimiento?", "home": "D", "why": "La lámina lo ubica en la Discusión porque trata los límites de la contribución; la justificación del diseño, en cambio, se plantea en los Métodos."}, {"id": "k1", "t": "¿Cuál es la lección clave de tu historia?", "home": "C", "why": "La lección clave es lo que deja la Conclusión."}, {"id": "k2", "t": "¿Cuál es la historia inevitable que está por venir?", "home": "C", "why": "Mirar lo que viene después es propio de la Conclusión."}]}, {"id": "c3", "kind": "grid", "title": "Los tipos de brecha de la lámina 7", "slides": "Lámina 7", "intro": "Completa el cuadro: elige la descripción que corresponde a cada tipo de brecha. Algunos tipos son cercanos entre sí: fíjate en qué es exactamente lo que falta.", "rows": [{"id": "co", "label": "Conceptual"}, {"id": "me", "label": "Metodológico"}, {"id": "em", "label": "Empírico"}, {"id": "cm", "label": "Comparativo"}, {"id": "te", "label": "Temporal"}, {"id": "cx", "label": "Contextual"}, {"id": "mc", "label": "Mecanístico"}, {"id": "tr", "label": "De traducción o implementación"}], "cols": [{"id": "d", "label": "Qué describe"}], "chips": [{"id": "co.d", "t": "La teoría no explica el fenómeno.", "home": "co.d", "why": "Es la brecha conceptual: falta una explicación teórica del fenómeno."}, {"id": "me.d", "t": "La pregunta siempre se ha estudiado de la misma manera.", "home": "me.d", "why": "Es la brecha metodológica: el problema es la manera de abordar la pregunta."}, {"id": "em.d", "t": "Existe evidencia, pero no para tu contexto específico.", "home": "em.d", "why": "Es la brecha empírica: falta evidencia para tu contexto específico, aunque exista en otros."}, {"id": "cm.d", "t": "Dos fenómenos se han estudiado por separado, pero nunca en conjunto.", "home": "cm.d", "why": "Es la brecha comparativa: falta estudiar los dos fenómenos juntos."}, {"id": "te.d", "t": "La investigación existe, pero el mundo ya cambió.", "home": "te.d", "why": "Es la brecha temporal: la investigación disponible quedó desactualizada."}, {"id": "cx.d", "t": "Los hallazgos no se trasladan a tu escenario o realidad específica.", "home": "cx.d", "why": "Es la brecha contextual: hay hallazgos, pero no se pueden trasladar a tu escenario o realidad."}, {"id": "mc.d", "t": "Sabemos qué ocurre, pero no por qué ocurre.", "home": "mc.d", "why": "Es la brecha mecanística: se sabe qué ocurre, pero falta explicar por qué."}, {"id": "tr.d", "t": "Algo funciona en condiciones controladas, pero nadie ha estudiado cómo se implementa en la práctica.", "home": "tr.d", "why": "Es la brecha de traducción o implementación: falta estudiar la puesta en práctica."}]}], "D": [{"id": "d1", "title": "Dato, marco analítico o evidencia", "slides": "Lámina 12", "opts": ["Dato en bruto", "Marco analítico", "Evidencia"], "intro": "Clasifica cada descripción según el ejemplo de la cafetería de la lámina 12, que se basa en Ragin.", "items": [{"q": "Personas sentadas en silencio, con un libro o un celular en la mano, registradas sin ninguna pregunta de investigación.", "ans": 0, "tip": "Es un dato en bruto: un fragmento de la realidad social susceptible de ser registrado que, por sí solo, no responde ninguna pregunta ni confirma ni refuta nada.", "ref": "Lámina 12 · Ragin, cap. 3, «Pruebas empíricas» y «Marcos analíticos»"}, {"q": "Una forma de mirar que atiende la comunicación no verbal y permite reconocer que en la cafetería hay no interacción.", "ans": 1, "tip": "Es un marco analítico: una forma de ver que, según Ragin, permite reconocer la no interacción; sin ese marco podría parecer que «no está ocurriendo nada».", "ref": "Lámina 12 · Ragin, cap. 3, «Marcos analíticos»"}, {"q": "Los mismos registros de personas en silencio, leídos con ese marco, como señales de una no interacción deliberada y significativa.", "ans": 2, "tip": "Es evidencia: el dato leído a través de un marco analítico empieza a decir algo preciso sobre el fenómeno.", "ref": "Lámina 12 · Ragin, cap. 3, «Marcos analíticos»"}, {"q": "El sonido que viene de la cocina y las personas que trabajan detrás del mostrador, anotados tal como ocurren.", "ans": 0, "tip": "Es un dato en bruto: material registrado sin forma, que todavía no ha sido puesto en diálogo con una idea.", "ref": "Lámina 12"}, {"q": "Una mirada que atiende la dimensión semiótica o estética de la cafetería para interpretar lo que se registra.", "ans": 1, "tip": "Es un marco analítico: la lámina menciona que un marco puede poner atención en la semiótica, la estética o incluso la estadística.", "ref": "Lámina 12"}, {"q": "Un registro de horarios y de tipos de clientes que, al interpretarlo desde un marco estadístico, dice algo preciso sobre el fenómeno.", "ans": 2, "tip": "Es evidencia: el registro es el dato, y deja de ser un simple apunte cuando se lee desde un marco (aquí, estadístico) que le da sentido.", "ref": "Lámina 12"}]}, {"id": "d2", "title": "¿En qué sección del artículo va?", "slides": "Lámina 10", "opts": ["Resumen", "Introducción", "Antecedentes", "Métodos", "Resultados y discusión", "Conclusión"], "intro": "Indica a qué sección de la lámina 10 corresponde cada función.", "items": [{"q": "Describe los métodos (la lámina menciona experimentales, matemáticos o computacionales), explica las decisiones de diseño y permite que otro investigador pueda reproducir el trabajo.", "ans": 3, "tip": "Son los Métodos: explican qué se hizo y por qué, con el detalle suficiente para reproducir el trabajo.", "ref": "Lámina 10 · sección 5"}, {"q": "Presenta el problema, los métodos, los resultados principales, las conclusiones y el valor del trabajo; debe ser autónomo y breve.", "ans": 0, "tip": "Es el Resumen: condensa todo el artículo y debe poder leerse por sí solo.", "ref": "Lámina 10 · sección 2"}, {"q": "Va más allá del resumen: destaca aprendizajes, innovación, impacto posible y futuras extensiones del trabajo.", "ans": 5, "tip": "Es la Conclusión: no repite el resumen, sino que proyecta lo aprendido y lo que podría venir.", "ref": "Lámina 10 · sección 7"}, {"q": "Desarrolla la discusión del problema y la revisión de literatura, mostrando cómo el trabajo previo se relaciona con la investigación propia.", "ans": 2, "tip": "Son los Antecedentes: ubican la investigación propia dentro del trabajo previo.", "ref": "Lámina 10 · sección 4"}, {"q": "Presenta datos, análisis, figuras y tablas, explica qué se aprendió y compara los resultados con trabajos previos.", "ans": 4, "tip": "Es la sección de Resultados y discusión. Fíjate que la lámina 10 las reúne en una sola, mientras que la lámina 6 las separa en dos.", "ref": "Láminas 6 y 10 · sección 6"}, {"q": "Introduce el campo, identifica el problema, justifica su importancia, delimita el alcance y ofrece una hoja de ruta del artículo.", "ans": 1, "tip": "Es la Introducción: presenta el campo y el problema, y orienta al lector sobre lo que sigue.", "ref": "Lámina 10 · sección 3"}]}, {"id": "d3", "title": "¿Qué tipo de brecha de la lámina 8 es?", "slides": "Lámina 8", "opts": ["Evidencia contradictoria", "Vacío de conocimiento", "Conflicto entre acción y conocimiento", "Método y diseño", "Población", "Teórica", "Empírica"], "intro": "Clasifica cada descripción según los siete tipos de brecha de la lámina 8. Dos de ellas se apoyan en las lecturas; su clasificación como brecha es una interpretación de este ejercicio, no una afirmación de los autores.", "items": [{"q": "Quienes buscan «dar voz» trabajan con grupos que han sido ignorados o pobremente representados en lo que sabemos de la sociedad.", "ans": 4, "tip": "Es una brecha de población: un grupo no está adecuadamente representado o ha sido poco investigado. Es una interpretación de este ejercicio: Ragin habla de dar voz, no de brechas.", "ref": "Lámina 8 · Ragin, cap. 3, «Ideas»"}, {"q": "La teoría disponible debe aplicarse a ciertos problemas de investigación para generar nuevos conocimientos, y hace falta teoría.", "ans": 5, "tip": "Es una brecha teórica (vacío de aplicación de teoría): falta teoría o falta aplicarla a ciertos problemas.", "ref": "Lámina 8"}, {"q": "Los métodos deductivos tradicionales no logran diferenciar los objetos en contextos nuevos, y se recurre cada vez más a estrategias inductivas.", "ans": 3, "tip": "Es una brecha de método y diseño: se requiere variar los métodos para generar nuevos conocimientos. Es una interpretación de este ejercicio: Flick describe el problema, pero no lo llama brecha.", "ref": "Lámina 8 · Flick, «Relevancia de la investigación cualitativa»"}, {"q": "Los resultados de distintos estudios permiten conclusiones por derecho propio, pero se contradicen cuando se miran desde un punto de vista más abstracto.", "ans": 0, "tip": "Es una brecha de evidencia contradictoria: cada estudio es consistente por sí mismo, pero en conjunto no concuerdan.", "ref": "Lámina 8"}, {"q": "Las prácticas profesionales se desvían de los hallazgos de investigación o no están cubiertas por ellos.", "ans": 2, "tip": "Es una brecha de conflicto entre acción y conocimiento: lo que se hace en la práctica no coincide con lo que dice la investigación, o esta no lo alcanza.", "ref": "Lámina 8"}, {"q": "Los hallazgos de investigación que se desean tener simplemente no existen.", "ans": 1, "tip": "Es una brecha de vacío de conocimiento: el conocimiento buscado todavía no se ha producido.", "ref": "Lámina 8"}, {"q": "Los hallazgos o proposiciones de investigación deben ser evaluados o verificados empíricamente.", "ans": 6, "tip": "Es una brecha empírica (vacío de evaluación): lo propuesto aún no ha sido puesto a prueba con evidencia.", "ref": "Lámina 8"}]}], "Q": [{"id": "q1", "tag": "Explicar y relacionar", "title": "Teoría, datos y evidencia", "ask": "Explica por qué, según la presentación, no hay investigación social sin teoría, y cómo se relacionan la teoría, los datos y la evidencia. Apóyate en el ejemplo de la cafetería de la lámina 12, basado en Ragin.", "sources": "Presentación 1 (láminas 3 a 5, 12 y 14) · Ragin, cap. 3 (Lectura 1)", "incl": ["El papel de la teoría según la lámina 3 y al menos una de las ideas 2, 3 u 8 de las láminas 4 y 5.", "La diferencia entre dato y evidencia (lámina 12), con el ejemplo de la cafetería.", "El diálogo entre ideas y pruebas empíricas del modelo de Ragin, con el papel del marco analítico y de la imagen.", "Un aporte de la lámina 14: de dónde vienen las ideas y qué las convierte en teoría social."], "concepts": ["andamiaje teórico", "dato", "evidencia", "marco analítico", "imagen", "teoría social"], "length": "De 7 a 10 líneas.", "starter": "Sin teoría no hay investigación social porque…", "review": ["Presentación 1, láminas 3 a 5, 12 y 14", "Ragin, cap. 3: «Introducción», «Un modelo simple de investigación social», «Ideas», «Marcos analíticos» y «Pruebas empíricas»"], "answers": [{"label": "Una forma posible", "text": ["Según la presentación, la teoría define qué se investigará, desde qué perspectivas y con qué metodología (lámina 3), y es el andamiaje de toda investigación: no hay observación sin teoría y los datos sin teoría no tienen interés académico (ideas 2, 3 y 8). Ragin lo formula como un diálogo entre ideas y pruebas empíricas: las ideas ayudan a darle sentido a las pruebas y las pruebas sirven para ampliar, revisar y comprobar las ideas, a través de marcos analíticos e imágenes.", "La lámina 12 distingue dato y evidencia. Prácticamente cualquier cosa puede ser un dato en potencia (un gesto, un silencio, una estadística), pero en estado bruto no responde ninguna pregunta. En el ejemplo de la cafetería (lámina 12, basado en Ragin), las personas sentadas en silencio parecen mostrar que no ocurre nada; con un marco analítico que atiende la comunicación no verbal, esos mismos datos se convierten en evidencia de una no interacción deliberada y significativa. La lámina 14 agrega que las ideas pueden venir de cualquier lugar, que la mayoría resulta equivocada y que solo las que superan el escrutinio de otros investigadores pasan al repertorio de la teoría social; incluso quien busca dar voz a grupos ignorados necesita alguna guía teórica."]}]}, {"id": "q2", "tag": "Aplicar a un estudio del texto", "title": "Contar un estudio como artículo", "ask": "Elige uno de los estudios que Ragin describe en el capítulo 4 (Hochschild, Becker o Ebaugh) y responde, con lo que dice el texto, las preguntas de Introducción, Métodos, Resultados y Discusión de la lámina 6.", "sources": "Presentación 1 (láminas 6, 9 y 10; idea 9 de la lámina 5) · Ragin, cap. 4 (Lectura 3) · Flick (Lectura 2)", "incl": ["Introducción: qué problema o fenómeno estudió y qué grupo o categoría trabajó.", "Métodos: qué hizo (casos, entrevistas, muestreo) y por qué ese diseño es apropiado al objeto (idea 9; Flick).", "Resultados: a qué concepto, categoría o marco analítico llegó y cómo reformuló sus ideas durante el estudio.", "Discusión: qué queda disponible para otras investigaciones; aclara que Ragin no presenta el estudio como artículo y que tu lectura es un ejercicio de aplicación."], "concepts": ["problema", "diseño", "justificación del método", "concepto", "marco analítico", "casos negativos", "muestreo teórico"], "length": "De 8 a 11 líneas.", "starter": "Elijo el estudio de… porque…", "review": ["Presentación 1, láminas 5 (idea 9), 6, 9 y 10", "Ragin, cap. 4: «Introducción», «El proceso de investigación cualitativa», «La depuración de los conceptos y las categorías», «La elaboración de marcos analíticos» y «El muestreo teórico»", "Flick: «Conveniencia de los métodos y las teorías»"], "answers": [{"label": "Hochschild", "text": ["Introducción: Hochschild estudió a los auxiliares de vuelo, que deben mostrar con frecuencia ciertas apariencias a los pasajeros; el estudio gira en torno a la manipulación consciente de los sentimientos para producir una expresión observable públicamente. Métodos: Ragin menciona, como ejemplo ilustrativo del proceso y no como dato del estudio de Hochschild, la entrevista a unos 35 auxiliares de vuelo. Una justificación posible: el objeto es lo que viven y muestran las personas, y según Flick el objeto determina el método y no al revés (idea 9).", "Resultados y Discusión: la imagen del auxiliar de vuelo y el concepto de «trabajo emocional» se fueron aclarando mutuamente hasta la representación final. Como aporte, el concepto queda disponible como componente de un marco analítico aplicable a otras ocupaciones de atención personal a clientes, como guías turísticos o camareras; y, en el supuesto hipotético de Ragin, si solo algunos auxiliares usaran el trabajo emocional, la categoría debería estrecharse."]}, {"label": "Becker", "text": ["Introducción: Becker estudió el proceso de convertirse en consumidor habitual de marihuana. Métodos: Ragin menciona más de cincuenta entrevistas a consumidores habituales. Una justificación posible: un proceso de aprendizaje solo se reconstruye bien con métodos abiertos que dejen hablar a quienes lo vivieron (idea 9; Flick).", "Resultados y Discusión: Becker vio que casi todos pasaban por un aprendizaje social para disfrutar la droga y especuló que todos los consumidores habituales (la categoría) lo experimentaban (el concepto). Aparecieron casos negativos: unos pocos la usaban por aparentar y no la disfrutaban; reformuló reduciendo la categoría a quienes la usaban por placer. Después estudió otros grupos «desviados» y los reunió en un marco analítico, el de los «marginales», con un proceso dual de aprendizaje social y etiquetamiento."]}, {"label": "Ebaugh", "text": ["Introducción: Ebaugh estudió a mujeres que habían sido monjas y dejaron las órdenes religiosas, y con ese grupo desarrolló el concepto de «abandono de un rol social». Métodos: se interesó por personas cuya identidad estaba muy influida por roles que habían abandonado y diseñó una estrategia deliberada de muestreo teórico: ex doctores, madres sin la custodia de sus hijos, transexuales y otros «ex algo». Una justificación posible: comparar grupos distintos permite desarrollar el concepto más allá de un solo caso.", "Resultados y Discusión: cada grupo aportó pruebas sobre un tipo distinto de abandono de rol y el producto final fue un marco analítico completamente desarrollado (como todo marco analítico, según Ragin, sus componentes cruciales son conceptos). Ese marco queda disponible para analizar otros casos de abandono de roles."]}]}, {"id": "q3", "tag": "Argumentar con un caso de las lecturas", "title": "Identificar una brecha de investigación", "ask": "Explica qué es una brecha de investigación, cómo se identifica (láminas 6 a 8) y por qué ayuda a plantear un estudio de objetivos acotados que contribuya a un conocimiento acumulado (ideas 6 y 7). Ilústralo con una situación que aparezca en las lecturas.", "sources": "Presentación 1 (láminas 5 a 8) · Ragin, cap. 3 (Lectura 1) · Flick (Lectura 2)", "incl": ["Una definición propia de brecha y al menos dos tipos de las láminas 7 y 8.", "Cómo se relaciona la brecha con la conversación en la que se inserta el estudio (lámina 6: revisión de literatura y discusión).", "La relación con las ideas 6 y 7 de la lámina 5: acumulación con base crítica y objetivos acotados.", "Una situación de las lecturas que pueda leerse como brecha, con el tipo elegido y su justificación; aclara que es tu interpretación."], "concepts": ["brecha de investigación", "tipos de brecha", "revisión de literatura", "acumulación crítica", "objetivos acotados"], "length": "De 8 a 11 líneas.", "starter": "Una brecha de investigación es…", "review": ["Presentación 1, láminas 5 a 8", "Ragin, cap. 3: «Ideas» y «Marcos analíticos»", "Flick: «Relevancia de la investigación cualitativa» y «Perspectivas de los participantes y su diversidad»"], "answers": [{"label": "Flick · brecha mecanística", "text": ["Como definición de trabajo (las láminas 7 y 8 no la formulan así), una brecha de investigación es lo que el conocimiento disponible no permite responder y que justifica un nuevo estudio. La lámina 7 distingue ocho tipos (conceptual, metodológica, empírica, comparativa, temporal, contextual, mecanística y de traducción o implementación) y la lámina 8 siete (evidencia contradictoria, vacío de conocimiento, conflicto entre acción y conocimiento, método y diseño, población, teórica y empírica). Según la lámina 6, la revisión de literatura pregunta a qué conversación se integra el estudio y cuál es la brecha de conocimiento, y la discusión retoma la brecha al preguntar cómo se la llenó. Siguiendo las ideas 6 y 7 de la lámina 5, identificarla permite plantear un objetivo acotado y alcanzable y contribuir a un conocimiento que se acumula a partir de la duda sobre lo ya conocido.", "Ilustración con Flick (interpretación propia, no afirmación del autor): los estudios epidemiológicos muestran que los trastornos mentales graves son más frecuentes en las clases sociales bajas, pero no se pudo clarificar la dirección de esa correlación ni qué significa vivir con la enfermedad. Puede leerse como una brecha mecanística (lámina 7: se sabe qué ocurre, pero no por qué), que un estudio cualitativo podría abordar con un objetivo acotado, por ejemplo los significados que la enfermedad tiene para quienes la viven."]}, {"label": "Ragin · brecha de población", "text": ["Como definición de trabajo (las láminas 7 y 8 no la formulan así), una brecha de investigación es lo que el conocimiento disponible no permite responder y que justifica un nuevo estudio. La lámina 7 distingue ocho tipos (conceptual, metodológica, empírica, comparativa, temporal, contextual, mecanística y de traducción o implementación) y la lámina 8 siete (evidencia contradictoria, vacío de conocimiento, conflicto entre acción y conocimiento, método y diseño, población, teórica y empírica). Según la lámina 6, la revisión de literatura pregunta a qué conversación se integra el estudio y cuál es la brecha de conocimiento, y la discusión retoma la brecha al preguntar cómo se la llenó. Siguiendo las ideas 6 y 7 de la lámina 5, identificarla permite plantear un objetivo acotado y alcanzable y contribuir a un conocimiento que se acumula a partir de la duda sobre lo ya conocido.", "Ilustración con Ragin, cap. 3, «Ideas» (interpretación propia, no afirmación del autor): quienes buscan dar voz a ciertos grupos trabajan con grupos que han sido ignorados o pobremente representados. Puede leerse como una brecha de población (lámina 8: población no representada adecuadamente o poco investigada), que justifica un estudio acotado centrado en ese grupo y que contribuye al repertorio de ideas de la teoría social."]}, {"label": "Ragin · brecha conceptual", "text": ["Como definición de trabajo (las láminas 7 y 8 no la formulan así), una brecha de investigación es lo que el conocimiento disponible no permite responder y que justifica un nuevo estudio. La lámina 7 distingue ocho tipos (conceptual, metodológica, empírica, comparativa, temporal, contextual, mecanística y de traducción o implementación) y la lámina 8 siete (evidencia contradictoria, vacío de conocimiento, conflicto entre acción y conocimiento, método y diseño, población, teórica y empírica). Según la lámina 6, la revisión de literatura pregunta a qué conversación se integra el estudio y cuál es la brecha de conocimiento, y la discusión retoma la brecha al preguntar cómo se la llenó. Siguiendo las ideas 6 y 7 de la lámina 5, identificarla permite plantear un objetivo acotado y alcanzable y contribuir a un conocimiento que se acumula a partir de la duda sobre lo ya conocido.", "Ilustración con Ragin, cap. 3, «Marcos analíticos» (interpretación propia, no afirmación del autor): a veces se estudia algo porque no se sabe bien qué es ni cómo caracterizarlo, como al preguntarse si el movimiento hacia lo «políticamente correcto» es una moda, un movimiento social o una nueva religión, y se prueban varios marcos para ver cuál tiene más sentido. Puede leerse como una brecha conceptual (lámina 7: la teoría no explica el fenómeno), que justifica un objetivo acotado: decidir qué marco caracteriza mejor el fenómeno."]}]}], "minw": 40};
+var META=DATA.meta;
+var KEYS={reg:'mis_bcs_reg',prog:'mis_bcs_prog',theme:'mis_bcs_theme',mod:'mis_bcs_'+META.id};
+var FIREBASE_CONFIG=window.MIS_FIREBASE||{apiKey:"REEMPLAZAR",authDomain:"REEMPLAZAR",databaseURL:"REEMPLAZAR",projectId:"REEMPLAZAR",storageBucket:"REEMPLAZAR",messagingSenderId:"REEMPLAZAR",appId:"REEMPLAZAR"};
+var FB_OK=FIREBASE_CONFIG.apiKey.indexOf('REEMPLAZAR')<0;
+var MOM=DATA.mom,S=DATA.S,B=DATA.B,D=DATA.D,Q=DATA.Q,MINW=DATA.minw;
+
+function $(s,r){return (r||document).querySelector(s)}
+function $$(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function lsGet(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}}
+function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function lsDel(k){try{localStorage.removeItem(k)}catch(e){}}
+function toast(m){var t=$('#toast');t.textContent=m;t.hidden=false;clearTimeout(toast.h);toast.h=setTimeout(function(){t.hidden=true},3600)}
+function words(t){return (t||'').trim().split(/\s+/).filter(Boolean).length}
+function cap(s){return s.charAt(0).toUpperCase()+s.slice(1)}
+function hsh(s){var h=7;for(var i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))%9973;return h}
+function byId(a,id){for(var i=0;i<a.length;i++)if(a[i].id===id)return a[i]}
+
+/* ---------- Estado ---------- */
+var ST=lsGet(KEYS.mod)||{};
+function freshST(){return {v:1,m1:{},m2:{},m3:{},m4:{}}}
+if(!ST.v){ST=freshST()}
+['m1','m2','m3','m4'].forEach(function(k){if(!ST[k])ST[k]={}});
+function s2(id){return ST.m2[id]||(ST.m2[id]={place:{},checks:0,done:false,assisted:false})}
+function s3(id){return ST.m3[id]||(ST.m3[id]={ans:[],done:false,tries:0,last:0})}
+function s4(id){return ST.m4[id]||(ST.m4[id]={text:'',stage:0,self:[],rev:'',done:false,ts:0,variant:0})}
+var view={name:'home',tab:0,sel:null,chk:{},msg:{}};
+function momDone(k){
+  if(k==='m1')return S.every(function(s){return ST.m1[s.id]});
+  if(k==='m2')return B.every(function(b){return s2(b.id).done});
+  if(k==='m3')return D.every(function(d){return s3(d.id).done});
+  if(k==='m4')return Q.every(function(q){return s4(q.id).done});
+  return false;
+}
+function doneCount(){return ['m1','m2','m3','m4'].filter(momDone).length}
+function save(){lsSet(KEYS.mod,ST);var p=lsGet(KEYS.prog)||{};p[META.id]={done:doneCount(),pts:0,ts:Date.now()};lsSet(KEYS.prog,p)}
+function reg(){return lsGet(KEYS.reg)}
+function hasText(){return Q.some(function(q){return s4(q.id).text})}
+
+/* ---------- Reinicio del módulo ---------- */
+var MODID=META.id;
+/* Registro para el docente: cada reinicio guarda una copia del avance previo (bandeja local mis_bcs_hist)
+   y la envía a Firebase en mis_bcs_hist/[módulo]/[id]/[clave]; así el registro no depende de que el estudiante conserve su avance.
+   Solo se registra si el estudiante está identificado. */
+var HK='mis_bcs_hist';
+function histAdd(estado,prog){
+  var r=reg();if(!r||!r.id)return;
+  var a=lsGet(HK)||[],ts=Date.now();
+  a.push({k:'r'+ts+'_'+MODID,mod:MODID,sid:r.id,name:r.name||'',mode:r.mode||'individual',members:r.members||[],ts:ts,prog:prog||null,estado:estado,sent:false});
+  if(a.length>40)a=a.slice(-40);
+  lsSet(HK,a);
+}
+function fbLoad(cb){
+  var ini=function(){if(!firebase.apps.length)firebase.initializeApp(FIREBASE_CONFIG);cb()};
+  if(window.firebase){ini();return}
+  var a=document.createElement('script');a.src='https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js';
+  a.onload=function(){var b=document.createElement('script');b.src='https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js';b.onload=ini;document.head.appendChild(b)};
+  document.head.appendChild(a);
+}
+function histFlush(){
+  if(!FB_OK||PREVIEW)return;
+  var a=lsGet(HK)||[];
+  if(!a.some(function(x){return !x.sent}))return;
+  try{fbLoad(function(){
+    (lsGet(HK)||[]).forEach(function(x){
+      if(x.sent)return;
+      var db=firebase.database();
+      db.ref('mis_bcs_hist/'+x.mod+'/'+x.sid+'/'+x.k).set({id:x.sid,name:x.name,mode:x.mode,members:x.members,mod:x.mod,ts:x.ts,prog:x.prog,estado:x.estado})
+        .then(function(){return db.ref('mis_bcs/'+x.mod+'/'+x.sid+'/ultimoReinicio').transaction(function(c){return Math.max(c||0,x.ts)})})
+        .then(function(){var b=lsGet(HK)||[];b.forEach(function(y){if(y.k===x.k)y.sent=true});lsSet(HK,b)})
+        .catch(function(){});
+    });
+  })}catch(e){}
+}
+function hasProgress(){
+  return Object.keys(ST.m1).length>0
+   ||B.some(function(b){var s=ST.m2[b.id];return s&&(s.done||s.checks>0||Object.keys(s.place||{}).length>0)})
+   ||D.some(function(d){var s=ST.m3[d.id];return s&&(s.done||s.tries>0||(s.ans||[]).length>0)})
+   ||Q.some(function(q){var s=ST.m4[q.id];return s&&(s.done||s.text||s.stage||s.rev||(s.self||[]).length>0)});
+}
+function resetBlock(){
+  if(!view.ask)return '<div class="reset"><button type="button" class="btn alt" data-act="ask">Borrar mi avance y empezar de nuevo</button></div>';
+  return '<div class="reset"><div class="reset-box" role="group" aria-labelledby="rst-t"><p id="rst-t"><b>¿Borrar tu avance en esta presentación?</b></p>'
+   +'<p>Se borrarán tus respuestas, los momentos completados y los textos que escribiste, en este navegador.'+(reg()?' Tu docente conservará el registro de lo que ya hiciste.':'')+(hasText()?' Si quieres conservar tus textos, descárgalos antes con «Descargar mis respuestas».':'')+'</p>'
+   +'<div class="acts"><button type="button" class="btn danger" data-act="rst-yes">Sí, borrar y empezar de nuevo</button><button type="button" class="btn alt" id="rst-no" data-act="rst-no">Cancelar</button></div></div></div>';
+}
+function resetAll(){
+  if(hasProgress())histAdd(JSON.parse(JSON.stringify(ST)),(lsGet(KEYS.prog)||{})[MODID]||null);
+  ST=freshST();lsDel(KEYS.mod);var pg=lsGet(KEYS.prog)||{};delete pg[MODID];lsSet(KEYS.prog,pg);
+  go('home');
+  histFlush();
+  toast('Empezaste de nuevo. Tu avance en esta presentación quedó en cero.');
+}
+
+
+/* ---------- Reporte a Firebase (opcional) ---------- */
+function summary(){
+  var r=reg()||{id:'anon',name:'Sin identificar'};
+  var o={id:r.id,name:r.name,mode:r.mode||'individual',members:r.members||[],pres:META.id,ts:Date.now(),momentos:{},tableros:{},conjuntos:{},preguntas:{}};
+  ['m1','m2','m3','m4'].forEach(function(k){o.momentos[k]=momDone(k)});
+  B.forEach(function(b){var s=s2(b.id);o.tableros[b.id]={done:s.done,comprobaciones:s.checks,conAyuda:s.assisted}});
+  D.forEach(function(d){var s=s3(d.id);o.conjuntos[d.id]={done:s.done,aciertos:s.last,max:d.items.length,intentos:s.tries}});
+  Q.forEach(function(q){var s=s4(q.id);o.preguntas[q.id]={done:s.done,texto:s.text,palabras:words(s.text),autoevaluacion:s.self,ajustes:s.rev,ts:s.ts}});
+  return o;
+}
+function report(){
+  if(!FB_OK||PREVIEW)return;
+  try{
+    var p=summary();
+    var go=function(){if(!firebase.apps.length)firebase.initializeApp(FIREBASE_CONFIG);firebase.database().ref('mis_bcs/'+META.id+'/'+p.id).update(p)};
+    if(window.firebase){go();return}
+    var a=document.createElement('script');a.src='https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js';
+    a.onload=function(){var b=document.createElement('script');b.src='https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js';b.onload=go;document.head.appendChild(b)};
+    document.head.appendChild(a);
+  }catch(e){}
+}
+
+/* ---------- Tema y cabecera ---------- */
+function applyTheme(t){if(t)document.documentElement.setAttribute('data-theme',t);else document.documentElement.removeAttribute('data-theme')}
+(function(){var t=lsGet(KEYS.theme);if(t==='light'||t==='dark')applyTheme(t)})();
+$('#theme').addEventListener('click',function(){
+  var cur=document.documentElement.getAttribute('data-theme');
+  var dark=cur?cur==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;
+  var n=dark?'light':'dark';applyTheme(n);lsSet(KEYS.theme,n);
+});
+function paintWho(){var r=reg(),w=$('#who');if(r&&r.name){w.textContent=(r.mode==='grupo'?'Grupo: ':'')+r.name;w.hidden=false}else w.hidden=true}
+$('#back').addEventListener('click',function(e){if(PREVIEW){e.preventDefault();toast('En la vista previa el portal no está disponible.')}});
+
+/* ---------- Utilidades de vista ---------- */
+var app=$('#app');
+function mStyle(i){return '--c:var(--s'+i+'c);--bg-c:var(--s'+i+'b)'}
+function mIdx(k){return ['m1','m2','m3','m4'].indexOf(k)}
+function icon(ok){return ok?'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>':'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></svg>'}
+function fb(ok,tip,ref){return '<div class="fb '+(ok?'ok':'no')+'">'+icon(ok)+'<div><p><b>'+(ok?'Correcto. ':'Para revisar. ')+'</b>'+esc(tip)+'</p><span class="ref"><b>Dónde repasarlo:</b> '+esc(ref)+'</span></div></div>'}
+function status(k){
+  var started=false;
+  if(k==='m1')started=S.some(function(s){return ST.m1[s.id]});
+  if(k==='m2')started=B.some(function(b){var s=s2(b.id);return s.checks>0||Object.keys(s.place).length>0});
+  if(k==='m3')started=D.some(function(d){return s3(d.id).ans.some(function(a){return a!==undefined&&a!==null})});
+  if(k==='m4')started=Q.some(function(q){return s4(q.id).text});
+  return momDone(k)?'Completado':(started?'En curso':'Sin empezar');
+}
+function dataNote(){
+  var r=reg();
+  if(r&&FB_OK)return 'Cuando completes cada pregunta de desarrollo, tu respuesta se envía a tu docente. También queda guardada en este navegador.';
+  return 'Tus respuestas escritas quedan solo en este navegador. Descárgalas para conservarlas o enviarlas por correo.';
+}
+function head(k,title,desc){var i=mIdx(k);return '<section class="sechd" style="'+mStyle(i)+'"><p class="k">Momento '+(i+1)+' de 4</p><h2>'+esc(title)+'</h2><p class="d">'+esc(desc)+'</p></section>'}
+function tabs(items,doneFn){
+  return '<div class="stepper" role="tablist">'+items.map(function(t,i){var d=doneFn(i);return '<button type="button" class="pill'+(d?' done':'')+'" role="tab" data-act="tab" data-i="'+i+'" aria-current="'+(view.tab===i)+'"'+'>'+esc(t)+'<i>'+(d?'✓':'')+'</i></button>'}).join('')+'</div>';
+}
+function backRow(){return '<div class="acts"><button type="button" class="btn alt" data-act="home">Volver al inicio</button></div>'}
+function go(name,tab){view={name:name,tab:tab||0,sel:null,chk:{},msg:{}};render();window.scrollTo(0,0)}
+
+/* ---------- Inicio ---------- */
+function vHome(){
+  var noreg=!reg(),dc=doneCount();
+  var h='<section class="hero"><p class="eyebrow">'+esc(META.eyebrow)+'</p><h1>'+esc(META.h1)+'</h1>'
+   +'<p class="lead">'+esc(META.lead)+'</p></section>';
+  if(noreg)h+='<div class="note"><span>Aún no te has identificado. Tu avance no quedará registrado en el sistema.</span>'+(PREVIEW?'':'<a class="cta" href="index_mis_bcs.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/></svg>Ingresa en el portal para identificarte</a>')+'</div>';
+  h+='<h2 class="sec-t">Lo que vas a lograr</h2><ul class="goals">'+META.goals.map(function(g){return '<li>'+esc(g)+'</li>'}).join('')+'</ul>';
+  h+='<h2 class="sec-t">Cómo funciona</h2><div class="how">'
+   +'<div><b>Sin puntaje</b><span>Lo que cuenta es completar cada momento. Verás qué revisar y dónde, no una nota.</span></div>'
+   +'<div><b>A tu ritmo</b><span>Puedes salir y volver: todo lo que haces se guarda en este navegador.</span></div>'
+   +'<div><b>Todo sale de tus materiales</b><span>Láminas de la presentación y las tres lecturas del módulo. No se necesita nada más.</span></div></div>';
+  h+='<div class="total"><div><div class="big">'+dc+' <small>de 4 momentos completados</small></div></div><div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="4" aria-valuenow="'+dc+'" aria-label="Momentos completados"><i style="width:'+(dc*25)+'%"></i></div></div>';
+  h+='<h2 class="sec-t">Momentos</h2><div class="cards">';
+  MOM.forEach(function(m,i){
+    var st=status(m.id),lbl=st==='Completado'?'Repasar':(st==='En curso'?'Continuar':'Empezar');
+    h+='<article class="card" style="'+mStyle(i)+'"><div class="hd"><span class="num" aria-hidden="true">'+(i+1)+'</span><div><h3>'+esc(m.title)+'</h3></div><span class="tagst'+(st==='Completado'?' done':'')+'">'+st+'</span></div>'
+     +'<div class="bd"><p>'+esc(m.desc)+'</p><div class="meta"><span>'+esc(m.meta)+'</span></div><button type="button" class="btn" data-act="open" data-k="'+m.id+'">'+lbl+'</button></div></article>';
+  });
+  h+='</div>';
+  if(dc===4)h+='<div class="res" style="'+mStyle(2)+'"><h3>Completaste la Presentación '+META.num+'</h3><p>Recorriste las láminas, reconstruiste los cuadros, clasificaste los ejemplos y desarrollaste las tres preguntas. Puedes volver a cualquier momento para repasar.</p></div>';
+  if(hasText())h+='<div class="acts"><button type="button" class="btn gold" data-act="dl">Descargar mis respuestas</button></div>';
+  if(hasProgress())h+=resetBlock();
+  app.innerHTML=h;
+}
+
+/* ---------- Momento 1 ---------- */
+function vM1(){
+  var s=S[view.tab],seen=!!ST.m1[s.id],n=S.filter(function(x){return ST.m1[x.id]}).length;
+  var h=head('m1',MOM[0].title,MOM[0].desc);
+  h+=tabs(S.map(function(x,i){return (i+1)+'. '+x.title.split(' ').slice(0,3).join(' ')+'…'}),function(i){return ST.m1[S[i].id]});
+  h+='<div class="prog" style="'+mStyle(0)+'"><div class="bar"><i style="width:'+Math.round(n/S.length*100)+'%"></i></div><span>'+n+' de '+S.length+' estaciones vistas</span></div>';
+  h+='<section class="blk"><p class="eyebrow">'+esc(s.slides)+'</p><h3 class="stt">'+esc(s.title)+'</h3>';
+  h+='<div class="before"><p><b>Piensa primero.</b> '+esc(s.prompt)+'</p>'+(seen?'':'<button type="button" class="btn" data-act="reveal" data-id="'+s.id+'">Ya lo pensé: mostrar lo que dice la lámina</button>')+'</div>';
+  if(seen){
+    h+='<dl class="items">'+s.items.map(function(it){return '<dt>'+esc(it[0])+'</dt><dd>'+esc(cap(it[1]))+'</dd>'}).join('')+'</dl>';
+    h+='<div class="conn"><b>Conecta con las lecturas</b><p>'+esc(s.conn)+'</p></div>';
+  }
+  h+='<div class="acts">'+(view.tab>0?'<button type="button" class="btn alt" data-act="tab" data-i="'+(view.tab-1)+'">Estación anterior</button>':'')
+   +(view.tab<S.length-1?'<button type="button" class="btn" data-act="tab" data-i="'+(view.tab+1)+'"'+(seen?'':' disabled')+'>Siguiente estación</button>':'')+'</div></section>';
+  h+='<div class="acts"><button type="button" class="btn '+(momDone('m1')?'gold':'alt')+'" data-act="home">'+(momDone('m1')?'Momento completado: volver al inicio':'Volver al inicio')+'</button></div>';
+  app.innerHTML=h;
+}
+
+/* ---------- Momento 2 ---------- */
+function chipById(b,id){return byId(b.chips,id)}
+function occ(b,slot){var st=s2(b.id),r=[];for(var c in st.place)if(st.place[c]===slot)r.push(c);return r}
+function placed(b,c){return s2(b.id).place[c]}
+function chipBtn(b,c,cls){return '<button type="button" class="pc'+(cls?' '+cls:'')+'" data-act="chip" data-id="'+c.id+'" aria-pressed="'+(view.sel===c.id)+'">'+esc(c.t)+'</button>'}
+function slotBtn(b,slotId,label){
+  var st=s2(b.id),oc=occ(b,slotId),cls='slot',ch;
+  if(oc.length){cls+=' has';ch=chipById(b,oc[0]);if(view.chk[ch.id]===true)cls+=' ok';if(view.chk[ch.id]===false)cls+=' no'}
+  else if(view.sel)cls+=' target';
+  var inner=oc.length?esc(chipById(b,oc[0]).t):'<span class="ph">Toca para colocar la pieza elegida</span>';
+  return '<button type="button" class="'+cls+'" data-act="slot" data-slot="'+slotId+'" aria-label="'+esc(label)+(oc.length?'. Contiene una pieza; tócala para quitarla':'. Vacía')+'">'+inner+'</button>';
+}
+function vBoard(b){
+  var st=s2(b.id),h='';
+  h+='<p class="sub">'+esc(b.intro)+' <span class="muted">('+esc(b.slides)+')</span></p>';
+  var unp=b.chips.filter(function(c){return !placed(b,c.id)}).sort(function(x,y){return hsh(x.id)-hsh(y.id)});
+  if(b.kind==='boxes'){
+    h+='<div class="boxes">'+b.slots.map(function(sl){
+      var oc=occ(b,sl.id);
+      return '<div class="bx"><h4>'+esc(sl.label)+'</h4><div class="slotlist">'+oc.map(function(c){var ch=chipById(b,c);return chipBtn(b,ch,(view.chk[c]===true?'ok':(view.chk[c]===false?'no':'')))}).join('')
+       +'<button type="button" class="slot'+(view.sel?' target':'')+'" data-act="slot" data-slot="'+sl.id+'" aria-label="Colocar la pieza elegida en «'+esc(sl.label)+'»"><span class="ph">Toca para colocar aquí</span></button></div></div>';
+    }).join('')+'</div>';
+    h+='<div class="bank"><h5>Piezas por colocar</h5><div class="pieces">'+(unp.length?unp.map(function(c){return chipBtn(b,c)}).join(''):'<span class="muted">Ya colocaste todas las piezas.</span>')+'</div></div>';
+  }else{
+    var nc=b.cols.length;
+    h+='<div class="gridb" style="--nc:'+nc+'"><div class="grow ghead"><span></span>'+b.cols.map(function(c){return '<span class="chd">'+esc(c.label)+'</span>'}).join('')+'</div>';
+    b.rows.forEach(function(r){
+      h+='<div class="grow"><span class="rl">'+esc(r.label)+'</span>'+b.cols.map(function(c){var id=r.id+'.'+c.id;return '<div class="cell"><span class="clab">'+esc(c.label)+'</span>'+slotBtn(b,id,r.label+', '+c.label)+'</div>'}).join('')+'</div>';
+    });
+    h+='</div><div class="bank">'+b.cols.map(function(c){
+      var g=unp.filter(function(p){return p.home.split('.')[1]===c.id});
+      return '<div class="bgrp"><h5>Piezas de «'+esc(c.label)+'»</h5><div class="pieces">'+(g.length?g.map(function(p){return chipBtn(b,p)}).join(''):'<span class="muted">Sin piezas pendientes.</span>')+'</div></div>';
+    }).join('')+'</div>';
+  }
+  var allp=b.chips.every(function(c){return placed(b,c.id)});
+  var msg=view.msg[b.id];
+  h+='<div class="acts"><button type="button" class="btn" data-act="check"'+(allp?'':' disabled')+'>Comprobar</button>'
+   +(st.checks>0&&!st.done?'<button type="button" class="btn alt" data-act="solve">Ver la solución</button>':'')
+   +'<button type="button" class="btn alt" data-act="reset">Reiniciar cuadro</button></div>';
+  if(!allp)h+='<p class="muted" style="margin-top:8px">Coloca todas las piezas para poder comprobar.</p>';
+  if(msg)h+='<div class="fb '+(msg.ok?'ok':'no')+'" role="status">'+icon(msg.ok)+'<div>'+msg.html+'</div></div>';
+  if(st.done)h+='<p class="doneline">'+(st.assisted?'Cuadro completado con la solución a la vista. Repítelo más tarde sin ayuda para fijarlo.':'Cuadro completado.')+'</p>';
+  return h;
+}
+function vM2(){
+  var b=B[view.tab];
+  var h=head('m2',MOM[1].title,MOM[1].desc)+tabs(B.map(function(x,i){return (i+1)+'. '+x.title.split(' ').slice(0,4).join(' ')+'…'}),function(i){return s2(B[i].id).done});
+  h+='<section class="blk"><h3 class="stt">'+esc(b.title)+'</h3>'+vBoard(b)+'</section>'+backRow();
+  app.innerHTML=h;
+}
+function onChip(b,id){
+  var st=s2(b.id);
+  if(placed(b,id)){delete st.place[id];delete view.chk[id];delete view.msg[b.id];view.sel=null;save();render();return}
+  view.sel=(view.sel===id)?null:id;render();
+}
+function onSlot(b,slot){
+  var st=s2(b.id),oc=occ(b,slot);
+  if(!view.sel){
+    if(oc.length&&b.kind==='grid'){delete st.place[oc[0]];delete view.chk[oc[0]];delete view.msg[b.id];save();render()}
+    else toast('Primero toca una pieza de la lista.');
+    return;
+  }
+  var ch=chipById(b,view.sel);
+  if(b.kind==='grid'){
+    if(ch.home.split('.')[1]!==slot.split('.')[1]){toast('Esa pieza pertenece a otra columna.');return}
+    if(oc.length){delete st.place[oc[0]];delete view.chk[oc[0]]}
+  }
+  st.place[ch.id]=slot;delete view.chk[ch.id];delete view.msg[b.id];view.sel=null;save();render();
+}
+function slotLabel(b,slot){
+  if(b.kind==='boxes')return byId(b.slots,slot).label;
+  var p=slot.split('.');return byId(b.rows,p[0]).label+' · '+byId(b.cols,p[1]).label;
+}
+function onCheck(b){
+  var st=s2(b.id),bad=[],chk={};
+  b.chips.forEach(function(c){var ok=placed(b,c.id)===c.home;chk[c.id]=ok;if(!ok)bad.push(c)});
+  view.chk=chk;st.checks++;
+  if(!bad.length){st.done=true;view.msg[b.id]={ok:true,html:'<p><b>Correcto. </b>Todas las piezas están en su lugar.</p>'};save();report();render();return}
+  var li=bad.map(function(c){
+    var short=c.t.length>70?c.t.slice(0,67)+'…':c.t;
+    return '<li><b>«'+esc(short)+'»</b> no va en «'+esc(slotLabel(b,placed(b,c.id)))+'». '+esc(c.why)+'</li>';
+  }).join('');
+  view.msg[b.id]={ok:false,html:'<p><b>Para revisar. </b>Estas piezas no están en su lugar (quedaron marcadas):</p><ul>'+li+'</ul><p class="ref">Puedes moverlas y comprobar de nuevo, o pedir la solución.</p>'};
+  save();render();
+}
+function onSolve(b){
+  var st=s2(b.id);b.chips.forEach(function(c){st.place[c.id]=c.home});
+  st.assisted=true;st.done=true;view.chk={};
+  b.chips.forEach(function(c){view.chk[c.id]=true});
+  view.msg[b.id]={ok:true,html:'<p><b>Solución a la vista. </b>Léela con calma: cada pieza está en el lugar que indica la lámina.</p>'};
+  save();report();render();
+}
+function onReset(b){var st=s2(b.id);st.place={};view.chk={};delete view.msg[b.id];view.sel=null;save();render()}
+
+/* ---------- Momento 3 ---------- */
+function vM3(){
+  var d=D[view.tab],st=s3(d.id);
+  var h=head('m3',MOM[2].title,MOM[2].desc)+tabs(D.map(function(x,i){return (i+1)+'. '+x.title.split(' ').slice(0,4).join(' ')+'…'}),function(i){return s3(D[i].id).done});
+  h+='<section class="blk"><h3 class="stt">'+esc(d.title)+'</h3><p class="sub">'+esc(d.intro)+' <span class="muted">('+esc(d.slides)+')</span></p>';
+  d.items.forEach(function(it,i){
+    var a=st.ans[i],has=a!==undefined&&a!==null;
+    var opts=d.opts.map(function(t,oi){
+      var cls='opt',dis='';
+      if(has){dis=' disabled';if(oi===it.ans)cls+=' right';else if(oi===a)cls+=' wrong';else cls+=' dim'}
+      return '<button type="button" class="'+cls+'"'+dis+' data-act="ans" data-i="'+i+'" data-v="'+oi+'"><span class="l">'+String.fromCharCode(65+oi)+'.</span><span>'+esc(t)+'</span></button>';
+    }).join('');
+    h+='<div class="q"><p class="qt"><span class="qn">'+(i+1)+'.</span>'+esc(it.q)+'</p><div class="opts">'+opts+'</div>'+(has?fb(a===it.ans,it.tip,it.ref):'')+'</div>';
+  });
+  var n=st.ans.filter(function(a){return a!==undefined&&a!==null}).length;
+  if(n===d.items.length){
+    var miss=d.items.map(function(it,i){return {it:it,i:i}}).filter(function(x){return st.ans[x.i]!==x.it.ans});
+    h+='<div class="res" style="'+mStyle(2)+'"><h3>Conjunto completado</h3>'+(miss.length?'<div class="rev"><b>Conviene repasar estos puntos:</b><ul>'+miss.map(function(x){return '<li>Ejemplo '+(x.i+1)+': '+esc(x.it.ref)+'</li>'}).join('')+'</ul></div>':'<p>Clasificaste bien todos los ejemplos.</p>')
+     +'<div class="acts"><button type="button" class="btn alt" data-act="again">Repetir este conjunto</button>'+(view.tab<D.length-1?'<button type="button" class="btn" data-act="tab" data-i="'+(view.tab+1)+'">Siguiente conjunto</button>':'<button type="button" class="btn gold" data-act="home">Volver al inicio</button>')+'</div></div>';
+  }else h+='<p class="muted" style="margin-top:14px">Respondidos: '+n+' de '+d.items.length+'.</p>';
+  h+='</section>'+backRow();
+  app.innerHTML=h;
+}
+function onAns(i,v){
+  var d=D[view.tab],st=s3(d.id);
+  if(st.ans[i]!==undefined&&st.ans[i]!==null)return;
+  st.ans[i]=v;
+  if(st.ans.filter(function(a){return a!==undefined&&a!==null}).length===d.items.length){
+    st.last=d.items.filter(function(it,k){return st.ans[k]===it.ans}).length;st.done=true;st.tries=Math.max(st.tries,1);report();
+  }
+  save();render();
+}
+
+/* ---------- Momento 4 ---------- */
+function selfBtns(q,s,i){
+  var cur=s.self[i];
+  return ['si','parte','no'].map(function(v){var lb={si:'Lo incluí',parte:'En parte',no:'No lo incluí'}[v];return '<button type="button" aria-pressed="'+(cur===v)+'" data-act="self" data-i="'+i+'" data-v="'+v+'">'+lb+'</button>'}).join('');
+}
+function vM4(){
+  var q=Q[view.tab],s=s4(q.id),w=words(s.text);
+  var h=head('m4',MOM[3].title,MOM[3].desc)+tabs(Q.map(function(x,i){return (i+1)+'. '+x.tag}),function(i){return s4(Q[i].id).done});
+  h+='<section class="blk"><p class="eyebrow">'+esc(q.tag)+'</p><h3 class="stt">'+esc(q.ask)+'</h3><p class="muted">Fuentes: '+esc(q.sources)+'</p>';
+  h+='<div class="before"><p><b>Tu respuesta debería incluir:</b></p><ol class="incl">'+q.incl.map(function(t){return '<li>'+esc(t)+'</li>'}).join('')+'</ol>'
+   +'<p class="muted"><b>Conceptos que conviene usar:</b> '+q.concepts.map(esc).join(' · ')+'. <b>Extensión sugerida:</b> '+esc(q.length)+'</p>'
+   +(s.text?'':'<button type="button" class="btn alt" data-act="starter">Insertar un inicio de frase</button>')+'</div>';
+  h+='<label class="tl" for="ta">Tu respuesta</label><textarea id="ta" data-ta="'+q.id+'" placeholder="Escribe aquí con tus propias palabras…" aria-describedby="cnt">'+esc(s.text)+'</textarea>';
+  h+='<p class="cnt" id="cnt"><span id="wc">'+w+'</span> palabras · mínimo '+MINW+' para ver la autoevaluación. '+esc(dataNote())+'</p>';
+  if(s.stage<1)h+='<div class="acts"><button type="button" class="btn" data-act="stage" id="stg"'+(w>=MINW?'':' disabled')+'>Ya respondí: ver la autoevaluación</button></div>';
+  else{
+    h+='<div class="blk"><h3>Autoevaluación</h3><p class="sub">Revisa tu respuesta contra cada elemento. Sé honesto: esto es para ti.</p><div class="self">'+q.incl.map(function(t,i){return '<div class="selfrow"><p><span class="qn">'+(i+1)+'.</span>'+esc(t)+'</p><div class="tri">'+selfBtns(q,s,i)+'</div></div>'}).join('')+'</div></div>';
+    var ans=q.answers[Math.min(s.variant,q.answers.length-1)];
+    h+='<details class="refbox"'+(s.refOpen?' open':'')+'><summary data-act="refsum">Ver una respuesta de referencia</summary><div class="inner"><p class="muted">Es una forma posible de responder, no la única. Compárala con la tuya.</p>'
+     +(q.answers.length>1?'<div class="tri" role="group" aria-label="Estudio elegido">'+q.answers.map(function(a,i){return '<button type="button" aria-pressed="'+(s.variant===i)+'" data-act="variant" data-i="'+i+'">'+esc(a.label)+'</button>'}).join('')+'</div>':'')
+     +ans.text.map(function(p){return '<p>'+esc(p)+'</p>'}).join('')+'</div></details>';
+    h+='<div class="conn"><b>Dónde repasar</b><ul>'+q.review.map(function(t){return '<li>'+esc(t)+'</li>'}).join('')+'</ul></div>';
+    h+='<label class="tl" for="rv">Después de comparar: ¿qué agregarías o corregirías en tu respuesta? (opcional)</label><textarea id="rv" class="short" data-rv="'+q.id+'" placeholder="Anota los ajustes que harías…">'+esc(s.rev)+'</textarea>';
+    var ready=q.incl.every(function(_,i){return s.self[i]});
+    h+='<div class="acts"><button type="button" class="btn gold" data-act="finish" id="fin"'+(ready?'':' disabled')+'>'+(s.done?'Guardar cambios':'Completar esta pregunta')+'</button></div>';
+    if(!ready)h+='<p class="muted" style="margin-top:8px">Marca los '+q.incl.length+' elementos de la autoevaluación para completar la pregunta.</p>';
+    if(s.done)h+='<p class="doneline">Pregunta completada.</p>';
+  }
+  h+='</section>';
+  h+='<div class="acts">'+(hasText()?'<button type="button" class="btn alt" data-act="dl">Descargar mis respuestas</button>':'')+'<button type="button" class="btn alt" data-act="home">Volver al inicio</button></div>';
+  app.innerHTML=h;
+}
+function descargar(){
+  var r=reg(),t='PRESENTACIÓN '+META.num+' · '+META.h1+'\nMetodología de la Investigación Social · Módulo cualitativo · Bachillerato en Ciencias Sociales, UFRO\n'+(r&&r.name?('Estudiante: '+r.name+'\n'):'')+'Fecha: '+new Date().toLocaleDateString('es-CL')+'\n\n';
+  Q.forEach(function(q,i){
+    var s=s4(q.id);
+    t+='==== Pregunta '+(i+1)+' · '+q.tag+' ====\n'+q.ask+'\n\nMI RESPUESTA:\n'+(s.text||'(sin respuesta)')+'\n\n';
+    if(s.self&&s.self.length)t+='AUTOEVALUACIÓN:\n'+q.incl.map(function(x,k){return (k+1)+'. '+({si:'Lo incluí',parte:'En parte',no:'No lo incluí'}[s.self[k]]||'sin marcar')+' — '+x}).join('\n')+'\n\n';
+    if(s.rev)t+='AJUSTES QUE HARÍA:\n'+s.rev+'\n\n';
+  });
+  var blob=new Blob([t],{type:'text/plain;charset=utf-8'}),a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);a.download='mis_respuestas_presentacion_'+META.num+'.txt';document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},500);
+}
+
+/* ---------- Render y eventos ---------- */
+function render(){
+  paintWho();
+  if(view.name==='home')vHome();else if(view.name==='m1')vM1();else if(view.name==='m2')vM2();else if(view.name==='m3')vM3();else vM4();
+}
+var saveT;
+app.addEventListener('input',function(e){
+  var t=e.target;
+  if(t.hasAttribute('data-ta')){
+    var s=s4(t.getAttribute('data-ta'));s.text=t.value;var w=words(t.value);
+    var wc=$('#wc');if(wc)wc.textContent=w;var b=$('#stg');if(b)b.disabled=w<MINW;
+    clearTimeout(saveT);saveT=setTimeout(save,400);
+  }else if(t.hasAttribute('data-rv')){
+    s4(t.getAttribute('data-rv')).rev=t.value;clearTimeout(saveT);saveT=setTimeout(save,400);
+  }
+});
+app.addEventListener('click',function(e){
+  var el=e.target.closest('[data-act]');if(!el||el.disabled)return;
+  var a=el.getAttribute('data-act'),i=parseInt(el.getAttribute('data-i'),10),v=el.getAttribute('data-v');
+  if(a==='open')go(el.getAttribute('data-k'),0);
+  else if(a==='ask'){view.ask=true;render();var rn=$('#rst-no');if(rn){rn.focus();rn.scrollIntoView({block:'center'})}}
+  else if(a==='rst-no'){view.ask=false;render()}
+  else if(a==='rst-yes')resetAll();
+  else if(a==='home')go('home');
+  else if(a==='tab'){view.tab=i;view.sel=null;view.chk={};render();window.scrollTo(0,0)}
+  else if(a==='reveal'){ST.m1[el.getAttribute('data-id')]=true;save();if(momDone('m1'))report();render()}
+  else if(a==='chip')onChip(B[view.tab],el.getAttribute('data-id'));
+  else if(a==='slot')onSlot(B[view.tab],el.getAttribute('data-slot'));
+  else if(a==='check')onCheck(B[view.tab]);
+  else if(a==='solve')onSolve(B[view.tab]);
+  else if(a==='reset')onReset(B[view.tab]);
+  else if(a==='ans')onAns(i,parseInt(v,10));
+  else if(a==='again'){var st=s3(D[view.tab].id);st.ans=[];st.tries++;save();render();window.scrollTo(0,0)}
+  else if(a==='starter'){var q=Q[view.tab],s=s4(q.id);if(!s.text){s.text=q.starter+' ';save();render();var ta=$('#ta');if(ta){ta.focus();ta.setSelectionRange(ta.value.length,ta.value.length)}}}
+  else if(a==='stage'){var s=s4(Q[view.tab].id);s.stage=1;save();render()}
+  else if(a==='self'){var s=s4(Q[view.tab].id);s.self[i]=v;save();render()}
+  else if(a==='variant'){var s=s4(Q[view.tab].id);s.variant=i;s.refOpen=true;save();render()}
+  else if(a==='refsum'){var s=s4(Q[view.tab].id);s.refOpen=!s.refOpen}
+  else if(a==='finish'){var q=Q[view.tab],s=s4(q.id);s.done=true;s.ts=Date.now();save();report();toast('Pregunta completada y guardada.');render()}
+  else if(a==='dl')descargar();
+});
+render();
+histFlush();
+window.addEventListener('storage',function(e){if(e.key===KEYS.mod&&e.newValue===null){ST=freshST();go('home')}});
+window.__PRES={ST:function(){return ST},DATA:DATA,go:go};
+})();
+
+</script>
+</body>
+</html>
